@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>售卖版本设置 · Demo</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'PingFang SC',sans-serif;background:#f5f6f8;color:#1a1a1a;font-size:13px}
+.page{max-width:1040px;margin:0 auto;padding:0 0 40px}
+.crumb{padding:14px 16px 0;font-size:13px;color:#6b7280}
+.crumb b{color:#1a1a1a;font-weight:600}
+.ctx{display:flex;justify-content:space-between;align-items:center;margin:12px 16px 0;padding:12px 16px;background:#fff;border:1px solid #e5e7eb;border-radius:10px}
+.ctx-left{display:flex;align-items:center;gap:10px}
+.ctx-title{font-size:14px;font-weight:700}
+.badge{font-size:11px;padding:3px 10px;border-radius:12px;font-weight:600}
+.b-pass{background:#dcfce7;color:#166534}.b-rev{background:#fef9c3;color:#854d0e}
+.demo{font-size:10px;color:#9ca3af;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+
+.vtabs{display:flex;gap:8px;padding:14px 16px 0;flex-wrap:wrap;align-items:center}
+.vtab{padding:7px 16px;border-radius:8px 8px 0 0;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid #e5e7eb;border-bottom:none;background:#f3f4f6;color:#6b7280;position:relative;top:1px}
+.vtab.on{background:#fff;color:#1d4ed8}
+.vtab .vx{margin-left:6px;color:#c4c4c4;font-size:11px}.vtab .vx:hover{color:#ef4444}
+.vadd{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:1.5px dashed #93c5fd;background:#fff;color:#2563eb}
+.vadd:hover{background:#eff6ff}
+
+.panel-wrap{background:#fff;border:1px solid #e5e7eb;border-radius:0 10px 10px 10px;margin:0 16px}
+.subtabs{display:flex;gap:0;border-bottom:1px solid #eef0f2;padding:0 20px}
+.subtab{padding:12px 16px;font-size:13px;font-weight:600;color:#6b7280;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.subtab.on{color:#1d4ed8;border-bottom-color:#1d4ed8}
+.subbody{padding:20px 22px}
+
+.sec{margin-bottom:22px}.sec:last-child{margin-bottom:0}
+.sec-hd{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#111;padding-bottom:11px;margin-bottom:14px;border-bottom:1px solid #f0f1f3}
+.sec-hd .lock-tip{margin-left:auto;font-size:10px;color:#b45309;font-weight:500}
+.frow{margin-bottom:14px}.frow:last-child{margin-bottom:0}
+.flabel{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:#374151;margin-bottom:7px}
+.fhelp{font-size:11px;color:#9ca3af;font-weight:400;margin-left:4px}
+.fhint{font-size:11px;color:#6b7280;margin-top:6px;line-height:1.6;background:#f9fafb;border-radius:6px;padding:8px 10px;border-left:3px solid #e5e7eb}
+.fhint.blue{border-left-color:#93c5fd;color:#1e40af;background:#eff6ff}
+.fhint.amber{border-left-color:#fcd34d;color:#92400e;background:#fffbeb}
+
+.sm-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.sm-card{border:1.5px solid #e5e7eb;border-radius:8px;padding:11px 13px;cursor:pointer;transition:all .12s}
+.sm-card:hover{border-color:#93c5fd}.sm-card.on{border-color:#2563eb;background:#eff6ff}
+.sm-top{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:#111}
+.sm-tag{font-size:9px;padding:1px 6px;border-radius:8px;margin-left:auto;font-weight:700}
+.tag-iap{background:#dbeafe;color:#1e40af}.tag-iaa{background:#fef3c7;color:#92400e}.tag-mix{background:#f3e8ff;color:#7c3aed}
+.sm-desc{font-size:10.5px;color:#9ca3af;margin-top:4px;line-height:1.5}
+.price-row{display:flex;align-items:center;gap:8px}
+.pinput{width:110px;border:1.5px solid #d1d5db;border-radius:6px;padding:7px 10px;font-size:12px;outline:none}
+.pinput:focus{border-color:#2563eb}
+.punit{font-size:12px;color:#6b7280}
+.ilink{color:#2563eb;font-size:12px;cursor:pointer;margin-left:16px}.ilink:hover{text-decoration:underline}
+.mm-row{display:flex;gap:10px}
+.mm-card{flex:1;border:1.5px solid #e5e7eb;border-radius:8px;padding:11px 13px;cursor:pointer;text-align:center}
+.mm-card:hover{border-color:#93c5fd}.mm-card.on{border-color:#2563eb;background:#eff6ff}
+.mm-t{font-size:12.5px;font-weight:600;color:#111}.mm-d{font-size:10px;color:#9ca3af;margin-top:3px}
+
+.pnl-hd{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.pnl-count{font-size:12px;color:#111;font-weight:600}
+.tpl-link{font-size:11.5px;color:#2563eb;cursor:pointer}.tpl-link:hover{text-decoration:underline}
+.pnl-lock{display:flex;align-items:center;gap:8px;background:#fef9c3;border:1px solid #fde68a;border-radius:8px;padding:9px 13px;font-size:11.5px;color:#854d0e;margin-bottom:12px}
+.pnl-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.pnl-card{border:1.5px solid #fde9c8;border-radius:10px;padding:14px;background:linear-gradient(180deg,#fffbf3,#fff)}
+.pnl-name-row{display:flex;justify-content:space-between;align-items:center;padding-bottom:10px;border-bottom:1px solid #fde9c8;margin-bottom:10px}
+.pnl-name{font-size:14px;font-weight:700;color:#111}
+.base-b{background:#f59e0b;color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px}
+.tier-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.tier-c{background:#fff;border:1px solid #fde9c8;border-radius:6px;padding:6px 11px;font-size:12px;font-weight:600;color:#374151}
+.pnl-acts{display:flex;padding-top:10px;border-top:1px solid #fde9c8}
+.pnl-a{font-size:11.5px;color:#374151;cursor:pointer;padding:0 11px;border-right:1px solid #e5e7eb}
+.pnl-a:first-child{padding-left:0}.pnl-a:last-child{border-right:none}
+.pnl-a:hover{color:#2563eb}.pnl-a.danger:hover{color:#ef4444}
+.pnl-a.locked{color:#c4c4c4;cursor:not-allowed;pointer-events:none}
+.pnl-add{border:1.5px dashed #d1d5db;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:130px;background:#fafafa}
+.pnl-add.disabled{opacity:.5;pointer-events:none}
+.add-opt{font-size:12.5px;color:#2563eb;cursor:pointer}.add-opt:hover{text-decoration:underline}
+
+.ep-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;padding:7px 15px;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;border:none;gap:5px}
+.btn-blue{background:#2563eb;color:#fff}.btn-blue:hover{background:#1d4ed8}
+.btn-danger{background:#dc2626;color:#fff}.btn-danger:hover{background:#b91c1c}
+.btn-out{background:#fff;color:#374151;border:1.5px solid #d1d5db}.btn-out:hover{border-color:#2563eb;color:#2563eb}
+.ep-sub{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;border-bottom:1px solid #eef0f2;padding-bottom:12px}
+.jump{display:flex;align-items:center;gap:5px;background:#fff;border:1.5px solid #e5e7eb;border-radius:6px;padding:4px 9px}
+.jlab{font-size:11px;color:#6b7280}
+.jin{width:44px;border:none;border-bottom:1.5px solid #d1d5db;padding:1px 3px;font-size:12px;font-weight:600;outline:none;text-align:center;background:transparent}
+.jgo{padding:2px 9px;background:#2563eb;color:#fff;border:none;border-radius:4px;font-size:10px;cursor:pointer}
+.chips{display:flex;gap:5px;flex-wrap:wrap}
+.chip{padding:4px 11px;border-radius:16px;font-size:11px;font-weight:500;cursor:pointer;border:1.5px solid #e5e7eb;background:#fff;color:#6b7280}
+.chip:hover{border-color:#2563eb;color:#2563eb}.chip.on{background:#2563eb;color:#fff;border-color:#2563eb}
+.res{font-size:11px;color:#9ca3af;margin-left:auto}
+.ep-note{font-size:11px;color:#9ca3af;margin-bottom:12px}
+
+.eg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.ec{border:1px solid #e5e7eb;border-radius:8px;padding:10px;background:#fafbfc}
+.ec.hide{display:none}
+.ec.hl{box-shadow:0 0 0 3px rgba(37,99,235,.25);border-color:#2563eb}
+.ec-hd{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.ec-cov{width:40px;height:53px;border-radius:5px;object-fit:cover;flex-shrink:0;background:#eef0f2}
+.ec-num{font-size:12px;font-weight:700;color:#111}
+.ec-title{font-size:11px;color:#6b7280;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ec-foot{display:flex;align-items:center;gap:6px;padding-top:8px;border-top:1px solid #f0f1f3;min-height:22px}
+.st{display:inline-block;font-size:10px;padding:2px 9px;border-radius:10px;cursor:pointer;font-weight:500}
+.st-free{background:#dcfce7;color:#166534}.st-paid{background:#dbeafe;color:#1e40af}.st-ad{background:#fef3c7;color:#92400e}
+.epin{width:52px;border:1px solid #d1d5db;border-radius:4px;padding:2px 5px;font-size:11px;outline:none}
+.uni{font-size:10px;color:#9ca3af}
+
+.foot{display:flex;gap:8px;padding:16px}
+.ovl{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;align-items:center;justify-content:center}
+.ovl.on{display:flex}
+.modal{background:#fff;border-radius:12px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.18);width:440px;max-width:92vw}
+.mhdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.mtitle{font-size:15px;font-weight:700}.mclose{cursor:pointer;color:#9ca3af;font-size:20px}
+.mfoot{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.wbody{font-size:14px;color:#374151;line-height:1.8}
+.wsub{font-size:12px;color:#6b7280;margin-top:8px;padding:9px 11px;background:#FFFBEB;border-radius:6px;border-left:3px solid #FCD34D;line-height:1.6}
+.wdanger{background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:11px 13px;margin-top:12px;font-size:12px;color:#991b1b;line-height:1.6}
+.mfrow{margin-bottom:13px}.mfl{display:block;font-size:11px;font-weight:600;color:#374151;margin-bottom:5px}
+.mfi{width:100%;border:1.5px solid #d1d5db;border-radius:6px;padding:7px 10px;font-size:12px;outline:none}
+.mrange{display:flex;align-items:center;gap:8px}.mrange .mfi{flex:1}
+.mrad{display:flex;gap:16px}.mradi{display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer}
+
+.spanel{display:none;position:fixed;right:0;top:0;bottom:0;width:400px;background:#fff;box-shadow:-4px 0 24px rgba(0,0,0,.12);z-index:90;flex-direction:column}
+.spanel.on{display:flex}
+.sphd{padding:14px 16px;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center}
+.spt{font-size:14px;font-weight:700}.spbody{flex:1;overflow-y:auto;padding:16px}
+.spfoot{padding:12px 16px;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end;gap:8px}
+.finp{width:100%;border:1.5px solid #d1d5db;border-radius:6px;padding:8px 12px;font-size:12px;outline:none}
+.tier-e{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.tier-e input{flex:1;border:1.5px solid #d1d5db;border-radius:6px;padding:7px 10px;font-size:12px}
+.tier-del{color:#9ca3af;cursor:pointer}.tier-del:hover{color:#ef4444}
+.addtier{font-size:12px;color:#2563eb;cursor:pointer}.addtier:hover{text-decoration:underline}
+
+.mkt-tabs{display:flex;gap:4px;margin-bottom:14px;border-bottom:1px solid #eef0f2}
+.mkt-tab{padding:8px 15px;font-size:12px;font-weight:600;color:#6b7280;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;display:flex;align-items:center;gap:5px}
+.mkt-tab.on{color:#1d4ed8;border-bottom-color:#1d4ed8}
+.mkt-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#16a34a}
+.pnl-tools{margin-left:auto;display:flex;gap:8px}
+.pnl-btn{font-size:11px;padding:4px 11px;border:1.5px solid #d1d5db;border-radius:6px;color:#374151;cursor:pointer;background:#fff}
+.pnl-btn:hover{border-color:#2563eb;color:#2563eb}
+.pnl-note{font-size:11px;color:#9ca3af;margin-bottom:10px;line-height:1.6}
+.excl-tip{display:flex;align-items:center;gap:8px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:9px 13px;font-size:11.5px;color:#1e40af;margin-bottom:12px;line-height:1.6}
+.jubi-rule-box{border:1px solid #e5e7eb;border-radius:8px;margin-bottom:14px;overflow:hidden}
+.jubi-rule-hd{display:flex;align-items:center;gap:7px;padding:11px 14px;font-size:12.5px;font-weight:700;color:#111;cursor:pointer;user-select:none}
+.jrb-arrow{font-size:12px;color:#6b7280;transition:transform .15s}
+.jrb-arrow.closed{transform:rotate(-90deg)}
+.jubi-rule-bd{padding:0 16px 14px}
+.jubi-rule-bd.hide{display:none}
+.jrb-line{font-size:12px;color:#374151;line-height:1.9;padding:2px 0}
+.jrb-table{border-collapse:collapse;margin-top:10px;width:100%;max-width:520px}
+.jrb-table th,.jrb-table td{border:1px solid #e5e7eb;padding:8px 14px;font-size:12px;text-align:center}
+.jrb-table th{background:#fafafa;font-weight:600;color:#374151}
+.jrb-table td{color:#6b7280}
+.jubi-card{border-color:#e9d5ff!important;background:linear-gradient(180deg,#faf5ff,#fff)!important}
+.jubi-card .pnl-name-row{border-bottom-color:#e9d5ff}
+.jubi-card .pnl-acts{border-top-color:#e9d5ff}
+.jtier-prev{min-width:88px;font-size:12px;color:#7c3aed;font-weight:600;text-align:right}
+#toast{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:7px 18px;border-radius:20px;font-size:12px;z-index:999;white-space:nowrap;pointer-events:none}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="crumb">付费短剧列表 › 短剧详情 › <b>售卖版本设置</b></div>
+  <div class="ctx">
+    <div class="ctx-left"><span class="ctx-title">《大城市现在》· 售卖版本设置 · 共 8 集</span><span class="badge b-pass" id="revBadge">已审核通过</span></div>
+    <span class="demo" id="revToggle" onclick="toggleReview()">演示切换：审核中 / 已通过</span>
+  </div>
+
+  <div class="vtabs" id="vtabs"></div>
+  <div class="panel-wrap">
+    <div class="subtabs">
+      <div class="subtab on" id="stSell" onclick="setSub('sell')">售卖信息</div>
+      <div class="subtab" id="stEp" onclick="setSub('ep')">单集信息</div>
+      <div class="subtab" id="stPromo" onclick="setSub('promo')">推广方式配置</div>
+    </div>
+    <div class="subbody" id="body"></div>
+  </div>
+
+  <div class="foot">
+    <button class="btn btn-blue" style="padding:8px 20px" onclick="toast('已保存当前售卖版本')">保存版本</button>
+    <button class="btn btn-out" style="padding:8px 20px" onclick="delVersion()">删除本版本</button>
+    <button class="btn btn-out" style="padding:8px 20px" onclick="toast('返回短剧详情')">返回</button>
+  </div>
+</div>
+
+<div class="ovl" id="ovlSwitch"><div class="modal">
+  <div class="mhdr"><span class="mtitle">⚠️ 切换售卖方式将删除付费面板</span><span class="mclose" onclick="closeSwitch()">×</span></div>
+  <div class="wbody">该版本当前已配置 <b id="swCount">2</b> 个付费面板，切换到不含单集付费的售卖方式需要先删除全部面板。</div>
+  <div class="wdanger">此操作不可撤销；面板删除后将立即从 C 端购买入口下架（已购用户权益不受影响）。</div>
+  <div class="mfoot"><button class="btn btn-out" onclick="closeSwitch()">取消</button><button class="btn btn-danger" onclick="confirmSwitch()">确认删除并切换</button></div>
+</div></div>
+
+<div class="ovl" id="ovlLock"><div class="modal">
+  <div class="mhdr"><span class="mtitle">暂不支持操作</span><span class="mclose" onclick="closeLock()">×</span></div>
+  <div class="wbody">该剧内容修改正在审核中，审核结束前暂不支持修改付费面板配置（售卖方式 / 营销方式 / 广告营销时间 / 单集售卖属性仍可预设）。</div>
+  <div class="mfoot"><button class="btn btn-blue" onclick="closeLock()">知道了</button></div>
+</div></div>
+
+<div class="ovl" id="ovlDelP"><div class="modal">
+  <div class="mhdr"><span class="mtitle">删除付费面板</span><span class="mclose" onclick="closeDelP()">×</span></div>
+  <div class="wbody">确认删除该付费面板？删除后将立即影响 C 端展示。</div>
+  <div class="mfoot"><button class="btn btn-out" onclick="closeDelP()">取消</button><button class="btn btn-danger" onclick="execDelP()">确认删除</button></div>
+</div></div>
+
+<div class="ovl" id="ovlFree"><div class="modal">
+  <div class="mhdr"><span class="mtitle">提示</span><span class="mclose" onclick="closeFree()">×</span></div>
+  <div class="wbody">剧集切换为免费，可能会对已购短剧用户造成权益损失的风险，将引发客诉和退款问题，请再次确认后谨慎操作。</div>
+  <div class="wsub">付费集数减少后，建议同步下调全集价格，否则可能造成打包模式下全集价格虚高。</div>
+  <div class="mfoot"><button class="btn btn-out" onclick="closeFree()">取消</button><button class="btn btn-blue" onclick="confirmFree()">我已确认</button></div>
+</div></div>
+
+<div class="ovl" id="ovlBatch"><div class="modal">
+  <div class="mhdr"><span class="mtitle">批量设置单集售卖属性</span><span class="mclose" onclick="closeBatch()">×</span></div>
+  <div class="mfrow"><label class="mfl">选择集数</label><div class="mrange"><input class="mfi" id="bF" type="number" min="1" value="2"><span style="color:#9ca3af">—</span><input class="mfi" id="bT" type="number" min="1" value="8"></div></div>
+  <div class="mfrow"><label class="mfl">设为</label><div class="mrad" id="bStates"></div></div>
+  <div class="mfrow" id="bPriceRow"><label class="mfl">单价（元）</label><input class="mfi" id="bPrice" type="number" step="0.5" min="0.5" value="1.0" style="width:120px"></div>
+  <div class="mfoot"><button class="btn btn-out" onclick="closeBatch()">取消</button><button class="btn btn-blue" onclick="applyBatch()">确认</button></div>
+</div></div>
+
+<div class="spanel" id="spPnl">
+  <div class="sphd"><span class="spt">添加付费面板</span><span class="mclose" onclick="closePnlDrawer()">×</span></div>
+  <div class="spbody">
+    <div class="mfrow"><label class="mfl">面板名称</label><input class="finp" id="pnlName" placeholder="如：暑期特惠面板"></div>
+    <div class="mfrow"><label class="mfl">价格档位（可多档，如全集/5集/10集）</label><div id="tierList"></div><span class="addtier" onclick="addTier()">＋ 新增档位</span></div>
+  </div>
+  <div class="spfoot"><button class="btn btn-out" onclick="closePnlDrawer()">取消</button><button class="btn btn-blue" onclick="createPnl()">确认创建</button></div>
+</div>
+
+<div class="spanel" id="spJubi">
+  <div class="sphd"><span class="spt" id="jubiDrawerTitle">添加付费面板</span><span class="mclose" onclick="closeJubiDrawer()">×</span></div>
+  <div class="spbody">
+    <div class="mfrow"><label class="mfl">面板名称</label><input class="finp" id="jubiName" placeholder="如：基础付费模板1"></div>
+    <div class="mfrow"><label class="mfl">充值档位（可多档，输入充值金额自动换算剧豆）</label><div id="jubiTierList"></div><span class="addtier" onclick="addJubiTier()">＋ 新增档位</span></div>
+  </div>
+  <div class="spfoot"><button class="btn btn-out" onclick="closeJubiDrawer()">取消</button><button class="btn btn-blue" onclick="saveJubi()">确认创建</button></div>
+</div>
+
+<div class="ovl" id="ovlDelJubi"><div class="modal">
+  <div class="mhdr"><span class="mtitle">删除付费面板</span><span class="mclose" onclick="closeDelJubi()">×</span></div>
+  <div class="wbody">确认删除该付费面板？删除全部虚拟币充值面板后，该剧将回到单集 / 全剧价格解锁，虚拟币充值页面不再对外展示。</div>
+  <div class="mfoot"><button class="btn btn-out" onclick="closeDelJubi()">取消</button><button class="btn btn-danger" onclick="execDelJubi()">确认删除</button></div>
+</div></div>
+
+<div id="toast"></div>
+
+<script>
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.style.display='block';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',2000)}
+const COV='https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=120&h=160&fit=crop';
+
+const SELL=[
+  {t:'全剧付费',tag:'IAP',tc:'tag-iap',d:'只允许购买全集解锁，不支持单集售卖'},
+  {t:'单集+全剧付费',tag:'IAP',tc:'tag-iap',d:'单集付费与全集付费均展示，可配付费面板'},
+  {t:'观看广告解锁',tag:'IAA',tc:'tag-iaa',d:'观看激励广告解锁剧集'},
+  {t:'广告解锁+单集付费',tag:'IAAP',tc:'tag-mix',d:'广告解锁与单集付费混合，可配付费面板'},
+];
+const MARKET=[{t:'投流',d:'生成 SDPA/推广链接'},{t:'分账',d:'走分账结算'},{t:'投流 + 分账',d:'两条路径并存'}];
+const hasPanel = m => m===1||m===3;
+const EPSTATES = {0:['free','paid'],1:['free','paid'],2:['free','ad'],3:['free','ad','paid']};
+const STLABEL = {free:'免费',paid:'付费',ad:'广告解锁'};
+const STCLASS = {free:'st-free',paid:'st-paid',ad:'st-ad'};
+const epTitles=['第一集','第二集','第三集','第四集','第五集','','',''];
+function newEps(mode){return epTitles.map((t,i)=>({title:t,state:(i===0?'free':(mode===2?'ad':'paid')),price:1.0}));}
+
+let versions=[{name:'版本 1',sell:1,fullPrice:'30',adEps:'1',market:0,adTime:'',panels:[{id:1,name:'123',base:true,tiers:[{l:'全集',p:3},{l:'1集',p:1},{l:'2集',p:2}]}],jubi:[],eps:newEps(1)}];
+let cur=0, sub='sell', reviewLock=false, pendingSell=null, delPId=null, tierRows=[], curFilter='all', freeCb=null, marketSub='bundle', jubiEditId=null, delJubiId=null, jubiRuleOpen=true, jubiRows=[];
+
+function toggleReview(){
+  reviewLock=!reviewLock;
+  document.getElementById('revToggle').textContent=reviewLock?'演示切换：恢复已通过':'演示切换：审核中 / 已通过';
+  const b=document.getElementById('revBadge');b.className='badge '+(reviewLock?'b-rev':'b-pass');b.textContent=reviewLock?'内容修改审核中':'已审核通过';
+  render();
+}
+function renderTabs(){
+  document.getElementById('vtabs').innerHTML=versions.map((v,i)=>`<div class="vtab${i===cur?' on':''}" onclick="selVer(${i})">${v.name}${versions.length>1?`<span class="vx" onclick="event.stopPropagation();delVersionAt(${i})">✕</span>`:''}</div>`).join('')+`<div class="vadd" onclick="addVersion()">＋ 新增版本</div>`;
+}
+function selVer(i){cur=i;renderTabs();render();}
+function addVersion(){versions.push({name:'版本 '+(versions.length+1),sell:0,fullPrice:'',adEps:'1',market:0,adTime:'',panels:[],jubi:[],eps:newEps(0)});cur=versions.length-1;renderTabs();render();toast('已新增售卖版本');}
+function delVersion(){delVersionAt(cur);}
+function delVersionAt(i){if(versions.length<=1){toast('至少保留一个售卖版本');return;}versions.splice(i,1);if(cur>=versions.length)cur=versions.length-1;renderTabs();render();toast('已删除该版本');}
+function setSub(s){sub=s;document.getElementById('stSell').classList.toggle('on',s==='sell');document.getElementById('stEp').classList.toggle('on',s==='ep');document.getElementById('stPromo').classList.toggle('on',s==='promo');render();}
+
+function trySell(idx){
+  const v=versions[cur];if(idx===v.sell)return;
+  const cnt=v.panels.length+v.jubi.length;
+  const leaving=hasPanel(v.sell)&&!hasPanel(idx)&&cnt>0;
+  if(leaving){if(reviewLock){document.getElementById('ovlLock').classList.add('on');return;}pendingSell=idx;document.getElementById('swCount').textContent=cnt;document.getElementById('ovlSwitch').classList.add('on');return;}
+  applySell(idx);
+}
+function applySell(idx){const v=versions[cur];v.sell=idx;
+  const allow=EPSTATES[idx];v.eps.forEach(e=>{if(!allow.includes(e.state))e.state=(idx===2?'ad':(idx===0||idx===1?'paid':'ad'));});
+  render();}
+function closeSwitch(){document.getElementById('ovlSwitch').classList.remove('on');pendingSell=null;}
+function confirmSwitch(){const v=versions[cur];v.panels=[];v.jubi=[];applySell(pendingSell);pendingSell=null;closeSwitch();toast('已删除面板并切换售卖方式');}
+function closeLock(){document.getElementById('ovlLock').classList.remove('on');}
+function setMarket(i){versions[cur].market=i;render();}
+
+function render(){ if(sub==='sell')renderSell(); else if(sub==='ep')renderEp(); else renderPromo(); }
+
+function renderSell(){
+  const v=versions[cur];
+  const price = v.sell===0?`<div class="frow"><label class="flabel">全剧价格</label><div class="price-row"><input class="pinput" type="number" value="${v.fullPrice}" oninput="versions[${cur}].fullPrice=this.value"><span class="punit">元</span></div></div>`
+    : v.sell===1?`<div class="frow"><label class="flabel">全剧价格</label><div class="price-row"><input class="pinput" type="number" value="${v.fullPrice}" oninput="versions[${cur}].fullPrice=this.value"><span class="punit">元</span></div><div class="fhint">单集价格与付费面板在「单集信息」中配置；使用付费面板需各付费集价格统一。</div></div>`
+    : v.sell===2?`<div class="frow"><label class="flabel">观看一次广告解锁集数</label><div class="price-row"><input class="pinput" style="width:80px" type="number" value="${v.adEps}" oninput="versions[${cur}].adEps=this.value"><span class="punit">集</span><span class="ilink" onclick="toast('iOS支付价格说明（模拟）')">iOS支付价格说明</span></div></div>`
+    : `<div class="frow"><label class="flabel">观看一次广告解锁集数</label><div class="price-row"><input class="pinput" style="width:80px" type="number" value="${v.adEps}" oninput="versions[${cur}].adEps=this.value"><span class="punit">集</span></div><div class="fhint">单集付费部分价格与付费面板在「单集信息」中配置。</div></div>`;
+  // 仅纯 IAP 售卖方式（全剧付费 / 单集+全剧付费）支持广告营销开始时间：到点由 IAP 转 IAA（P→A）
+  const showAdTime = v.sell===0 || v.sell===1;
+  const adHelp = '到达该时间后，付费短剧由 IAP 转为 IAA（P 转 A）；转换后不可再改回 IAP。';
+
+  let html=`
+  <div class="sec"><div class="sec-hd">💰 售卖信息</div>
+    <div class="frow"><label class="flabel">售卖方式</label>
+      <div class="sm-grid">${SELL.map((s,i)=>`<div class="sm-card${v.sell===i?' on':''}" onclick="trySell(${i})"><div class="sm-top">${s.t}<span class="sm-tag ${s.tc}">${s.tag}</span></div><div class="sm-desc">${s.d}</div></div>`).join('')}</div>
+    </div>${price}
+  </div>`;
+  if(showAdTime){
+    html+=`
+  <div class="sec"><div class="sec-hd">⏰ 广告营销开始时间</div>
+    <div class="price-row"><input class="pinput" style="width:220px" type="text" placeholder="选择日期时间 / 发布时开启" value="${v.adTime}" oninput="versions[${cur}].adTime=this.value"></div>
+    <div class="fhint amber">${adHelp}</div>
+  </div>`;
+  }
+  document.getElementById('body').innerHTML=html;
+}
+
+function renderPromo(){
+  document.getElementById('body').innerHTML=`
+  <div style="padding:44px 20px 52px;text-align:center;color:#9ca3af">
+    <div style="font-size:30px;margin-bottom:12px">🧭</div>
+    <div style="font-size:14px;font-weight:700;color:#6b7280;margin-bottom:8px">推广方式配置</div>
+    <div style="font-size:12px;line-height:1.9;max-width:480px;margin:0 auto">
+      设定营销方式（投流 / 分账 / 投流+分账），及对应的投放 ID / SDPA / 分销配置。<br>
+      本模块规划中，将在后续版本设计。
+    </div>
+  </div>`;
+}
+
+function panelSectionHtml(v){
+  if(!hasPanel(v.sell))return '';
+  const lc=reviewLock?' locked':'';
+  const hasBundle=v.panels.length>0, hasJubi=v.jubi.length>0;
+  let html=`<div class="sec" style="margin-top:24px;border-top:1px solid #f0f1f3;padding-top:20px"><div class="sec-hd">🎁 营销付费面板${reviewLock?'<span class="lock-tip">审核中 · 仅可查看</span>':''}</div>`;
+  if(reviewLock)html+=`<div class="pnl-lock">⏳ 内容修改审核中，暂不支持修改付费面板；其余售卖配置仍可预设。</div>`;
+  html+=`<div class="mkt-tabs">
+    <div class="mkt-tab${marketSub==='bundle'?' on':''}" onclick="setMarketSub('bundle')">多集优惠包${hasBundle?'<span class="mkt-dot"></span>':''}</div>
+    <div class="mkt-tab${marketSub==='jubi'?' on':''}" onclick="setMarketSub('jubi')">虚拟币充值${hasJubi?'<span class="mkt-dot"></span>':''}</div>
+  </div>`;
+  html+=(marketSub==='bundle')?bundlePanelHtml(v,lc,hasJubi):jubiPanelHtml(v,lc,hasBundle);
+  html+=`</div>`;
+  return html;
+}
+function bundlePanelHtml(v,lc,blocked){
+  const addDisabled=reviewLock||blocked;
+  let html=`<div class="pnl-hd"><span class="pnl-count">设置多集优惠包（${v.panels.length}/10）</span><span class="tpl-link" onclick="toast('管理通用模版（模拟）')">管理通用模版(9/15)</span><span class="pnl-tools"><span class="pnl-btn" onclick="toast('补贴计划（现有能力，占位）')">补贴计划</span></span></div>`;
+  if(blocked)html+=`<div class="excl-tip">ⓘ 该短剧已配置「虚拟币充值」，二者互斥；如需配置多集优惠包，请先删除虚拟币充值。</div>`;
+  html+=`<div class="pnl-grid">`;
+  html+=v.panels.map(p=>`<div class="pnl-card"><div class="pnl-name-row"><span class="pnl-name">${p.name}</span>${p.base?'<span class="base-b">基础面板</span>':''}</div><div class="tier-row">${p.tiers.map(t=>`<span class="tier-c">${t.l} ¥${t.p.toFixed(2)}</span>`).join('')}</div><div class="pnl-acts"><span class="pnl-a${lc}" onclick="editPnl(${p.id})">编辑</span><span class="pnl-a${lc}" onclick="copyPnl(${p.id})">复制</span><span class="pnl-a${lc} danger" onclick="askDelP(${p.id})">删除</span><span class="pnl-a${lc}" onclick="toast('已设为通用模版')">设为模版</span></div></div>`).join('');
+  html+=`<div class="pnl-add${addDisabled?' disabled':''}"><span class="add-opt" onclick="chooseTpl()">⇄ 选择通用模版</span><span class="add-opt" onclick="openPnlDrawer()">⊹ 添加付费面板</span></div></div>`;
+  return html;
+}
+function jubiGift(a){a=+a;if(a>50)return Math.round(a*100*.15);if(a>30)return Math.round(a*100*.10);if(a>10)return Math.round(a*100*.05);return 0;}
+function toggleJubiRule(){jubiRuleOpen=!jubiRuleOpen;renderEp();}
+function jubiPanelHtml(v,lc,blocked){
+  const addDisabled=reviewLock||blocked;
+  let html=`<div class="pnl-hd"><span class="pnl-count">设置虚拟币充值面板（${v.jubi.length}/10）</span><span class="tpl-link" onclick="toast('管理通用模版（模拟）')">管理通用模版(9/15)</span><span class="pnl-tools"><span class="pnl-btn" onclick="toast('会员权益营销（占位）')">会员权益营销</span><span class="pnl-btn" onclick="toast('补贴计划（现有能力，占位）')">补贴计划</span></span></div>`;
+  html+=`<div class="jubi-rule-box">
+    <div class="jubi-rule-hd" onclick="toggleJubiRule()"><span class="jrb-arrow${jubiRuleOpen?'':' closed'}">⌄</span> 充值付费解锁规则</div>
+    <div class="jubi-rule-bd${jubiRuleOpen?'':' hide'}">
+      <div class="jrb-line">1. 消费者充值现金将按照一定比例换算为虚拟币"剧豆"，解锁付费集将需扣减单集价格等比的剧豆</div>
+      <div class="jrb-line">2. 虚拟币"剧豆"为平台通用，消费者可以将剧豆用于平台所有参加虚拟币充值的短剧解锁付费集观看</div>
+      <div class="jrb-line">3. 创作者可以直接获取消费者对于该剧实际充值金额，而非实际消耗的剧豆等值的金额</div>
+      <div class="jrb-line">4. 不同充值金额，平台将在等比换算的基础上，自动赠送部分剧豆。具体规则如下：</div>
+      <table class="jrb-table"><tr><th>充值金额区间（元）</th><th>赠送比例（%）</th></tr><tr><td>10 &lt; x &lt;= 30</td><td>5</td></tr><tr><td>30 &lt; x &lt;= 50</td><td>10</td></tr><tr><td>50 &lt; x</td><td>15</td></tr></table>
+    </div>
+  </div>`;
+  if(blocked)html+=`<div class="excl-tip">ⓘ 该短剧已配置「多集优惠包」，二者互斥；如需配置虚拟币充值，请先删除多集优惠包。</div>`;
+  html+=`<div class="pnl-grid">`;
+  html+=v.jubi.map(p=>`<div class="pnl-card jubi-card"><div class="pnl-name-row"><span class="pnl-name">${p.name}</span>${p.base?'<span class="base-b">基础面板</span>':''}</div><div class="tier-row">${p.tiers.map(t=>`<span class="tier-c">${(+t.amount)*100+jubiGift(t.amount)}剧豆 ¥${t.amount}</span>`).join('')}</div><div class="pnl-acts"><span class="pnl-a${lc}" onclick="editJubi(${p.id})">编辑</span><span class="pnl-a${lc}" onclick="copyJubi(${p.id})">复制</span><span class="pnl-a${lc} danger" onclick="askDelJubi(${p.id})">删除</span><span class="pnl-a${lc}" onclick="toast('已设为通用模版')">设为模版</span></div></div>`).join('');
+  html+=`<div class="pnl-add${addDisabled?' disabled':''}"><span class="add-opt" onclick="chooseJubiTpl()">⇄ 选择通用模版</span><span class="add-opt" onclick="openJubiDrawer()">⊹ 添加付费面板</span></div></div>`;
+  return html;
+}
+function setMarketSub(s){marketSub=s;renderEp();}
+
+function epMatch(e,f){if(f==='all')return true;return e.state===f;}
+function renderEp(){
+  const v=versions[cur];const showPrice=(v.sell===1||v.sell===3);
+  let html=`
+  <div class="ep-toolbar">
+    <button class="btn btn-blue" onclick="openBatch()">批量设置</button>
+  </div>
+  <div class="eg">`;
+  html+=v.eps.map((e,i)=>{
+    const num=i+1;const visc=epMatch(e,curFilter);
+    let foot=`<span class="st ${STCLASS[e.state]}" onclick="cycleState(${i})">${STLABEL[e.state]}</span>`;
+    if(e.state==='paid'){ foot+= showPrice?`<input class="epin" type="number" step="0.5" min="0.5" value="${e.price.toFixed(1)}" onchange="setEpPrice(${i},this.value)">`:`<span class="uni">全剧统一定价</span>`; }
+    return `<div class="ec${visc?'':' hide'}" id="ec${num}">
+      <div class="ec-hd"><img class="ec-cov" src="${COV}"><div style="min-width:0"><div class="ec-num">第${num}集</div><div class="ec-title">${e.title||'（未命名）'}</div></div></div>
+      <div class="ec-foot">${foot}</div>
+    </div>`;
+  }).join('');
+  html+=`</div>`;
+  html+=panelSectionHtml(v);
+  document.getElementById('body').innerHTML=html;
+}
+function setFilter(f){curFilter=f;renderEp();}
+function doJump(){const val=parseInt(document.getElementById('jin').value);const v=versions[cur];if(!val||val<1||val>v.eps.length)return;if(curFilter!=='all'){curFilter='all';renderEp();}const c=document.getElementById('ec'+val);if(c){c.classList.add('hl');c.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>c.classList.remove('hl'),2000);}}
+function cycleState(i){
+  const v=versions[cur];const allow=EPSTATES[v.sell];const e=v.eps[i];
+  const next=allow[(allow.indexOf(e.state)+1)%allow.length];
+  if(next==='free'&&e.state!=='free'){ freeCb=()=>{e.state='free';renderEp();toast('第'+(i+1)+'集已设为免费');}; document.getElementById('ovlFree').classList.add('on'); return; }
+  e.state=next; renderEp();
+}
+function setEpPrice(i,val){versions[cur].eps[i].price=parseFloat(val)||versions[cur].eps[i].price;}
+function closeFree(){document.getElementById('ovlFree').classList.remove('on');freeCb=null;}
+function confirmFree(){const cb=freeCb;closeFree();if(cb)cb();}
+
+function openBatch(){
+  const v=versions[cur];const allow=EPSTATES[v.sell];
+  document.getElementById('bF').max=v.eps.length;document.getElementById('bT').max=v.eps.length;document.getElementById('bT').value=v.eps.length;
+  document.getElementById('bStates').innerHTML=allow.map((s,idx)=>`<label class="mradi"><input type="radio" name="bs" value="${s}" ${idx===1?'checked':''} onchange="onBatchState()"> ${STLABEL[s]}</label>`).join('');
+  onBatchState();
+  document.getElementById('ovlBatch').classList.add('on');
+}
+function onBatchState(){const v=versions[cur];const sel=document.querySelector('input[name=bs]:checked').value;const showPrice=(v.sell===1||v.sell===3)&&sel==='paid';document.getElementById('bPriceRow').style.display=showPrice?'block':'none';}
+function closeBatch(){document.getElementById('ovlBatch').classList.remove('on');}
+function applyBatch(){
+  const v=versions[cur];const f=Math.min(+document.getElementById('bF').value,+document.getElementById('bT').value);const t=Math.max(+document.getElementById('bF').value,+document.getElementById('bT').value);
+  const st=document.querySelector('input[name=bs]:checked').value;const prc=parseFloat(document.getElementById('bPrice').value)||1;
+  v.eps.forEach((e,i)=>{const n=i+1;if(n>=f&&n<=t){e.state=st;if(st==='paid'&&(v.sell===1||v.sell===3))e.price=prc;}});
+  closeBatch();renderEp();toast('已批量设置第'+f+'–'+t+'集');
+}
+
+function editPnl(){if(reviewLock)return;toast('跳转至现有付费面板编辑页（沿用现状，不在本次重构范围）');}
+function copyPnl(id){if(reviewLock)return;const v=versions[cur];const s=v.panels.find(p=>p.id===id);if(!s)return;v.panels.push({id:Date.now(),name:s.name+' 副本',base:false,tiers:s.tiers.map(t=>({...t}))});renderEp();toast('已复制付费面板');}
+function askDelP(id){if(reviewLock)return;delPId=id;document.getElementById('ovlDelP').classList.add('on');}
+function closeDelP(){document.getElementById('ovlDelP').classList.remove('on');delPId=null;}
+function execDelP(){const v=versions[cur];v.panels=v.panels.filter(p=>p.id!==delPId);closeDelP();renderEp();toast('已删除付费面板');}
+function chooseTpl(){if(reviewLock){document.getElementById('ovlLock').classList.add('on');return;}if(versions[cur].jubi.length>0){toast('已配置虚拟币充值，二者互斥，请先删除');return;}toast('打开选择通用模版列表（模拟）');}
+function openPnlDrawer(){if(reviewLock){document.getElementById('ovlLock').classList.add('on');return;}if(versions[cur].jubi.length>0){toast('已配置虚拟币充值，二者互斥，请先删除');return;}if(versions[cur].panels.length>=10){toast('最多支持 10 个付费面板');return;}document.getElementById('pnlName').value='';tierRows=[{l:'全集',p:''},{l:'',p:''}];renderTiers();document.getElementById('spPnl').classList.add('on');}
+function closePnlDrawer(){document.getElementById('spPnl').classList.remove('on');}
+function addTier(){tierRows.push({l:'',p:''});renderTiers();}
+function delTier(i){tierRows.splice(i,1);renderTiers();}
+function renderTiers(){document.getElementById('tierList').innerHTML=tierRows.map((t,i)=>`<div class="tier-e"><input placeholder="如：全集 / 5集" value="${t.l}" oninput="tierRows[${i}].l=this.value"><input placeholder="价格" type="number" value="${t.p}" oninput="tierRows[${i}].p=this.value">${tierRows.length>1?`<span class="tier-del" onclick="delTier(${i})">✕</span>`:''}</div>`).join('');}
+function createPnl(){const name=document.getElementById('pnlName').value.trim()||'未命名面板';const tiers=tierRows.filter(t=>t.l&&t.p).map(t=>({l:t.l,p:parseFloat(t.p)}));if(!tiers.length){toast('请至少填写一个价格档位');return;}const v=versions[cur];v.panels.push({id:Date.now(),name,base:v.panels.length===0,tiers});closePnlDrawer();renderEp();toast('付费面板创建成功');}
+
+/* ══ 虚拟币充值（剧豆）：面板结构与多集优惠包一致 ══ */
+function jubiBeanText(a){return (a&&+a>0)?`${(+a)*100+jubiGift(a)}剧豆`:'—';}
+function renderJubiTiers(){
+  document.getElementById('jubiTierList').innerHTML=jubiRows.map((t,i)=>`<div class="tier-e"><input placeholder="充值金额（元）" type="number" min="1" value="${t.amount}" oninput="jubiRows[${i}].amount=this.value;this.nextElementSibling.textContent=jubiBeanText(this.value)"><span class="jtier-prev">${jubiBeanText(t.amount)}</span>${jubiRows.length>1?`<span class="tier-del" onclick="delJubiTier(${i})">✕</span>`:''}</div>`).join('');
+}
+function addJubiTier(){jubiRows.push({amount:''});renderJubiTiers();}
+function delJubiTier(i){jubiRows.splice(i,1);renderJubiTiers();}
+function chooseJubiTpl(){if(reviewLock){document.getElementById('ovlLock').classList.add('on');return;}if(versions[cur].panels.length>0){toast('已配置多集优惠包，二者互斥，请先删除');return;}toast('打开选择通用模版列表（模拟）');}
+function openJubiDrawer(){
+  if(reviewLock){document.getElementById('ovlLock').classList.add('on');return;}
+  if(versions[cur].panels.length>0){toast('已配置多集优惠包，二者互斥，请先删除');return;}
+  if(versions[cur].jubi.length>=10){toast('最多支持 10 个付费面板');return;}
+  jubiEditId=null;document.getElementById('jubiDrawerTitle').textContent='添加付费面板';
+  document.getElementById('jubiName').value='';jubiRows=[{amount:''},{amount:''}];renderJubiTiers();
+  document.getElementById('spJubi').classList.add('on');
+}
+function editJubi(id){if(reviewLock)return;const p=versions[cur].jubi.find(x=>x.id===id);if(!p)return;jubiEditId=id;document.getElementById('jubiDrawerTitle').textContent='编辑付费面板';document.getElementById('jubiName').value=p.name;jubiRows=p.tiers.map(t=>({amount:t.amount}));renderJubiTiers();document.getElementById('spJubi').classList.add('on');}
+function copyJubi(id){if(reviewLock)return;const v=versions[cur];const s=v.jubi.find(p=>p.id===id);if(!s)return;v.jubi.push({id:Date.now(),name:s.name+' 副本',base:false,tiers:s.tiers.map(t=>({...t}))});renderEp();toast('已复制付费面板');}
+function closeJubiDrawer(){document.getElementById('spJubi').classList.remove('on');}
+function saveJubi(){
+  const name=document.getElementById('jubiName').value.trim()||'未命名面板';const v=versions[cur];
+  const tiers=jubiRows.filter(t=>t.amount&&+t.amount>0).map(t=>({amount:+t.amount}));
+  if(!tiers.length){toast('请至少填写一个充值档位');return;}
+  const amts=tiers.map(t=>t.amount);if(new Set(amts).size!==amts.length){toast('充值金额不可重复');return;}
+  if(jubiEditId){const p=v.jubi.find(x=>x.id===jubiEditId);p.name=name;p.tiers=tiers;}else{v.jubi.push({id:Date.now(),name,base:v.jubi.length===0,tiers});}
+  closeJubiDrawer();renderEp();toast('付费面板保存成功');
+}
+function askDelJubi(id){if(reviewLock)return;delJubiId=id;document.getElementById('ovlDelJubi').classList.add('on');}
+function closeDelJubi(){document.getElementById('ovlDelJubi').classList.remove('on');delJubiId=null;}
+function execDelJubi(){const v=versions[cur];v.jubi=v.jubi.filter(x=>x.id!==delJubiId);closeDelJubi();renderEp();toast('已删除付费面板');}
+
+renderTabs();render();
+</script>
+</body>
+</html>

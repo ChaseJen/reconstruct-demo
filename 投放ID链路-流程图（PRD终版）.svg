@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" font-family="-apple-system,'PingFang SC',sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#555"/>
+    </marker>
+  </defs>
+  <rect width="900" height="1200" fill="#ffffff"/>
+  <text x="450" y="46" text-anchor="middle" font-size="19" font-weight="700" fill="#111">短剧智投 · 投放 ID 链路（重构后）</text>
+
+  <!-- 起点 -->
+  <rect x="270" y="70" width="360" height="50" rx="25" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="450" y="101" text-anchor="middle" font-size="13.5" font-weight="600" fill="#1d4ed8">经营方式配置 · 售卖版本</text>
+  <line x1="450" y1="120" x2="450" y2="146" stroke="#555" stroke-width="1.4" marker-end="url(#a)"/>
+
+  <!-- 决策：经营方式 -->
+  <polygon points="450,148 560,205 450,262 340,205" fill="#fff" stroke="#333" stroke-width="1.4"/>
+  <text x="450" y="210" text-anchor="middle" font-size="13" fill="#111">经营方式？</text>
+
+  <!-- 分账分支 -->
+  <text x="230" y="194" text-anchor="middle" font-size="12" fill="#374151">分账</text>
+  <path d="M340,205 L160,205 L160,236" fill="none" stroke="#555" stroke-width="1.4" marker-end="url(#a)"/>
+  <rect x="40" y="238" width="250" height="66" rx="8" fill="#f9fafb" stroke="#9ca3af" stroke-width="1.4"/>
+  <text x="165" y="264" text-anchor="middle" font-size="12.5" font-weight="600" fill="#374151">分账结算</text>
+  <text x="165" y="286" text-anchor="middle" font-size="11" fill="#9ca3af">不透传 DSP · 不生成 SDPA / 推广链接</text>
+
+  <!-- 投流分支 -->
+  <text x="472" y="292" text-anchor="middle" font-size="12" fill="#1d4ed8">投流</text>
+  <line x1="450" y1="262" x2="450" y2="308" stroke="#2563eb" stroke-width="1.6" marker-end="url(#a)"/>
+
+  <!-- 剧集id -->
+  <rect x="250" y="310" width="400" height="52" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="450" y="332" text-anchor="middle" font-size="13.5" font-weight="700" fill="#111">剧集 id（唯一）</text>
+  <text x="450" y="351" text-anchor="middle" font-size="11" fill="#374151">取消复制剧 · 一个概念剧 = 一个 id</text>
+  <line x1="450" y1="362" x2="450" y2="388" stroke="#555" stroke-width="1.4" marker-end="url(#a)"/>
+
+  <!-- 售卖版本id -->
+  <rect x="210" y="390" width="480" height="70" rx="8" fill="#fff7ed" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="450" y="413" text-anchor="middle" font-size="13.5" font-weight="700" fill="#111">售卖版本 id（N 个）</text>
+  <text x="450" y="432" text-anchor="middle" font-size="11.5" fill="#374151">一个版本 = 一套售卖方式 + 价格 + 一个生效面板</text>
+  <text x="450" y="450" text-anchor="middle" font-size="11" fill="#9ca3af">例：大额版 / 中额版 / 小额版 / 广告解锁版</text>
+  <line x1="450" y1="460" x2="450" y2="486" stroke="#555" stroke-width="1.4" marker-end="url(#a)"/>
+
+  <!-- 产品名×sdpa -->
+  <rect x="250" y="488" width="400" height="52" rx="8" fill="#fff7ed" stroke="#c2410c" stroke-width="1.7"/>
+  <text x="450" y="510" text-anchor="middle" font-size="13.5" font-weight="700" fill="#9a3412">产品名 × sdpa（投放核心 key）</text>
+  <text x="450" y="529" text-anchor="middle" font-size="11" fill="#7c2d12">与售卖版本 1:1 · 一版本一套产品名×sdpa</text>
+  <line x1="450" y1="540" x2="450" y2="566" stroke="#555" stroke-width="1.4" marker-end="url(#a)"/>
+
+  <!-- SDPA商品 -->
+  <rect x="250" y="568" width="400" height="46" rx="8" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.4"/>
+  <text x="450" y="596" text-anchor="middle" font-size="12.5" font-weight="600" fill="#5b21b6">SDPA / DPA 商品（剧 × 版本）</text>
+  <line x1="450" y1="614" x2="450" y2="640" stroke="#555" stroke-width="1.4" marker-end="url(#a)"/>
+
+  <!-- 授权投放 -->
+  <rect x="250" y="642" width="400" height="46" rx="8" fill="#fff" stroke="#333" stroke-width="1.4"/>
+  <text x="450" y="670" text-anchor="middle" font-size="12.5" fill="#111">授权 DSP 账户 → 广告投放</text>
+  <line x1="450" y1="688" x2="450" y2="714" stroke="#555" stroke-width="1.4" marker-end="url(#a)"/>
+
+  <!-- 效果回传 -->
+  <rect x="250" y="716" width="400" height="52" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="450" y="738" text-anchor="middle" font-size="12.5" font-weight="600" fill="#15803d">效果回传</text>
+  <text x="450" y="757" text-anchor="middle" font-size="11" fill="#166534">消耗 / ROI 归因到「售卖版本 id」粒度</text>
+
+  <!-- 口径说明 -->
+  <rect x="90" y="820" width="720" height="96" rx="10" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.2"/>
+  <text x="112" y="848" font-size="12.5" font-weight="700" fill="#374151">口径说明（与 DSP / 算法侧对齐）</text>
+  <text x="112" y="873" font-size="11.5" fill="#4b5563">· 面板内「全集 / 1集 / 2集」为价格档，属于版本内部，不单独生成 sdpa。</text>
+  <text x="112" y="895" font-size="11.5" fill="#4b5563">· 强出扶持：同一剧 id 下各售卖版本的 sdpa 命名保持一致（替代旧「子母剧名称一致」）。</text>
+</svg>

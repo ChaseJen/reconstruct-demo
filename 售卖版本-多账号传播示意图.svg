@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 820" font-family="-apple-system,'PingFang SC',sans-serif">
+  <defs>
+    <marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/></marker>
+    <marker id="ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ea580c"/></marker>
+  </defs>
+  <rect width="1000" height="820" fill="#ffffff"/>
+  <text x="500" y="38" text-anchor="middle" font-size="18" font-weight="700" fill="#111">售卖版本操作 · 多账号传播（生效 / 失效 / 预约生效 / 预约失效）</text>
+
+  <!-- 分销商A 子树高亮框 -->
+  <rect x="330" y="176" width="360" height="228" rx="12" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <text x="510" y="196" text-anchor="middle" font-size="11" fill="#2563eb">分销商A 操作 → 仅级联「此子树」</text>
+
+  <!-- 版权商 -->
+  <rect x="415" y="62" width="170" height="52" rx="9" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="500" y="86" text-anchor="middle" font-size="14" font-weight="700" fill="#111">版权商（根）</text>
+  <text x="500" y="104" text-anchor="middle" font-size="10.5" fill="#374151">操作级联整棵树</text>
+
+  <!-- 边：版权商→版权商子账号（同步/蓝实线） -->
+  <path d="M455,114 L175,218" fill="none" stroke="#2563eb" stroke-width="1.5" marker-end="url(#ab)"/>
+  <text x="300" y="150" font-size="10.5" fill="#2563eb">同步</text>
+  <!-- 边：版权商→分销商A（分销/橙虚线） -->
+  <path d="M500,114 L500,228" fill="none" stroke="#ea580c" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#ao)"/>
+  <text x="512" y="150" font-size="10.5" fill="#ea580c">分销 · 通知</text>
+  <!-- 边：版权商→分销商B（分销/橙虚线） -->
+  <path d="M545,114 L825,228" fill="none" stroke="#ea580c" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#ao)"/>
+  <text x="690" y="150" font-size="10.5" fill="#ea580c">分销 · 通知</text>
+
+  <!-- 版权商子账号 -->
+  <rect x="90" y="220" width="170" height="50" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="1.3"/>
+  <text x="175" y="242" text-anchor="middle" font-size="12.5" fill="#111">版权商 · 子账号</text>
+  <text x="175" y="259" text-anchor="middle" font-size="10" fill="#9ca3af">跟随，只管自己</text>
+
+  <!-- 分销商A -->
+  <rect x="415" y="230" width="170" height="52" rx="9" fill="#ffedd5" stroke="#ea580c" stroke-width="1.5"/>
+  <text x="500" y="252" text-anchor="middle" font-size="13" font-weight="600" fill="#111">分销商 A</text>
+  <text x="500" y="270" text-anchor="middle" font-size="10" fill="#9a3412">对自己子树是主控</text>
+
+  <!-- 分销商B -->
+  <rect x="780" y="230" width="170" height="52" rx="9" fill="#ffedd5" stroke="#ea580c" stroke-width="1.5"/>
+  <text x="865" y="252" text-anchor="middle" font-size="13" font-weight="600" fill="#111">分销商 B</text>
+  <text x="865" y="270" text-anchor="middle" font-size="10" fill="#9a3412">与 A 互不影响</text>
+
+  <!-- A→A子账号（同步/蓝实线） -->
+  <path d="M460,282 L420,348" fill="none" stroke="#2563eb" stroke-width="1.5" marker-end="url(#ab)"/>
+  <path d="M540,282 L600,348" fill="none" stroke="#2563eb" stroke-width="1.5" marker-end="url(#ab)"/>
+  <text x="415" y="322" font-size="10.5" fill="#2563eb">同步</text>
+  <!-- B→B子账号 -->
+  <path d="M865,282 L865,348" fill="none" stroke="#2563eb" stroke-width="1.5" marker-end="url(#ab)"/>
+  <text x="875" y="322" font-size="10.5" fill="#2563eb">同步</text>
+
+  <!-- A子账号1/2 -->
+  <rect x="345" y="350" width="150" height="48" rx="8" fill="#fff" stroke="#94a3b8" stroke-width="1.2"/>
+  <text x="420" y="379" text-anchor="middle" font-size="12" fill="#111">A · 子账号1</text>
+  <rect x="525" y="350" width="150" height="48" rx="8" fill="#fff" stroke="#94a3b8" stroke-width="1.2"/>
+  <text x="600" y="379" text-anchor="middle" font-size="12" fill="#111">A · 子账号2</text>
+  <!-- B子账号 -->
+  <rect x="790" y="350" width="150" height="48" rx="8" fill="#fff" stroke="#94a3b8" stroke-width="1.2"/>
+  <text x="865" y="379" text-anchor="middle" font-size="12" fill="#111">B · 子账号</text>
+
+  <!-- 复制：脱离树 -->
+  <rect x="60" y="330" width="180" height="66" rx="9" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <text x="150" y="356" text-anchor="middle" font-size="12" font-weight="600" fill="#6b7280">复制出的版本</text>
+  <text x="150" y="376" text-anchor="middle" font-size="10.5" fill="#9ca3af">无关联 · 脱离级联树</text>
+  <text x="150" y="391" text-anchor="middle" font-size="10.5" fill="#9ca3af">不受任何级联</text>
+
+  <!-- 图例 -->
+  <g transform="translate(60,430)">
+    <text x="0" y="0" font-size="12.5" font-weight="700" fill="#374151">图例</text>
+    <line x1="0" y1="18" x2="34" y2="18" stroke="#2563eb" stroke-width="1.6" marker-end="url(#ab)"/>
+    <text x="42" y="22" font-size="11.5" fill="#4b5563">同步边（同一主体内部）：生效/失效完整级联</text>
+    <line x1="0" y1="42" x2="34" y2="42" stroke="#ea580c" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#ao)"/>
+    <text x="42" y="46" font-size="11.5" fill="#4b5563">分销边（跨主体，有分账）：生效/失效强制级联，并通知分销商</text>
+  </g>
+
+  <!-- 规则框 -->
+  <rect x="60" y="500" width="880" height="288" rx="10" fill="#f9fafb" stroke="#e5e7eb" stroke-width="1.2"/>
+  <text x="82" y="528" font-size="13" font-weight="700" fill="#111">传播规则（终版·锁定）</text>
+  <text x="82" y="556" font-size="12" fill="#374151">1. 统一规则：任一节点的 生效 / 失效 / 预约生效 / 预约失效 → <tspan font-weight="700">强制级联到"以它为根的整棵子树"</tspan>；生效、失效对称，都强制。</text>
+  <text x="82" y="582" font-size="12" fill="#374151">2. 只向下，不向上、不向旁系。版权商操作覆盖整棵树；分销商 A 操作仅覆盖 A 的子树，不碰版权商、不碰分销商 B。</text>
+  <text x="82" y="608" font-size="12" fill="#374151">3. 上游优先：上游操作强制覆盖下游状态；两次上游操作之间，下游可在自己子树内自主调整，上游再操作即重新覆盖。</text>
+  <text x="82" y="634" font-size="12" fill="#374151">4. <tspan font-weight="700" fill="#b91c1c">上游失效具"封禁"效力</tspan>：被上游失效的版本，下游不能自行生效（需上游恢复），防止合规/纠纷收回被下游绕过。</text>
+  <text x="82" y="660" font-size="12" fill="#374151">5. 分销边（跨主体）级联时，向分销商发送通知（生效、失效均通知）。</text>
+  <text x="82" y="686" font-size="12" fill="#374151">6. 复制的版本无关联、脱离级联树，不受任何级联；仅"同步 / 分销"出去的副本在树上、受级联。</text>
+  <text x="82" y="712" font-size="12" fill="#374151">7. 预约冲突：同一版本上下游都设了预约时，到点触发以<tspan font-weight="700">上游为准</tspan>（上游预约覆盖下游）。</text>
+  <text x="82" y="746" font-size="11" fill="#9ca3af">注：本图仅描述"生效/失效"类操作的传播；编辑/删除/复制维持现有逻辑（被分销的版本删除置灰、复制生成无关联新版本）。</text>
+  <text x="82" y="768" font-size="11" fill="#9ca3af">注：版本"生效/失效"作用于剧级已上架前提之下——剧未上架时任何版本都不对外。</text>
+</svg>

@@ -1,0 +1,11 @@
+.DS_Store
+.claude/
+*.docx
+
+# PRD / 参考大图（体积大，不参与线上 demo 部署）
+重构方案prd.png
+短剧智投功能prd.png
+抖音原声投流能力介绍.png
+抖音原生配置操作说明.png
+抖音短剧操作指南.png
+投放ID链路重构图.png

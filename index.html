@@ -1,0 +1,2873 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>短剧管理平台 · 统一 Demo</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'PingFang SC',sans-serif;background:#f5f6f8;color:#1a1a1a;font-size:13px}
+.page{max-width:1280px;margin:0 auto;padding:0 0 60px}
+.view{display:none}.view.on{display:block}
+.crumb{padding:14px 16px 8px;font-size:13px;color:#6b7280}
+.crumb a,.crumb span.link{color:#2563eb;cursor:pointer;text-decoration:none}
+.crumb b{color:#1a1a1a;font-weight:600}
+.btn{display:inline-flex;align-items:center;padding:7px 15px;border-radius:7px;font-size:12.5px;font-weight:500;cursor:pointer;border:none;gap:4px}
+.btn-blue{background:#2563eb;color:#fff}.btn-blue:hover{background:#1d4ed8}
+.btn-blue:disabled,.btn-blue.dis{background:#93c5fd;cursor:not-allowed}
+.btn-out{background:#fff;color:#374151;border:1.5px solid #d1d5db}.btn-out:hover{border-color:#2563eb;color:#2563eb}
+.btn-out.dis{color:#c4c4c4;border-color:#e5e7eb;cursor:not-allowed}
+.btn-danger{background:#dc2626;color:#fff}
+.btn-sm{padding:5px 10px;font-size:12px}
+.badge{font-size:11px;padding:2px 9px;border-radius:11px;font-weight:600}
+.b-green{background:#dcfce7;color:#166534}.b-gray{background:#f3f4f6;color:#6b7280}.b-amber{background:#fef9c3;color:#854d0e}.b-blue{background:#dbeafe;color:#1e40af}.b-red{background:#fee2e2;color:#b91c1c}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px 22px;margin:14px 16px 0}
+.card-hd{font-size:13px;font-weight:700;color:#6b7280;padding-bottom:11px;margin-bottom:16px;border-bottom:1px solid #f0f1f3}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 16px;padding:12px 0}
+.finput,.fselect{border:1.5px solid #d1d5db;border-radius:7px;padding:8px 12px;font-size:12px;outline:none;background:#fff}
+.finput:focus,.fselect:focus{border-color:#2563eb}
+.finput{width:100%;max-width:280px}
+.tbl-wrap{overflow-x:auto;margin:0 16px 16px;background:#fff;border:1px solid #e5e7eb;border-radius:12px}
+table.lt{width:100%;border-collapse:collapse;font-size:12.5px;min-width:1100px}
+.lt th{background:#f9fafb;text-align:left;padding:11px 12px;font-weight:600;color:#374151;border-bottom:1px solid #eef0f2;white-space:nowrap}
+.lt td{padding:12px;border-bottom:1px solid #f3f4f6;vertical-align:middle}
+.lt tr:hover td{background:#f8faff}
+.lt a{color:#2563eb;cursor:pointer}.lt a:hover{text-decoration:underline}
+.cbcol{width:40px;text-align:center}
+.cb{accent-color:#2563eb;width:15px;height:15px;cursor:pointer;vertical-align:middle}
+.batch-bar{display:none;align-items:center;gap:10px;margin:12px 16px 0;padding:10px 14px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px}
+.batch-bar.on{display:flex}
+.batch-count{font-size:12.5px;color:#1e40af}.batch-count b{color:#2563eb}
+.batch-clear{font-size:12px;color:#6b7280;cursor:pointer}.batch-clear:hover{color:#2563eb}
+.zt-row{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:6px;cursor:pointer;font-size:12.5px}
+.zt-row:hover{background:#f8faff}
+.zt-row.zt-dis{opacity:.45;cursor:not-allowed}
+.zt-name{font-weight:600}.zt-id{color:#9ca3af;font-size:11px}.zt-audit{margin-left:auto;color:#6b7280;font-size:11px}
+.list-tabs{display:flex;gap:0;margin:8px 16px 0;border-bottom:1px solid #e5e7eb}
+.list-tab{padding:12px 20px;font-size:14px;font-weight:600;color:#6b7280;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.list-tab.on{color:#16a34a;border-bottom-color:#16a34a}
+.drama-cell{display:flex;gap:10px;align-items:center}
+.thumb{width:40px;height:54px;border-radius:5px;background:linear-gradient(135deg,#c7d2fe,#a5b4fc);flex-shrink:0}
+.dname{font-weight:600;color:#111}.did{font-size:11px;color:#9ca3af;margin-top:2px}
+.tag{font-size:10px;font-weight:700;padding:1px 7px;border-radius:8px}
+.pay-iap{background:#dbeafe;color:#1e40af}.pay-iaa{background:#ede9fe;color:#7c3aed}
+.pm{background:#dcfce7;color:#166534;font-size:11px;padding:2px 10px;border-radius:11px;white-space:nowrap}
+.st{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:600}
+.st-live{color:#16a34a}.st-fail{color:#9ca3af}.st-pend{color:#6b7280}.st-slive{color:#2563eb}.st-sfail{color:#d97706}
+.dot{width:6px;height:6px;border-radius:50%;display:inline-block}
+.d-live{background:#16a34a}.d-fail{background:#9ca3af}.d-pend{background:#9ca3af}.d-slive{background:#2563eb}.d-sfail{background:#d97706}
+.cv-done{color:#16a34a;font-size:12px}.cv-sched{color:#d97706;font-size:12px}
+.red-dot{position:relative}
+.red-dot::after{content:'';position:absolute;top:-2px;right:-2px;width:7px;height:7px;background:#ef4444;border-radius:50%;border:1.5px solid #fff}
+.hint{font-size:11px;color:#9ca3af;line-height:1.6;margin:8px 16px 0}
+.tip-bar{margin:10px 16px 0;padding:10px 14px;background:#eff6ff;border-radius:8px;font-size:12px;color:#1e3a8a;line-height:1.7;display:flex;justify-content:space-between;gap:10px}
+.tip-bar.warn{background:#fff7ed;color:#9a3412}
+.tip-bar .x{cursor:pointer;color:#93c5fd}
+
+/* detail hero */
+.hero{background:#fff;border:1px solid #e5e7eb;border-radius:12px;margin:6px 16px 0;padding:20px 22px;position:relative}
+.hero-top{display:flex;gap:18px}
+.cover{width:120px;height:158px;border-radius:8px;background:linear-gradient(135deg,#c7d2fe,#a5b4fc);flex-shrink:0}
+.hero-main{flex:1;min-width:0}
+.dtitle{font-size:18px;font-weight:700;color:#111;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.dsyn{font-size:12px;color:#6b7280;line-height:1.7;margin-top:8px;max-width:900px}
+.viewep{display:inline-flex;align-items:center;gap:5px;margin-top:12px;font-size:12px;color:#2563eb;cursor:pointer;border:1px solid #bfdbfe;background:#eff6ff;padding:6px 12px;border-radius:7px}
+.fields{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 24px;margin-top:16px;padding-top:16px;border-top:1px solid #f0f1f3}
+.fitem .flab{color:#9ca3af;font-size:12px;margin-bottom:3px}.fitem .fval{color:#1a1a1a;font-weight:500;font-size:12px}
+.hero-ops{position:absolute;top:20px;right:22px;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;max-width:420px}
+.tabs{display:flex;gap:0;padding:0 22px;margin:16px 16px 0;border-bottom:1px solid #e5e7eb}
+.tab{padding:12px 18px;font-size:14px;font-weight:600;color:#6b7280;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab.on{color:#16a34a;border-bottom-color:#16a34a}
+.tabbody{padding:0 16px}
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px 24px}
+.info-item .lab{font-size:12px;color:#9ca3af;margin-bottom:5px}.info-item .val{font-size:13px;color:#1a1a1a}
+.files{display:flex;gap:12px;flex-wrap:wrap}
+.file{display:inline-flex;align-items:center;gap:7px;border:1px solid #e5e7eb;border-radius:8px;padding:10px 14px;font-size:12px;color:#374151;cursor:pointer}
+.blk-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:12px}
+.blk-title{font-size:14px;font-weight:700;color:#111}
+.blk-sub{font-size:11px;color:#9ca3af;margin-top:4px;max-width:760px;line-height:1.6}
+.frow2{margin-bottom:16px}.frow2-lb{font-size:12px;font-weight:600;color:#374151;margin-bottom:6px}
+.home-vrow{display:flex;align-items:center;gap:10px;padding:9px 11px;border:1px solid #eef0f2;border-radius:8px;margin-bottom:8px;font-size:12px;cursor:pointer}
+.home-vrow:hover{background:#f8faff}
+.home-vrow.dis{opacity:.5;cursor:not-allowed;background:#fafbfc}.home-vrow.dis:hover{background:#fafbfc}
+.home-drow{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:9px;margin:0 8px 8px 0;cursor:pointer;background:#fff;vertical-align:top}
+.home-drow.sel{border-color:#2563eb;background:#eff6ff}
+.home-dthumb{width:34px;height:44px;border-radius:5px;background:linear-gradient(135deg,#c7d2fe,#a5b4fc);display:inline-block;flex:none}
+.phone-frame{border:7px solid #111827;border-radius:24px;padding:9px;background:#fff;min-height:340px}
+.pp-card{display:flex;gap:8px;align-items:center;padding:6px;border:1px solid #f0f1f3;border-radius:8px;margin-bottom:7px}
+.pp-thumb{width:30px;height:40px;border-radius:4px;background:linear-gradient(135deg,#c7d2fe,#a5b4fc);flex:none}
+.ver-scroll{overflow-x:auto}
+.vtbl{width:100%;min-width:1560px;border-collapse:collapse;font-size:12.5px}
+.vtbl th{background:#f9fafb;color:#374151;font-weight:600;font-size:12px;text-align:left;padding:11px 12px;white-space:nowrap;border-bottom:1px solid #eef0f2}
+.vtbl td{padding:12px;border-bottom:1px solid #f3f4f6;vertical-align:middle;white-space:nowrap}
+.vid2{color:#2563eb;font-weight:500}
+.opbtn{display:inline-flex;align-items:center;font-size:11px;border:1px solid #d1d5db;border-radius:6px;padding:4px 9px;cursor:pointer;margin:2px 5px 2px 0;color:#374151;background:#fff;white-space:nowrap}
+.opbtn:hover{border-color:#2563eb;color:#2563eb}
+.ob-green{color:#16a34a;border-color:#bbf7d0}.ob-orange{color:#d97706;border-color:#fed7aa}.ob-red{color:#dc2626;border-color:#fecaca}.ob-purple{color:#7c3aed;border-color:#ddd6fe}
+.more-wrap{position:relative;display:inline-block}
+.more-menu{display:none;position:absolute;right:0;top:100%;background:#fff;border:1px solid #e5e7eb;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:20;min-width:110px;overflow:hidden}
+.more-menu.on{display:block}
+.more-menu a{display:block;margin:0;padding:9px 14px;color:#374151;font-size:12px;cursor:pointer}
+.more-menu a:hover{background:#eff6ff;color:#2563eb}
+.more-menu a.danger{color:#dc2626}
+
+/* wizard */
+.top-row{display:flex;justify-content:center;padding:14px 16px 0}
+.tabbar{display:flex;align-items:flex-start;gap:0}
+.tab-step{display:flex;align-items:flex-start;gap:8px;cursor:pointer;padding:2px 4px}
+.tab-circle{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
+.tab-circle.current{background:#2563eb;color:#fff}
+.tab-circle.next{border:1.5px solid #d1d5db;color:#9ca3af;background:#fff}
+.tab-circle.done{border:1.5px solid #2563eb;color:#2563eb;background:#fff}
+.tab-name{font-size:13px;font-weight:600;color:#111}.tab-name.next{color:#9ca3af}.tab-name.done{color:#2563eb}
+.tab-sub{font-size:11px;color:#9ca3af;margin-top:2px;max-width:200px;line-height:1.5}
+.tab-line{width:70px;height:1.5px;background:#d1d5db;margin:11px 12px 0}
+.main-layout{display:flex;gap:20px;padding:16px 16px 0;align-items:flex-start}
+.anchor-nav{width:140px;flex-shrink:0;position:sticky;top:16px}
+.anchor-item{padding:8px 12px;font-size:12px;color:#6b7280;cursor:pointer;border-radius:6px;border-left:2px solid transparent;margin-bottom:2px}
+.anchor-item.active{color:#2563eb;font-weight:600;background:#eff6ff;border-left-color:#2563eb}
+.form-col{flex:1;min-width:0;max-width:900px}
+.module-card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:18px 22px 22px;margin-bottom:16px}
+.module-hdr{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#111;padding-bottom:13px;margin-bottom:16px;border-bottom:1px solid #f0f1f3}
+.module-note{font-size:11px;color:#9ca3af;margin:-8px 0 14px;line-height:1.6}
+.frow{margin-bottom:16px}
+.flabel{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:#374151;margin-bottom:7px}
+.req{color:#ef4444}
+.radio-row{display:flex;gap:18px;flex-wrap:wrap}
+.radio-item{display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;color:#374151}
+.radio-item input{accent-color:#2563eb}
+.sm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.sm-card{border:1.5px solid #e5e7eb;border-radius:8px;padding:12px;cursor:pointer}
+.sm-card:hover{border-color:#93c5fd}.sm-card.sel{border-color:#2563eb;background:#eff6ff}
+.sm-t{font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.sm-d{font-size:11px;color:#9ca3af;line-height:1.5}
+.price-row{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap}
+.pinput{width:120px;border:1.5px solid #d1d5db;border-radius:6px;padding:7px 10px;font-size:12px}
+.punit{font-size:12px;color:#6b7280}
+.convert-note{font-size:11px;color:#9ca3af;line-height:1.7;margin-top:8px;background:#f9fafb;padding:10px;border-radius:6px}
+.ep-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.ep-card{border:1px solid #e5e7eb;border-radius:8px;padding:10px;background:#fff}
+.ep-cov{height:80px;border-radius:6px;background:linear-gradient(135deg,#dbeafe,#bfdbfe);margin-bottom:8px}
+.ep-num{font-size:12px;font-weight:700}.ep-ttl{font-size:11px;color:#6b7280;margin-top:2px}
+.ep-sell{margin-top:6px;font-size:11px}
+.ep-free{color:#16a34a}.ep-paid{color:#1e40af}.ep-ad{color:#7c3aed}
+.sellep-row{display:flex;align-items:center;justify-content:space-between;border:1px solid #e5e7eb;border-radius:8px;padding:10px 12px;margin-bottom:8px}
+.bottom-actions{display:flex;gap:10px;padding:8px 0 20px;flex-wrap:wrap}
+.agree-row{font-size:12px;color:#374151;margin:8px 0 14px;display:flex;align-items:center;gap:8px}
+.agree-row a{color:#2563eb}
+.panel-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.panel-card{border:1px dashed #d1d5db;border-radius:8px;padding:14px;text-align:center;color:#2563eb;cursor:pointer;font-size:12px}
+.panel-card.filled{border-style:solid;text-align:left;color:#374151}
+.ptype-seg{display:flex;gap:0;margin-bottom:12px;border:1px solid #e5e7eb;border-radius:7px;overflow:hidden;width:fit-content}
+.ptype-item{padding:7px 14px;font-size:12px;cursor:pointer;background:#fff;color:#6b7280}
+.ptype-item.on{background:#eff6ff;color:#2563eb;font-weight:600}
+.review-panel{margin:12px 16px 0;border-radius:8px;overflow:hidden}
+.review-panel.fail{background:#fef2f2;border:1px solid #fecaca}
+.review-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;font-size:12px;font-weight:600;color:#b91c1c}
+.review-body{padding:0 14px 12px;font-size:12px;color:#7f1d1d;line-height:1.7}
+.help-box{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px 22px;margin:14px 16px;line-height:1.8;font-size:12.5px;color:#374151}
+.help-box h3{font-size:14px;margin:0 0 10px;color:#111}
+.help-box ol,.help-box ul{padding-left:18px;margin:6px 0}
+.flow{display:flex;flex-direction:column;align-items:center;gap:0;padding:10px 0}
+.flow-node{border:1.5px solid #d1d5db;border-radius:8px;padding:10px 18px;background:#fff;text-align:center;min-width:280px;font-size:12px}
+.flow-node.blue{border-color:#2563eb;background:#eff6ff}
+.flow-node.amber{border-color:#f59e0b;background:#fff7ed}
+.flow-node.green{border-color:#16a34a;background:#f0fdf4}
+.flow-arrow{color:#9ca3af;font-size:16px;padding:4px 0}
+/* 查看模式只读：真正禁用交互 + 视觉灰化；保留 .bottom-actions 内按钮（返回详情）可点 */
+.ro input,.ro select,.ro textarea{background:#f3f4f6!important;color:#9ca3af!important;cursor:not-allowed;border-color:#e5e7eb!important}
+.ro .finput,.ro .pinput,.ro .sm-card,.ro .panel-card,.ro .radio-item,.ro .tag,.ro .opbtn,.ro .tpl-link,.ro .panel-action,.ro [onclick]{pointer-events:none}
+.ro .module-card{opacity:.85}
+.ro .sm-card:not(.sel){opacity:.45}
+.ro .bottom-actions,.ro .bottom-actions *{pointer-events:auto!important;opacity:1}
+.ro .convert-linked .vid2.link{pointer-events:auto!important;cursor:pointer!important;color:#2563eb!important}
+.acct-chip{display:inline-block;padding:5px 10px;margin:0 8px 8px 0;border:1px solid #e5e7eb;border-radius:6px;font-size:12px;color:#374151;background:#f9fafb;font-weight:600}
+
+/* drawer / modal */
+.mask{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:50}
+.mask.on{display:block}
+.drawer{display:none;position:fixed;top:0;right:0;bottom:0;width:480px;max-width:94vw;background:#fff;box-shadow:-6px 0 28px rgba(0,0,0,.16);z-index:60;flex-direction:column}
+.drawer.on{display:flex}
+.dhd{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;border-bottom:1px solid #eef0f2}
+.dhd .t{font-size:15px;font-weight:700}.dhd .c{cursor:pointer;color:#9ca3af;font-size:20px}
+.dtabs{display:flex;gap:0;padding:0 18px;border-bottom:1px solid #eef0f2}
+.dtab{padding:11px 14px;font-size:13px;font-weight:600;color:#6b7280;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.dtab.on{color:#16a34a;border-bottom-color:#16a34a}
+.dbody{flex:1;overflow-y:auto;padding:16px 18px}
+.drawer.wide{width:880px}
+.sharelink{color:#2563eb;cursor:pointer;text-decoration:none}.sharelink:hover{text-decoration:underline}
+.sd-tbl{width:100%;min-width:1180px;border-collapse:collapse;font-size:12px}
+.sd-tbl th{background:#f9fafb;color:#374151;font-weight:600;text-align:left;padding:9px 10px;white-space:nowrap;border-bottom:1px solid #eef0f2}
+.sd-tbl td{padding:9px 10px;border-bottom:1px solid #f3f4f6;white-space:nowrap;vertical-align:top}
+.eprow{display:flex;gap:12px;border:1px solid #e5e7eb;border-radius:9px;padding:11px;margin-bottom:10px;align-items:center}
+.epcov{width:48px;height:64px;border-radius:6px;background:linear-gradient(135deg,#dbeafe,#bfdbfe);flex-shrink:0}
+.ovl{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;align-items:center;justify-content:center}
+.ovl.on{display:flex}
+.modal{background:#fff;border-radius:12px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.18);width:420px;max-width:92vw}
+.mhd{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.mtitle{font-size:15px;font-weight:700}.mclose{cursor:pointer;color:#9ca3af;font-size:20px}
+.mbody{font-size:13px;color:#374151;line-height:1.7}
+.mfoot{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+#toast{display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:9px 20px;border-radius:20px;font-size:12.5px;z-index:999;white-space:nowrap}
+.demo-banner{background:#111;color:#fff;padding:8px 16px;font-size:12px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.demo-banner span{opacity:.75}
+.filter-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px 12px;margin:0 16px;padding:12px;background:#fff;border:1px solid #e5e7eb;border-radius:12px}
+.filter-grid label{font-size:11px;color:#9ca3af;display:block;margin-bottom:4px}
+.filter-grid .finput,.filter-grid .fselect{max-width:none;width:100%}
+/* 轻量多选下拉（点击展开 + checkbox 勾选 + 外部收起） */
+.msel{position:relative}
+.msel-btn{border:1.5px solid #d1d5db;border-radius:7px;padding:8px 12px;font-size:12px;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;color:#374151}
+.msel-btn:hover{border-color:#2563eb}
+.msel-txt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.msel-txt.ph{color:#9ca3af}
+.msel-arrow{color:#9ca3af;font-size:10px;flex-shrink:0}
+.msel-menu{position:absolute;z-index:60;top:calc(100% + 4px);left:0;min-width:100%;background:#fff;border:1px solid #e5e7eb;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.12);padding:6px;display:none}
+.msel.on .msel-menu{display:block}
+.msel-menu label{display:flex;align-items:center;gap:8px;padding:6px 8px;font-size:12px;color:#374151;cursor:pointer;border-radius:6px;white-space:nowrap}
+.msel-menu label:hover{background:#f3f4f6}
+.msel-menu input{accent-color:#2563eb;margin:0}
+/* 列表字段自定义 */
+.colcfg-bar{display:flex;justify-content:flex-end;margin:8px 16px 0}
+.colcfg-hint{font-size:11px;color:#9ca3af;margin-bottom:10px;line-height:1.6}
+.colcfg-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:6px;background:#fff;cursor:grab;user-select:none}
+.colcfg-item.drag-over{border-color:#2563eb;background:#eff6ff}
+.colcfg-handle{color:#9ca3af;font-size:14px;flex-shrink:0;cursor:grab}
+.colcfg-item label{flex:1;font-size:13px;color:#374151;cursor:pointer;display:flex;align-items:center;gap:8px;margin:0}
+.colcfg-item input{accent-color:#2563eb;margin:0}
+
+/* ═══════════ 内容上传/编辑向导（完整复现 短剧内容上传-重构demo.html，.upz 作用域） ═══════════ */
+.upz .notice-row{display:flex;justify-content:space-between;align-items:center;background:#eff6ff;padding:9px 16px;font-size:12px;color:#1e3a8a;gap:12px}
+.upz .notice-left{display:flex;align-items:center;gap:6px}
+.upz .notice-left .ic{color:#2563eb;font-size:13px}
+.upz .notice-left a{color:#2563eb;text-decoration:none;font-weight:500;margin-left:4px}
+.upz .tab-step{border-radius:6px}
+.upz .tab-step:hover{background:#f5f8ff}
+.upz .review-panel{margin:12px 16px 0;border-radius:8px;overflow:hidden}
+.upz .review-panel.fail{background:#fef2f2;border:1px solid #fecaca}
+.upz .review-panel.pass{background:#f0fdf4;border:1px solid #bbf7d0}
+.upz .review-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px}
+.upz .review-hdr-left{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;cursor:pointer}
+.upz .review-panel.fail .review-hdr-left{color:#b91c1c}
+.upz .review-panel.pass .review-hdr-left{color:#15803d}
+.upz .review-expand-toggle{font-size:11px;color:#b91c1c;transition:transform .15s;cursor:pointer}
+.upz .review-expand-toggle.open{transform:rotate(180deg)}
+.upz .review-demo-link{font-size:10px;color:#9ca3af;cursor:pointer;text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
+.upz .review-body{padding:0 14px 12px;display:none}
+.upz .review-body.open{display:block}
+.upz .review-item{font-size:12px;color:#7f1d1d;padding:6px 0;border-top:1px dashed #fecaca;line-height:1.6}
+.upz .review-item:first-child{border-top:none}
+.upz .review-item .num{font-weight:700;margin-right:4px}
+.upz .merged-notice{display:flex;justify-content:space-between;align-items:flex-start;background:#eff6ff;margin:10px 16px 0;padding:10px 14px;border-radius:6px;font-size:12px;color:#1e3a8a;line-height:1.7;gap:10px}
+.upz .merged-notice .ic{color:#2563eb;flex-shrink:0;margin-top:1px}
+.upz .notice-close{cursor:pointer;color:#93c5fd;font-size:15px;padding:0 4px;flex-shrink:0}
+.upz .anchor-nav{width:150px}
+.upz .anchor-item:hover{color:#2563eb;background:#f5f8ff}
+.upz .module-card{scroll-margin-top:16px}
+.upz .module-card.collapsed{padding-bottom:18px}
+.upz .module-hdr{cursor:pointer;user-select:none}
+.upz .module-card.collapsed .module-hdr{padding-bottom:0;margin-bottom:0;border-bottom:none}
+.upz .module-icon{font-size:14px}
+.upz .module-collapse-btn{margin-left:auto;font-size:11px;color:#9ca3af;display:flex;align-items:center;gap:3px;font-weight:500}
+.upz .module-collapse-btn:hover{color:#2563eb}
+.upz .module-collapse-arrow{transition:transform .15s;font-size:10px}
+.upz .module-collapse-arrow.collapsed{transform:rotate(180deg)}
+.upz .module-body.collapsed{display:none}
+.upz .frow{margin-bottom:18px}
+.upz .frow:last-child{margin-bottom:0}
+.upz .fhelp{font-size:11px;color:#9ca3af;margin-left:4px;font-weight:400}
+.upz .flink{font-size:11px;color:#2563eb;cursor:pointer;text-decoration:none;margin-left:auto}
+.upz .finput{width:100%;max-width:420px;border:1.5px solid #d1d5db;border-radius:6px;padding:8px 12px;font-size:12px;outline:none}
+.upz .finput:focus{border-color:#2563eb}
+.upz .finput.err{border-color:#ef4444}
+.upz .input-counter-wrap{position:relative;max-width:420px}
+.upz .input-counter{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:10px;color:#c4c4c4;pointer-events:none}
+.upz .synopsis-wrap{position:relative;max-width:560px}
+.upz .synopsis-box{width:100%;height:104px;border:1.5px solid #d1d5db;border-radius:8px;padding:10px 12px 24px;font-size:12px;line-height:1.7;outline:none;resize:none;font-family:inherit;color:#374151;overflow-y:auto}
+.upz .synopsis-counter{position:absolute;right:10px;bottom:8px;font-size:10px;color:#c4c4c4;background:#fff;padding:0 2px}
+.upz .cover-upload-row{display:flex;gap:14px;align-items:flex-start}
+.upz .cover-upload-box{width:120px;height:150px;border:1.5px dashed #d1d5db;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:12px;color:#2563eb;cursor:pointer;flex-shrink:0}
+.upz .cover-upload-box:hover{border-color:#2563eb;background:#eff6ff}
+.upz .cover-rules{font-size:11px;color:#9ca3af;line-height:1.8;list-style:none;margin-top:2px}
+.upz .cover-rules li::before{content:"· "}
+.upz .select-row{display:flex;gap:10px;flex-wrap:wrap}
+.upz .fselect{border:1.5px solid #d1d5db;border-radius:6px;padding:7px 10px;font-size:12px;min-width:130px;background:#fff;display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;color:#374151;max-width:none;width:auto}
+.upz .fselect select{border:none;outline:none;background:transparent;font-size:12px;color:#374151;width:100%}
+.upz .chip-x{display:inline-flex;align-items:center;gap:4px}
+.upz .chip-x .x{color:#9ca3af;cursor:pointer}
+.upz .radio-row{gap:20px}
+.upz .actor-card{border:1px solid #e5e7eb;border-radius:8px;margin-bottom:12px;overflow:hidden}
+.upz .actor-hdr{display:flex;justify-content:space-between;align-items:center;background:#f9fafb;padding:9px 14px;font-size:12px;font-weight:600;color:#374151}
+.upz .actor-del{font-size:11px;color:#9ca3af;cursor:pointer}
+.upz .actor-del:hover{color:#ef4444}
+.upz .actor-body{padding:14px}
+.upz .actor-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:640px}
+.upz .actor-grid .flabel{margin-bottom:5px;font-size:11px}
+.upz .actor-grid .finput{max-width:none}
+.upz .add-actor-link{font-size:12px;color:#2563eb;cursor:pointer}
+.upz .add-actor-link:hover{text-decoration:underline}
+.upz .copyright-panel{border:1px solid #e5e7eb;border-radius:8px;padding:12px 14px;max-width:560px;margin-top:8px}
+.upz .copyright-panel-hdr{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#374151;font-weight:600;margin-bottom:10px}
+.upz .copyright-panel-hdr a{color:#2563eb;font-size:11px;font-weight:400;text-decoration:none;cursor:pointer}
+.upz .copyright-imgs{display:flex;gap:10px}
+.upz .copyright-thumb{width:78px;height:78px;border-radius:6px;background:linear-gradient(135deg,#fecaca,#fca5a5);flex-shrink:0}
+.upz .copyright-add{width:78px;height:78px;border:1.5px dashed #d1d5db;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10px;color:#9ca3af;cursor:pointer}
+.upz .copyright-add:hover{border-color:#2563eb;color:#2563eb}
+.upz .copyright-hint{font-size:10px;color:#9ca3af;line-height:1.6;margin-top:8px}
+.upz .beian-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.upz .beian-num{width:46px;border:1.5px solid #d1d5db;border-radius:6px;padding:7px 6px;font-size:12px;text-align:center;outline:none}
+.upz .beian-txt{font-size:12px;color:#374151}
+.upz .cost-err{font-size:11px;color:#dc2626;margin-top:6px}
+.upz .cost-hint{font-size:11px;color:#9ca3af;margin-top:4px}
+.upz .decl-select{max-width:420px;border:1.5px solid #d1d5db;border-radius:6px;padding:8px 12px;font-size:12px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:#fff;color:#374151}
+.upz .decl-select:hover{border-color:#2563eb}
+.upz .decl-select.locked{background:#f9fafb;color:#6b7280;cursor:not-allowed;border-color:#e5e7eb}
+.upz .decl-menu{display:none;max-width:420px;border:1px solid #e5e7eb;border-radius:8px;margin-top:4px;box-shadow:0 8px 24px rgba(0,0,0,.1);overflow:hidden;background:#fff}
+.upz .decl-menu.on{display:block}
+.upz .decl-opt{padding:9px 12px;cursor:pointer}
+.upz .decl-opt:hover{background:#eff6ff}
+.upz .decl-opt.sel{background:#eff6ff}
+.upz .decl-opt-t{font-size:12px;color:#111}
+.upz .decl-opt-d{font-size:10px;color:#9ca3af;margin-top:2px}
+.upz .decl-lock-tip{font-size:11px;color:#b45309;margin-top:6px}
+.upz .qtip{position:relative;display:inline-flex;align-items:center;color:#9ca3af;cursor:help;font-size:12px;font-weight:400}
+.upz .qtip::after{content:attr(data-tip);display:none;position:absolute;left:50%;bottom:calc(100% + 7px);transform:translateX(-50%);background:#1f2937;color:#fff;font-size:11px;font-weight:400;line-height:1.7;padding:8px 11px;border-radius:6px;white-space:normal;width:max-content;max-width:280px;text-align:left;z-index:60;box-shadow:0 4px 14px rgba(0,0,0,.22)}
+.upz .qtip::before{content:'';display:none;position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);border:5px solid transparent;border-top-color:#1f2937;z-index:60}
+.upz .qtip:hover::after,.upz .qtip:hover::before{display:block}
+.upz .panel-section-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.upz .panel-section-title{font-size:13px;color:#111;font-weight:600}
+.upz .tpl-link{font-size:12px;color:#2563eb;cursor:pointer;text-decoration:none}
+.upz .tpl-link:hover{text-decoration:underline}
+.upz .panel-sep{color:#e5e7eb}
+.upz .panel-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.upz .panel-card{border:1.5px solid #fde9c8;border-radius:10px;padding:16px;background:linear-gradient(180deg,#fffbf3,#fff);text-align:left;color:#374151;cursor:default;font-size:13px}
+.upz .panel-name-row{display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid #fde9c8;margin-bottom:12px}
+.upz .panel-name{font-size:15px;font-weight:700;color:#111}
+.upz .base-badge{background:#f59e0b;color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:5px}
+.upz .tier-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.upz .tier-chip{background:#fff;border:1px solid #fde9c8;border-radius:6px;padding:8px 14px;font-size:13px;font-weight:600;color:#374151}
+.upz .panel-actions{display:flex;gap:0;padding-top:12px;border-top:1px solid #fde9c8}
+.upz .panel-action{font-size:12px;color:#374151;cursor:pointer;padding:0 12px;border-right:1px solid #e5e7eb}
+.upz .panel-action:first-child{padding-left:0}
+.upz .panel-action:last-child{border-right:none}
+.upz .panel-action:hover{color:#2563eb}
+.upz .panel-action.danger:hover{color:#ef4444}
+.upz .panel-add-card{border:1.5px dashed #d1d5db;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;min-height:150px;background:#fafafa;cursor:default}
+.upz .add-option{display:flex;align-items:center;gap:6px;font-size:13px;color:#2563eb;cursor:pointer}
+.upz .add-option:hover{text-decoration:underline}
+.upz .agree-row{display:flex;align-items:center;gap:6px;font-size:12px;color:#374151;padding:18px 16px 0;margin:0}
+.upz .bottom-actions{display:flex;gap:8px;padding:14px 16px 0}
+.upz .btn{padding:8px 22px;border-radius:6px;font-size:12px;gap:5px}
+.upz .btn-dash{background:#fff;color:#2563eb;border:1.5px dashed #93c5fd}
+.upz .btn-dash:hover{background:#eff6ff}
+.upz .toolbar2{display:flex;align-items:center;gap:10px;padding:12px 16px 6px;flex-wrap:wrap}
+.upz .spec-hint{font-size:11px;color:#9ca3af}
+.upz .batch-menu-wrap{position:relative;display:inline-block}
+.upz .batch-menu{display:none;position:absolute;top:100%;left:0;margin-top:4px;background:#fff;border:1px solid #e5e7eb;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.12);overflow:hidden;z-index:30;min-width:150px}
+.upz .batch-menu.on{display:block}
+.upz .batch-menu-item{padding:10px 14px;font-size:12px;color:#374151;cursor:pointer;white-space:nowrap}
+.upz .batch-menu-item:hover{background:#eff6ff;color:#2563eb}
+.upz .sm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:660px}
+.upz .sm-card{border:1.5px solid #e5e7eb;border-radius:8px;padding:11px 13px;cursor:pointer}
+.upz .sm-card:hover{border-color:#93c5fd}
+.upz .sm-card.on{border-color:#2563eb;background:#eff6ff}
+.upz .sm-top{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:#111}
+.upz .sm-tag{font-size:9px;padding:1px 6px;border-radius:8px;margin-left:auto;font-weight:700}
+.upz .tag-iap{background:#dbeafe;color:#1e40af}
+.upz .tag-iaa{background:#fef3c7;color:#92400e}
+.upz .sm-desc{font-size:10.5px;color:#9ca3af;margin-top:5px;line-height:1.5}
+.upz .price-row{display:flex;align-items:center;gap:8px;margin-top:0}
+.upz .pinput{width:120px;border:1.5px solid #d1d5db;border-radius:6px;padding:8px 10px;font-size:12px;outline:none}
+.upz .pinput:focus{border-color:#2563eb}
+.upz .punit{font-size:12px;color:#6b7280}
+.upz .sellep-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.upz .sellep-card{border:1px solid #e5e7eb;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px;background:#fafbfc}
+.upz .sellep-num{font-size:12px;font-weight:700;color:#111}
+.upz .sellep-ttl{font-size:11px;color:#9ca3af;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.upz .ptype-seg{display:inline-flex;background:#f3f4f6;border-radius:8px;padding:3px;margin-bottom:14px;border:none;overflow:visible;width:auto}
+.upz .ptype-item{padding:6px 18px;font-size:12px;font-weight:500;color:#6b7280;border-radius:6px;cursor:pointer;background:transparent}
+.upz .ptype-item.on{background:#fff;color:#c2410c;font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.upz .convert-note{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 13px;font-size:11.5px;color:#92400e;line-height:1.9;margin-top:8px}
+.upz .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:0 16px}
+.upz .card{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:10px 12px 12px;margin:0;display:flex;flex-direction:column;gap:8px;transition:box-shadow .15s,opacity .15s;scroll-margin-top:100px}
+.upz .card.highlight{box-shadow:0 0 0 3px rgba(37,99,235,.25);border-color:#2563eb}
+.upz .card.hidden{display:none}
+.upz .card.dragging{opacity:.35}
+.upz .card.drag-over{border-color:#2563eb;box-shadow:0 0 0 2px rgba(37,99,235,.2) inset}
+.upz .card-hdr{display:flex;align-items:center;justify-content:space-between}
+.upz .card-hdr-left{display:flex;align-items:center;gap:6px}
+.upz .drag-handle{cursor:grab;color:#c4c4c4;font-size:14px}
+.upz .card-num{font-size:13px;font-weight:700;color:#111}
+.upz .card-del{cursor:pointer;color:#c4c4c4;font-size:15px;padding:2px 4px;border-radius:4px}
+.upz .card-del:hover{color:#ef4444;background:#fef2f2}
+.upz .title-wrap{position:relative}
+.upz .title-input{width:100%;max-width:none;border:1px solid transparent;border-radius:5px;padding:3px 34px 3px 4px;font-size:12px;color:#374151;outline:none;background:transparent}
+.upz .title-input:hover{background:#f9fafb}
+.upz .title-input:focus{border-color:#2563eb;background:#fff}
+.upz .title-counter{position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:9px;color:#c4c4c4}
+.upz .title-counter.warn{color:#f59e0b}
+.upz .title-counter.over{color:#ef4444}
+.upz .assets-row{display:flex;gap:8px}
+.upz .cover-box{width:64px;height:85px;border-radius:6px;border:1px dashed #d1d5db;background:#f9fafb;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:9px;color:#9ca3af;cursor:pointer;position:relative;overflow:hidden}
+.upz .cover-box:hover{border-color:#2563eb;color:#2563eb}
+.upz .cover-box.has{border-style:solid;padding:0}
+.upz .cover-box.has img{width:100%;height:100%;object-fit:cover;display:block}
+.upz .video-box{flex:1;min-height:85px;border-radius:6px;border:1px dashed #d1d5db;background:#f9fafb;position:relative;overflow:hidden;cursor:pointer}
+.upz .video-box:hover .video-actions{opacity:1}
+.upz .video-box.has{border-style:solid;border-color:#e5e7eb}
+.upz .video-box img{width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0}
+.upz .video-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:85px;gap:3px;font-size:10px;color:#9ca3af}
+.upz .video-actions{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:14px;opacity:0;transition:opacity .15s}
+.upz .vupload-opt{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:#6b7280;padding:2px 6px;border-radius:5px}
+.upz .vupload-opt:hover{color:#2563eb;background:#eff6ff}
+.upz .video-box.has .video-actions{background:rgba(0,0,0,.35)}
+.upz .va-item{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:9px;color:#fff;cursor:pointer}
+.upz .video-status-tag{position:absolute;top:4px;right:4px;font-size:8px;padding:1px 5px;border-radius:8px;z-index:5}
+.upz .vst-proc{background:#fef9c3;color:#854d0e}
+.upz .vst-fail{background:#fee2e2;color:#991b1b}
+.upz .video-progress-mini{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(0,0,0,.08)}
+.upz .video-progress-mini-bar{height:100%;background:#2563eb;transition:width .2s}
+.upz .asset-label{font-size:9px;color:#9ca3af;margin-bottom:2px;display:block}
+.upz .tag{display:inline-block;font-size:10px;font-weight:400;padding:2px 8px;border-radius:10px;cursor:pointer}
+.upz .t-free{background:#dcfce7;color:#166534}
+.upz .t-paid{background:#dbeafe;color:#1e40af}
+.upz .t-ad{background:#fef3c7;color:#92400e}
+.upz .add-card{border:1.5px dashed #93c5fd;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#2563eb;font-size:12px;font-weight:500;cursor:pointer;min-height:230px;background:#f8faff}
+.upz .add-card:hover{background:#eff6ff}
+.upz .modal{width:460px;border-radius:12px}
+.upz .mhdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px}
+.upz .warn-body{font-size:14px;color:#374151;line-height:1.8}
+.upz .warn-sub{font-size:12px;color:#6b7280;line-height:1.6;margin-top:10px;padding:9px 11px;background:#FFFBEB;border-radius:6px;border-left:3px solid #FCD34D}
+.upz .spanel{display:none;position:fixed;right:0;top:0;bottom:0;width:380px;background:#fff;box-shadow:-4px 0 24px rgba(0,0,0,.12);z-index:90;flex-direction:column}
+.upz .spanel.on{display:flex}
+.upz .sphdr{padding:14px 16px;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center}
+.upz .sptitle{font-size:14px;font-weight:700}
+.upz .spbody{flex:1;overflow-y:auto;padding:16px}
+.upz .spfoot{padding:12px 16px;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end;gap:8px}
+.upz .section-div{height:1px;background:#f3f4f6;margin:16px 0}
+.upz .section-title{font-size:11px;font-weight:700;color:#374151;margin-bottom:7px}
+.upz .cover-upload-box2{width:64px;height:85px;border:1.5px dashed #d1d5db;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10px;color:#9ca3af;cursor:pointer;flex-shrink:0}
+.upz .cover-upload-box2.has{border-style:solid;border-color:#86efac;background:#f0fdf4;color:#15803d}
+.upz .range-row{display:flex;align-items:center;gap:8px}
+.upz .range-row .finput{flex:1;max-width:none}
+.upz .dropzone{border:1.5px dashed #93c5fd;border-radius:10px;padding:22px 14px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;background:#f8faff;text-align:center}
+.upz .dropzone:hover{background:#eff6ff}
+.upz .dropzone-main{font-size:12px;color:#2563eb;font-weight:500}
+.upz .dropzone-spec{font-size:10px;color:#9ca3af}
+.upz .vf-list{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+.upz .vf-row{display:flex;align-items:center;gap:10px;border:1px solid #e5e7eb;border-radius:8px;padding:8px 10px;background:#fff}
+.upz .vf-drag{color:#c4c4c4;cursor:grab;font-size:13px}
+.upz .vf-thumb{width:36px;height:36px;border-radius:5px;background:#f3f4f6;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:#c4c4c4}
+.upz .vf-info{flex:1;min-width:0}
+.upz .vf-name{font-size:11px;color:#374151;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+.upz .vf-progress-track{height:3px;background:#f3f4f6;border-radius:2px;margin-top:5px;overflow:hidden}
+.upz .vf-progress-fill{height:100%;background:#2563eb;transition:width .15s;border-radius:2px}
+.upz .vf-status{font-size:9px;color:#9ca3af;margin-top:2px}
+.upz .vf-status.done{color:#16a34a}
+.upz .vf-status.failtxt{color:#dc2626;font-size:10px;margin-top:3px}
+.upz .vf-row.fail{border-color:#fca5a5;background:#fef2f2}
+.upz .vf-epnum{font-size:11px;font-weight:600;color:#6b7280;background:#f3f4f6;border-radius:4px;padding:4px 8px;flex-shrink:0;white-space:nowrap}
+.upz .vf-row.fail .vf-epnum{background:#fee2e2;color:#b91c1c}
+.upz .vf-summary{font-size:12px;font-weight:700;color:#111;margin-bottom:10px}
+.upz .vf-summary span{font-weight:400;color:#9ca3af;margin-left:8px}
+.upz .vf-reup{cursor:pointer;color:#9ca3af;font-size:13px}
+.upz .vf-reup:hover{color:#2563eb}
+.upz .vf-actions{display:flex;gap:8px;flex-shrink:0}
+.upz .vf-edit,.upz .vf-del{cursor:pointer;color:#9ca3af;font-size:12px}
+.upz .vf-edit:hover{color:#2563eb}
+.upz .vf-del:hover{color:#ef4444}
+.upz .tier-edit-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.upz .tier-edit-row input{flex:1;border:1.5px solid #d1d5db;border-radius:6px;padding:7px 10px;font-size:12px}
+.upz .tier-del{color:#9ca3af;cursor:pointer;font-size:14px}
+.upz .tier-del:hover{color:#ef4444}
+.upz .add-tier-link{font-size:12px;color:#2563eb;cursor:pointer}
+.upz .add-tier-link:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="demo-banner">
+  <div><b>短剧管理平台 · 统一 Demo</b>　以详情页为准 · 售卖逻辑对齐上传 Tab3 · 投放链路对齐 PRD 终版 SVG（版本×sdpa 1:1）· 不含 IAAP / 一集一价</div>
+  <span id="navHint">当前：列表</span>
+</div>
+
+<!-- ════════════ LIST ════════════ -->
+<div class="view on" id="view-list">
+  <div class="page">
+    <div class="crumb">内容 › <b>付费短剧</b></div>
+    <div class="list-tabs">
+      <div class="list-tab on" data-lt="drama" onclick="setListTab('drama')">剧目</div>
+      <div class="list-tab" data-lt="ver" onclick="setListTab('ver')">版本</div>
+    </div>
+
+    <div id="list-drama">
+      <div class="toolbar">
+        <button class="btn btn-blue" onclick="go('upload')">＋ 内容上传</button>
+        <button class="btn btn-out" onclick="openZhitou()">🚀 短剧智投</button>
+        <span style="flex:1"></span>
+      </div>
+      <div class="filter-grid">
+        <div><label>短剧</label><input class="finput" placeholder="短剧名称或短剧id"></div>
+        <div style="grid-column:span 2"><label>创建时间</label>
+          <div style="display:flex;align-items:center;gap:6px"><input class="finput" type="date" style="flex:1"><span style="color:#9ca3af">~</span><input class="finput" type="date" style="flex:1"></div>
+        </div>
+        <div><label>售卖方式 <span title="筛选项「售卖方式」按版本维度聚合；剧下任一版本匹配即命中。" style="color:#9ca3af;cursor:help;font-size:11px">ⓘ</span></label>
+          <div class="msel" id="msDramaSell" data-ph="请选择售卖方式">
+            <div class="msel-btn" onclick="toggleMsel(event,'msDramaSell')"><span class="msel-txt ph">请选择售卖方式</span><span class="msel-arrow">▾</span></div>
+            <div class="msel-menu" onclick="event.stopPropagation()">
+              <label><input type="checkbox" onchange="onMselChange('msDramaSell')"> IAA</label>
+              <label><input type="checkbox" onchange="onMselChange('msDramaSell')"> IAP</label>
+            </div>
+          </div>
+        </div>
+        <div><label>推广方式 <span title="筛选项「推广方式」按版本维度聚合；剧下任一版本匹配即命中。" style="color:#9ca3af;cursor:help;font-size:11px">ⓘ</span></label>
+          <div class="msel" id="msDramaPromo" data-ph="请选择推广方式">
+            <div class="msel-btn" onclick="toggleMsel(event,'msDramaPromo')"><span class="msel-txt ph">请选择推广方式</span><span class="msel-arrow">▾</span></div>
+            <div class="msel-menu" onclick="event.stopPropagation()">
+              <label><input type="checkbox" onchange="onMselChange('msDramaPromo')"> 投流</label>
+              <label><input type="checkbox" onchange="onMselChange('msDramaPromo')"> 分销</label>
+              <label><input type="checkbox" onchange="onMselChange('msDramaPromo')"> 仅发布</label>
+              <label><input type="checkbox" onchange="onMselChange('msDramaPromo')"> 分账</label>
+              <label><input type="checkbox" onchange="onMselChange('msDramaPromo')"> 授权子账号</label>
+            </div>
+          </div>
+        </div>
+        <div><label>上架状态</label><select class="fselect"><option>全部</option><option>已上架</option><option>已下架</option></select></div>
+        <div><label>审核状态</label><select class="fselect"><option>全部</option><option>待提交</option><option>审核中</option><option>审核通过</option><option>审核未通过</option></select></div>
+      </div>
+      <div class="colcfg-bar"><button class="btn btn-out btn-sm" onclick="openColCfg('drama')">⚙ 字段设置</button></div>
+      <div class="batch-bar" id="dramaBatchBar">
+        <span class="batch-count">已选 <b id="dramaSelCount">0</b> 项</span>
+        <button class="btn btn-blue btn-sm" onclick="doDramaBatch('上架')">批量上架</button>
+        <button class="btn btn-out btn-sm" onclick="doDramaBatch('下架')">批量下架</button>
+        <button class="btn btn-out btn-sm" onclick="doDramaBatch('预约上架')">批量预约上架</button>
+        <span style="flex:1"></span>
+        <a class="batch-clear" onclick="clearDramaSel()">取消选择</a>
+      </div>
+      <div class="tbl-wrap"><table class="lt">
+        <thead><tr id="dramaListHead"></tr></thead>
+        <tbody id="dramaListBody"></tbody>
+      </table></div>
+    </div>
+
+    <div id="list-ver" style="display:none">
+      <div class="filter-grid" style="margin-top:12px">
+        <div><label>短剧</label><input class="finput" placeholder="按短剧id查询（名称/ID）"></div>
+        <div><label>版本</label><input class="finput" placeholder="按版本id查询"></div>
+        <div style="grid-column:span 2"><label>创建时间</label>
+          <div style="display:flex;align-items:center;gap:6px"><input class="finput" type="date" style="flex:1"><span style="color:#9ca3af">~</span><input class="finput" type="date" style="flex:1"></div>
+        </div>
+        <div><label>售卖类型</label>
+          <div class="msel" id="msVerSell" data-ph="请选择售卖类型">
+            <div class="msel-btn" onclick="toggleMsel(event,'msVerSell')"><span class="msel-txt ph">请选择售卖类型</span><span class="msel-arrow">▾</span></div>
+            <div class="msel-menu" onclick="event.stopPropagation()">
+              <label><input type="checkbox" onchange="onMselChange('msVerSell')"> 付费短剧</label>
+              <label><input type="checkbox" onchange="onMselChange('msVerSell')"> 免费短剧</label>
+            </div>
+          </div>
+        </div>
+        <div><label>推广方式</label>
+          <div class="msel" id="msVerPromo" data-ph="请选择推广方式">
+            <div class="msel-btn" onclick="toggleMsel(event,'msVerPromo')"><span class="msel-txt ph">请选择推广方式</span><span class="msel-arrow">▾</span></div>
+            <div class="msel-menu" onclick="event.stopPropagation()">
+              <label><input type="checkbox" onchange="onMselChange('msVerPromo')"> 投流</label>
+              <label><input type="checkbox" onchange="onMselChange('msVerPromo')"> 分销</label>
+              <label><input type="checkbox" onchange="onMselChange('msVerPromo')"> 仅发布</label>
+              <label><input type="checkbox" onchange="onMselChange('msVerPromo')"> 分账</label>
+              <label><input type="checkbox" onchange="onMselChange('msVerPromo')"> 授权子账号</label>
+            </div>
+          </div>
+        </div>
+        <div><label>经营状态</label><select class="fselect"><option>全部</option><option>已生效</option><option>已失效</option></select></div>
+        <div><label>是否在售</label><select class="fselect"><option>全部</option><option>是</option><option>否</option></select></div>
+        <div><label>分销商UID</label><input class="finput" placeholder="多个uid用英文逗号隔开"></div>
+        <div><label>授权账号UID</label><input class="finput" placeholder="多个uid用英文逗号隔开"></div>
+      </div>
+      <div class="colcfg-bar" style="margin-top:12px"><button class="btn btn-out btn-sm" onclick="openColCfg('ver')">⚙ 字段设置</button></div>
+      <div class="tbl-wrap" style="margin-top:12px"><table class="lt">
+        <thead><tr id="verListHead"></tr></thead>
+        <tbody id="verListBody"></tbody>
+      </table></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ DETAIL ════════════ -->
+<div class="view" id="view-detail">
+  <div class="page">
+    <div class="crumb"><span class="link" onclick="go('list')">付费短剧列表</span> › <b>短剧详情</b></div>
+    <div class="hero">
+      <div class="hero-ops" id="heroOps"></div>
+      <div class="hero-top">
+        <div class="cover"></div>
+        <div class="hero-main">
+          <div class="dtitle">总裁的秘密恋人 <span class="badge b-gray" id="dramaBadge">已下架</span> <span class="badge b-green" id="auditBadge">审核通过</span></div>
+          <div class="dsyn">总裁的秘密恋人是一部精彩的真人剧，共60集，讲述了主人公跌宕起伏的人生故事。内容丰富，情节紧凑，是同类型短剧中的优质作品。</div>
+          <div class="viewep" onclick="openEpDrawer()">▤ 查看单集内容 / 预告</div>
+          <div class="fields">
+            <div class="fitem"><div class="flab">短剧ID</div><div class="fval">1753396</div></div>
+            <div class="fitem"><div class="flab">短剧类型</div><div class="fval">短剧</div></div>
+            <div class="fitem"><div class="flab">内容分类</div><div class="fval">都市 · 逆袭</div></div>
+            <div class="fitem"><div class="flab">是否完结</div><div class="fval">是</div></div>
+            <div class="fitem"><div class="flab">总集数</div><div class="fval">60 集</div></div>
+            <div class="fitem"><div class="flab">上架状态</div><div class="fval" id="fUpState">已下架</div></div>
+            <div class="fitem"><div class="flab">审核状态</div><div class="fval" id="fAudit">审核通过</div></div>
+            <div class="fitem"><div class="flab">推广方式</div><div class="fval">投流、分账</div></div>
+            <div class="fitem"><div class="flab">创建时间</div><div class="fval">2024-11-08 20:18</div></div>
+            <div class="fitem"><div class="flab">修改时间</div><div class="fval">2025-02-09 14:30</div></div>
+            <div class="fitem"><div class="flab">备注</div><div class="fval" id="fRemark">—</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="listHint" class="tip-bar warn" style="display:none">
+      <div>请进行短剧「上架」或「预约上架」操作，短剧上架后所有已生效售卖版本对 C 端展示。</div>
+      <span class="x" onclick="this.parentElement.style.display='none'">×</span>
+    </div>
+    <div class="tabs">
+      <div class="tab on" data-t="copyright" onclick="setTab('copyright')">版权备案</div>
+      <div class="tab" data-t="make" onclick="setTab('make')">制作信息</div>
+      <div class="tab" data-t="jy" onclick="setTab('jy')">经营配置</div>
+      <div class="tab" data-t="home" onclick="setTab('home')">主页配置</div>
+    </div>
+    <div class="tabbody">
+      <div id="tab-copyright">
+        <div class="card"><div class="card-hd">版权信息</div>
+          <div class="info-grid">
+            <div class="info-item"><div class="lab">版权证明类型</div><div class="val">自有版权</div></div>
+            <div class="info-item"><div class="lab">版权证明材料</div><div class="val">短剧制作协议</div></div>
+            <div class="info-item"><div class="lab">版权有效期</div><div class="val">2024-01-01 ~ 2029-12-31</div></div>
+            <div class="info-item"><div class="lab">版权归属方</div><div class="val">北京快手科技有限公司</div></div>
+            <div class="info-item"><div class="lab">授权范围</div><div class="val">中国大陆地区</div></div>
+            <div class="info-item"><div class="lab">授权方式</div><div class="val">独家授权</div></div>
+          </div>
+        </div>
+        <div class="card"><div class="card-hd">备案信息</div>
+          <div class="info-grid">
+            <div class="info-item"><div class="lab">是否有备案号</div><div class="val">是</div></div>
+            <div class="info-item"><div class="lab">备案号类型</div><div class="val">普通备案号</div></div>
+            <div class="info-item"><div class="lab">备案号</div><div class="val">BA20241108001</div></div>
+            <div class="info-item"><div class="lab">备案机构</div><div class="val">北京市广播电视局</div></div>
+            <div class="info-item"><div class="lab">备案时间</div><div class="val">2024-11-08</div></div>
+            <div class="info-item"><div class="lab">节目类型</div><div class="val">网络微短剧</div></div>
+          </div>
+        </div>
+        <div class="card"><div class="card-hd">版权证明材料附件</div>
+          <div class="files">
+            <div class="file" onclick="toast('查看附件（模拟）')">📄 短剧制作协议.pdf</div>
+            <div class="file" onclick="toast('查看附件（模拟）')">📄 版权登记证书.pdf</div>
+            <div class="file" onclick="toast('查看附件（模拟）')">🖼 授权方营业执照.jpg</div>
+          </div>
+        </div>
+      </div>
+      <div id="tab-make" style="display:none">
+        <div class="card"><div class="card-hd">制作信息</div>
+          <div class="info-grid">
+            <div class="info-item"><div class="lab">制作方式</div><div class="val">小说剧</div></div>
+            <div class="info-item"><div class="lab">制作形式</div><div class="val">竖屏</div></div>
+            <div class="info-item"><div class="lab">制作成本（万）</div><div class="val">120</div></div>
+            <div class="info-item"><div class="lab">出品年份</div><div class="val">2024年</div></div>
+            <div class="info-item"><div class="lab">单集平均成本</div><div class="val">2万元</div></div>
+          </div>
+        </div>
+      </div>
+      <div id="tab-jy" style="display:none">
+        <div style="margin-top:12px;font-size:11px;color:#9ca3af" id="jyUpHint">剧级上架状态：<b id="jyUpState" style="color:#6b7280">已下架</b> · 剧未上架时，各版本即使已生效也不对 C 端展示</div>
+        <div class="card">
+          <div class="blk-hd"><div>
+            <div class="blk-title">分账版本配置</div>
+            <div class="blk-sub">推广方式仅支持「分账」；同一部剧同一时刻仅一个分账版本可生效。新增时推广方式默认分账，其他选项置灰。</div>
+          </div>
+          <span style="display:flex;gap:8px;flex-shrink:0">
+            <button class="btn btn-blue" onclick="openVerForm('nat','new')">+ 新版本</button>
+            <button class="btn btn-out btn-sm" onclick="openColCfg('jy')">⚙ 字段设置</button>
+          </span>
+          </div>
+          <div class="ver-scroll"><table class="vtbl">
+            <thead><tr id="natListHead"></tr></thead>
+            <tbody id="natBody"></tbody>
+          </table></div>
+        </div>
+        <div class="card">
+          <div class="blk-hd"><div>
+            <div class="blk-title">经营版本配置</div>
+            <div class="blk-sub">推广方式支持「投流 / 分销 / 仅发布」；支持多个版本。新增时分账置灰。投流版本与 SDPA 1:1（PRD 终版）。</div>
+          </div>
+          <span style="display:flex;gap:8px;flex-shrink:0">
+            <button class="btn btn-blue" onclick="openVerForm('biz','new')">+ 新版本</button>
+            <button class="btn btn-out btn-sm" onclick="openColCfg('jy')">⚙ 字段设置</button>
+          </span>
+          </div>
+          <div class="ver-scroll"><table class="vtbl">
+            <thead><tr id="bizListHead"></tr></thead>
+            <tbody id="bizBody"></tbody>
+          </table></div>
+        </div>
+      </div>
+      <div id="tab-home" style="display:none">
+        <div class="blk-sub" style="margin:12px 16px 0">主页配置分两部分：<b>场景展示设置</b>（该剧是否参与 P 页 / 搜索 / 榜单展示）与 <b>主页展示设置</b>（选定 1 个【在售】售卖版本在快手主页短剧栏目展示）。</div>
+        <!-- 场景展示设置 -->
+        <div class="card"><div class="card-hd">场景展示设置</div>
+          <div class="frow2"><div class="frow2-lb">是否 P 页展示</div>
+            <div class="radio-row">
+              <label class="radio-item"><input type="radio" name="home_pp" value="yes" checked> 是</label>
+              <label class="radio-item"><input type="radio" name="home_pp" value="no"> 否</label>
+            </div>
+            <div style="font-size:11px;color:#dc2626;margin-top:5px">P 页关闭展示后无法再开启（选填，默认「是」）</div>
+          </div>
+          <div class="frow2"><div class="frow2-lb">是否搜索展示 <span title="搜索展示包括自然搜索展示、商业化搜索展示" style="color:#9ca3af;cursor:help;font-size:12px">ⓘ</span></div>
+            <div class="radio-row">
+              <label class="radio-item"><input type="radio" name="home_ss" value="yes" checked> 是</label>
+              <label class="radio-item"><input type="radio" name="home_ss" value="no"> 否</label>
+            </div>
+            <div style="font-size:11px;color:#9ca3af;margin-top:5px">含自然搜索展示、商业化搜索展示（选填，默认「是」）</div>
+          </div>
+          <div class="frow2" style="margin-bottom:0"><div class="frow2-lb">是否榜单展示</div>
+            <div class="radio-row">
+              <label class="radio-item"><input type="radio" name="home_rank" value="yes" checked> 是</label>
+              <label class="radio-item"><input type="radio" name="home_rank" value="no"> 否</label>
+            </div>
+            <div style="font-size:11px;color:#9ca3af;margin-top:5px">参与热榜 / 分类榜等榜单曝光（选填，默认「是」）</div>
+          </div>
+        </div>
+        <!-- 主页展示设置（合并原「P页展示版本」+「主页装修」）：选 1 个【在售】版本在快手主页短剧栏目展示 -->
+        <div class="card"><div class="card-hd">主页展示设置 · 快手主页短剧展示</div>
+          <div class="blk-sub" style="max-width:none;margin-bottom:12px">当前剧在快手经营者主页「短剧」栏目的展示配置：选择 <b>1 个【在售】售卖版本</b>在主页(P 页)展示（仅可选一个，且仅【在售】版本可选）。需「是否 P 页展示 = 是」且该剧<b>已上架</b>，所选版本方在 C 端 P 页生效。</div>
+          <div style="display:flex;gap:24px;flex-wrap:wrap">
+            <div style="flex:1;min-width:340px">
+              <div style="font-size:12px;font-weight:600;margin-bottom:6px">选择展示版本 <span style="font-weight:400;color:#9ca3af">（仅【在售】版本可选，选 1 个）</span></div>
+              <div id="homeVerList"></div>
+              <div style="margin-top:12px">
+                <button class="btn btn-blue" onclick="toast('已保存并发布主页展示配置（模拟）')">保存并发布</button>
+              </div>
+            </div>
+            <div style="width:210px">
+              <div style="font-size:12px;font-weight:600;margin-bottom:6px">内容配置预览</div>
+              <div class="phone-frame" id="homePreview"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ UPLOAD / EDIT（同一向导复用：内容上传 + 短剧信息编辑；完整复现 短剧内容上传-重构demo.html） ════════════ -->
+<div class="view upz" id="view-upload">
+  <div class="page">
+    <div class="notice-row">
+      <div class="notice-left"><span class="ic">ⓘ</span>优质版权商「胜事北京分公司」、「影谭」等上新了分销招募任务<a href="#">去处理</a></div>
+    </div>
+    <div class="crumb" id="upCrumb"><span class="link" onclick="go('list')">付费短剧列表</span> › <b>内容上传</b></div>
+
+    <!-- 编辑态：审核结果面板 -->
+    <div class="review-panel fail" id="upReview" style="display:none">
+      <div class="review-hdr">
+        <div class="review-hdr-left" onclick="toggleUpReview()"><span id="upReviewTitle">⚠ 短剧审核未通过，共 2 个问题需修改</span><span class="review-expand-toggle" id="upReviewArrow">▾</span></div>
+        <span class="review-demo-link" onclick="toggleUpReviewPass()">演示：切换 通过/未通过</span>
+      </div>
+      <div class="review-body" id="upReviewBody">
+        <div class="review-item"><span class="num">1.</span>第 3 集封面涉及敏感元素，请替换后重新提交</div>
+        <div class="review-item"><span class="num">2.</span>简介含违规表述，请修改后重新提交</div>
+      </div>
+    </div>
+
+    <div class="top-row">
+      <div class="tabbar">
+        <div class="tab-step" onclick="switchTab('basic')">
+          <div class="tab-circle current" id="circleBasic">1</div>
+          <div><div class="tab-name" id="nameBasic">短剧基础信息</div><div class="tab-sub">标题、简介、封面、演员及版权备案</div></div>
+        </div>
+        <div class="tab-line"></div>
+        <div class="tab-step" onclick="switchTab('episode')">
+          <div class="tab-circle next" id="circleEpisode">2</div>
+          <div><div class="tab-name next" id="nameEpisode">单集信息设置</div><div class="tab-sub">每集标题、封面及视频上传</div></div>
+        </div>
+        <div class="tab-line"></div>
+        <div class="tab-step" onclick="switchTab('sell')">
+          <div class="tab-circle next" id="circleSell">3</div>
+          <div><div class="tab-name next" id="nameSell">售卖信息</div><div class="tab-sub">自然流量售卖方式、单集售卖属性、推广方式及场景展示</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="merged-notice">
+      <div style="display:flex;gap:6px"><span class="ic">ⓘ</span>
+        <span>为符合广电备案规定，新上传未备案短剧需填写制作形式及出品年份等信息；若短剧信息尚未准备完整（如备案号），可先填写临时信息保存为草稿，仅用于上传预告，后续可统一修改。</span>
+      </div>
+      <span class="notice-close" onclick="this.parentElement.style.display='none'">×</span>
+    </div>
+
+    <!-- STEP1 短剧基础信息 -->
+    <div id="tabContentBasic">
+      <div class="main-layout">
+        <div class="anchor-nav">
+          <div class="anchor-item active" data-target="mod-basic" onclick="jumpTo('mod-basic',this)">短剧基础信息</div>
+          <div class="anchor-item" data-target="mod-copyright" onclick="jumpTo('mod-copyright',this)">版权信息</div>
+          <div class="anchor-item" data-target="mod-beian" onclick="jumpTo('mod-beian',this)">备案信息</div>
+        </div>
+        <div class="form-col">
+          <div class="module-card" id="mod-basic">
+            <div class="module-hdr" onclick="toggleModule('mod-basic')">
+              <span class="module-icon">📄</span>短剧基础信息
+              <span class="module-collapse-btn"><span id="collapseTxt-mod-basic">收起</span><span class="module-collapse-arrow" id="collapseArrow-mod-basic">⌃</span></span>
+            </div>
+            <div class="module-body" id="body-mod-basic">
+              <div class="frow">
+                <label class="flabel"><span class="req">*</span>短剧标题 <span class="qtip" data-tip="标题将用于硬广样式展示，直接影响投放效果，请准确、清晰地填写">ⓘ</span> <span class="fhelp">（发布后不可修改）</span></label>
+                <div class="input-counter-wrap">
+                  <input class="finput" id="upTitleInput" maxlength="30" value="大城市现在" oninput="updCounter(this,'titleCounter')" style="padding-right:44px">
+                  <span class="input-counter" id="titleCounter">5/30</span>
+                </div>
+              </div>
+              <div class="frow">
+                <label class="flabel"><span class="req">*</span>短剧封面 <span class="qtip" data-tip="封面将用于硬广样式展示，直接影响投放效果，请上传清晰、含主演角色的竖版封面">ⓘ</span></label>
+                <div class="cover-upload-row">
+                  <div class="cover-upload-box" onclick="toast('模拟选择封面图片')"><span style="font-size:20px">↑</span><span>上传图片</span></div>
+                  <ul class="cover-rules"><li>不允许涉及政治敏感与色情</li><li>图片格式：png/bmp/jpeg/jpg</li><li>不可大于10M</li><li>图片需带有主演角色</li></ul>
+                </div>
+              </div>
+              <div class="frow">
+                <label class="flabel"><span class="req">*</span>短剧简介 <span class="qtip" data-tip="投放样式中仅完整展示前28字（含标点），超出部分将被截断，建议将核心卖点前置">ⓘ</span></label>
+                <div class="synopsis-wrap">
+                  <textarea class="synopsis-box" maxlength="400" oninput="updCounter(this,'synopsisCounter')">这是一部讲述都市青年在陌生城市打拼、寻找归属感的现实题材短剧。主角从县城来到大城市，经历职场挫折与情感波折，逐渐找到属于自己的生活方式与人生方向。</textarea>
+                  <span class="synopsis-counter" id="synopsisCounter">105/400</span>
+                </div>
+              </div>
+              <div class="frow">
+                <label class="flabel"><span class="req">*</span>短剧内容 <span class="flink" onclick="toast('查看分类说明')">查看分类说明</span></label>
+                <div class="select-row">
+                  <div class="fselect">男频 <span style="color:#9ca3af">▾</span></div>
+                  <div class="fselect"><span class="chip-x">古风<span class="x">×</span></span> <span style="color:#9ca3af">▾</span></div>
+                  <div class="fselect"><span class="chip-x">三教九流<span class="x">×</span></span> <span style="color:#9ca3af">▾</span></div>
+                </div>
+              </div>
+              <div class="frow">
+                <label class="flabel"><span class="req">*</span>内容类型 <span class="fhelp">（请准确选择内容类型，直接影响投放效果）</span></label>
+                <div class="radio-row">
+                  <label class="radio-item"><input type="radio" name="contentType" value="short" checked onchange="onContentTypeChange('short')">短剧</label>
+                  <label class="radio-item"><input type="radio" name="contentType" value="manga" onchange="onContentTypeChange('manga')">漫剧</label>
+                </div>
+              </div>
+
+              <!-- 漫剧专属：漫剧制作方式 -->
+              <div class="frow" id="row-manhua-method" style="display:none">
+                <label class="flabel"><span class="req">*</span>漫剧制作方式 <span class="flink" onclick="toast('查看方式说明')">查看方式说明</span></label>
+                <div class="fselect" style="max-width:420px;width:100%;padding:0 10px">
+                  <select id="manhuaMethod" onchange="onManhuaMethodChange()" style="padding:8px 0">
+                    <option value="" disabled selected hidden>请选择制作方式</option>
+                    <option value="simple">简笔动画</option>
+                    <option value="novel">小说剧</option>
+                    <option value="aigc">AIGC剧</option>
+                    <option value="shadiao">沙雕动画</option>
+                    <option value="3d">3D动画</option>
+                    <option value="2d">2D动画</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- 短剧专属：主要演员信息（漫剧不透传） -->
+              <div class="frow" id="row-actors">
+                <label class="flabel"><span class="req">*</span>主要演员信息</label>
+                <div id="actorList"></div>
+                <span class="add-actor-link" onclick="addActor()">＋ 新增主要演员信息</span>
+              </div>
+
+              <!-- 短剧专属：导演信息 -->
+              <div class="frow" id="row-directors">
+                <label class="flabel"><span class="req">*</span>导演信息</label>
+                <div id="directorList"></div>
+                <span class="add-actor-link" onclick="addDirector()">＋ 新增导演</span>
+              </div>
+
+              <!-- 短剧专属：编剧信息 -->
+              <div class="frow" id="row-writers">
+                <label class="flabel"><span class="req">*</span>编剧信息</label>
+                <div id="writerList"></div>
+                <span class="add-actor-link" onclick="addWriter()">＋ 新增编剧</span>
+              </div>
+
+              <!-- 作者声明（必填；漫剧-AIGC剧锁定为「含AI生成内容」） -->
+              <div class="frow" id="row-declaration">
+                <label class="flabel"><span class="req">*</span>作者声明</label>
+                <div class="decl-select" id="declSelect" onclick="toggleDeclMenu(event)">
+                  <span id="declText" style="color:#9ca3af">请选择</span>
+                  <span id="declArrow" style="color:#9ca3af">▾</span>
+                </div>
+                <div class="decl-menu" id="declMenu">
+                  <div class="decl-opt" id="declOptNone" onclick="pickDecl('none',event)"><div class="decl-opt-t">内容无需添加声明</div><div class="decl-opt-d">作品不涉及AI生成</div></div>
+                  <div class="decl-opt" id="declOptAi" onclick="pickDecl('ai',event)"><div class="decl-opt-t">含AI生成内容</div></div>
+                </div>
+                <div class="decl-lock-tip" id="declLockTip" style="display:none">AIGC剧默认为「含AI生成内容」，不可修改</div>
+              </div>
+
+              <div class="frow">
+                <label class="flabel">是否完结</label>
+                <div class="radio-row"><label class="radio-item"><input type="radio" name="finished" checked>是</label><label class="radio-item"><input type="radio" name="finished">否</label></div>
+              </div>
+              <div class="frow" style="margin-bottom:0">
+                <label class="flabel">备注 <span class="qtip" data-tip="对短剧的备注不对C端用户展示">ⓘ</span></label>
+                <textarea class="finput" id="upRemarkInput" placeholder="选填，仅内部可见" rows="3" style="max-width:420px;resize:vertical"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="module-card" id="mod-copyright">
+            <div class="module-hdr" onclick="toggleModule('mod-copyright')">
+              <span class="module-icon">©️</span>版权信息
+              <span class="module-collapse-btn"><span id="collapseTxt-mod-copyright">收起</span><span class="module-collapse-arrow" id="collapseArrow-mod-copyright">⌃</span></span>
+            </div>
+            <div class="module-body" id="body-mod-copyright">
+              <div class="module-note">版权证明材料不影响短剧内容审核，但会导致投诉下架，请上传真实有效的版权信息。</div>
+              <div class="frow">
+                <label class="flabel"><span class="req">*</span>版权证明类型</label>
+                <div class="fselect" style="max-width:200px">自有版权 <span style="color:#9ca3af">▾</span></div>
+              </div>
+              <div class="frow">
+                <label class="flabel"><span class="req">*</span>版权证明材料 <span class="flink" onclick="toast('查看要求')">查看要求</span></label>
+                <div class="fselect" style="max-width:260px"><span class="chip-x">作品登记证书<span class="x">×</span></span> <span style="color:#9ca3af">▾</span></div>
+                <div class="copyright-panel">
+                  <div class="copyright-panel-hdr">作品登记证书 <a onclick="toast('切换为上传PDF')">⇌ 切换为上传PDF</a></div>
+                  <div class="copyright-imgs"><div class="copyright-thumb"></div><div class="copyright-add" onclick="toast('模拟上传图片')"><span style="font-size:16px">＋</span><span>上传图片</span></div></div>
+                  <div class="copyright-hint">请上传相关证明文件，支持JPEG/JPG/PNG格式，大小不超过5M，请勿遮挡模糊，可上传1-2张。</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="module-card" id="mod-beian">
+            <div class="module-hdr" onclick="toggleModule('mod-beian')">
+              <span class="module-icon">📋</span>备案信息
+              <span class="module-collapse-btn"><span id="collapseTxt-mod-beian">收起</span><span class="module-collapse-arrow" id="collapseArrow-mod-beian">⌃</span></span>
+            </div>
+            <div class="module-body" id="body-mod-beian">
+              <div class="frow">
+                <label class="flabel"><span class="req">*</span>是否有备案号</label>
+                <div class="radio-row">
+                  <label class="radio-item"><input type="radio" name="hasBeian" value="yes" checked onchange="setHasBeian('yes')">是</label>
+                  <label class="radio-item"><input type="radio" name="hasBeian" value="no" onchange="setHasBeian('no')">否</label>
+                </div>
+              </div>
+              <!-- 有备案号 → 备案号类型 + 备案号 -->
+              <div id="beianYesBlock">
+                <div class="frow">
+                  <label class="flabel"><span class="req">*</span>备案号</label>
+                  <div class="fselect" style="max-width:170px;margin-bottom:10px;padding:0 10px"><select id="beianType" style="padding:8px 0"><option>重点备案号</option><option>普通备案号</option><option>V字头备案号</option></select></div>
+                  <div class="beian-row"><input class="beian-num" value="1"><span class="beian-txt">网微剧审字</span><input class="beian-num" value="1"><span class="beian-txt">第</span><input class="beian-num" value="1"><span class="beian-txt">号</span></div>
+                </div>
+              </div>
+              <!-- 无备案号 → 制作方式/制作形式/出品年份/制作成本/单集平均时长（PRD 3.1 备案信息模块） -->
+              <div id="beianNoBlock" style="display:none">
+                <div class="frow">
+                  <label class="flabel"><span class="req">*</span>制作方式</label>
+                  <div class="fselect" style="max-width:220px;padding:0 10px">
+                    <select id="makeMethod" style="padding:8px 0"><option>真人实拍</option><option>简笔动画</option><option>小说剧</option><option>AIGC剧</option><option>沙雕动画</option><option>3D动画</option><option>2D动画</option></select>
+                  </div>
+                </div>
+                <div class="frow">
+                  <label class="flabel"><span class="req">*</span>制作形式</label>
+                  <div class="radio-row"><label class="radio-item"><input type="radio" name="makeForm">横屏</label><label class="radio-item"><input type="radio" name="makeForm" checked>竖屏</label></div>
+                </div>
+                <div class="frow">
+                  <label class="flabel"><span class="req">*</span>出品年份</label>
+                  <div class="fselect" style="max-width:170px;padding:0 10px">
+                    <select id="prodYear" style="padding:8px 0"><option>2026</option><option selected>2025</option><option>2024</option><option>2023及以前</option></select>
+                  </div>
+                </div>
+                <div class="frow">
+                  <label class="flabel"><span class="req">*</span>制作成本（万） <span class="qtip" data-tip="漫剧且无备案号时校验：成本≥80万需重点备案号；≥30万且<80万需普通备案号；<30万需V字头备案号">ⓘ</span></label>
+                  <input class="finput" id="costInput" type="number" min="0" value="120" style="max-width:170px" oninput="checkCostBeian()">
+                  <div class="cost-err" id="costBeianErr" style="display:none"></div>
+                  <div class="cost-hint">确保全部信息客观真实，如有不实，自愿承担一切法律责任</div>
+                </div>
+                <div class="frow">
+                  <label class="flabel"><span class="req">*</span>单集平均时长（分）</label>
+                  <input class="finput" type="number" min="0" value="2" placeholder="请输入单集平均时长" style="max-width:170px">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="agree-row"><input type="checkbox" checked style="accent-color:#2563eb"><span>请勾选同意 <a href="#">「付费短剧经营者服务协议」</a></span></div>
+          <div class="bottom-actions">
+            <button class="btn btn-blue" onclick="goToStep('episode')">下一步</button>
+            <button class="btn btn-out" onclick="toast('已保存为草稿')">保存草稿</button>
+            <button class="btn btn-out" onclick="upCancel()">取消</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP2 单集信息设置（纯内容，无售卖属性） -->
+    <div id="tabContentEpisode" style="display:none">
+      <div class="toolbar2">
+        <div class="batch-menu-wrap">
+          <button class="btn btn-blue" onclick="toggleBatchMenu(event)">批量操作 <span style="font-size:9px;margin-left:2px">▾</span></button>
+          <div class="batch-menu" id="batchMenu">
+            <div class="batch-menu-item" onclick="pickBatch('info')">批量设置信息</div>
+            <div class="batch-menu-item" onclick="pickBatch('video')">批量上传视频</div>
+            <div class="batch-menu-item" onclick="pickBatch('unlock')">批量设置解锁集</div>
+          </div>
+        </div>
+        <button class="btn btn-dash" onclick="addEpisode()">+ 添加单集</button>
+        <span class="spec-hint">单集视频长度15秒~15分钟，单集不大于1GB；支持mp4、mov、ogg、webm格式；</span>
+      </div>
+
+      <div class="grid" id="grid" style="margin-top:8px"></div>
+
+      <div class="bottom-actions">
+        <button class="btn btn-blue" onclick="goToStep('sell')">下一步</button>
+        <button class="btn btn-out" onclick="toast('已保存为草稿')">保存草稿</button>
+        <button class="btn btn-out" onclick="goToStep('basic')">上一步</button>
+        <button class="btn btn-out" onclick="upCancel()">取消</button>
+      </div>
+    </div>
+
+    <!-- STEP3 售卖信息（自然流量版本） -->
+    <div id="tabContentSell" style="display:none">
+      <div class="main-layout">
+        <div class="form-col" style="max-width:860px">
+
+          <div class="module-card">
+            <div class="module-hdr"><span class="module-icon">💰</span>售卖信息</div>
+            <div class="module-note">保存后生成一个「自然流量下 · 待生效」的售卖版本；投流场景的售卖版本在「经营方式配置」中另配，不受此处约束。</div>
+            <div class="frow">
+              <label class="flabel"><span class="req">*</span>售卖方式</label>
+              <div class="sm-grid" id="smGrid"></div>
+            </div>
+            <div id="priceArea"></div>
+            <div class="section-div"></div>
+            <div class="frow" style="margin-bottom:0">
+              <label class="flabel">预约转换售卖方式</label>
+              <div class="radio-row">
+                <label class="radio-item"><input type="radio" name="convert" value="no" checked onchange="setConvert('no')"> 否</label>
+                <label class="radio-item"><input type="radio" name="convert" value="yes" onchange="setConvert('yes')"> 预约转换</label>
+              </div>
+              <div id="convertExtra" style="margin-top:10px"></div>
+            </div>
+          </div>
+
+          <div class="module-card">
+            <div class="module-hdr" style="cursor:default"><span class="module-icon">🎬</span>单集售卖属性
+              <span class="module-collapse-btn"><span class="tpl-link" onclick="openSellBatch()">批量设置</span></span>
+            </div>
+            <div class="module-note" id="sellEpNote"></div>
+            <div class="sellep-grid" id="sellEpGrid"></div>
+            <div id="panelBlock" style="display:none">
+              <div class="section-div"></div>
+              <div class="panel-section-hdr">
+                <span class="panel-section-title">营销付费面板</span>
+                <span class="panel-sep">|</span>
+                <span style="font-size:11px;color:#9ca3af">「多集优惠包」与「虚拟币充值」二选一，互斥</span>
+              </div>
+              <div class="ptype-seg">
+                <div class="ptype-item on" id="ptBundle" onclick="setPanelType('bundle')">多集优惠包</div>
+                <div class="ptype-item" id="ptCoin" onclick="setPanelType('coin')">虚拟币充值</div>
+              </div>
+              <div class="panel-section-hdr" style="margin-bottom:12px">
+                <span class="panel-section-title" id="panelCountText" style="font-size:12px">设置多集优惠包(0/10)</span>
+                <span class="panel-sep">|</span>
+                <span class="tpl-link" onclick="toast('管理通用模版（模拟）')">管理通用模版</span>
+              </div>
+              <div class="panel-grid" id="panelGrid"></div>
+            </div>
+          </div>
+
+          <div class="module-card">
+            <div class="module-hdr" style="cursor:default"><span class="module-icon">📣</span>推广方式</div>
+            <div class="module-note">内容上传阶段仅支持「仅发布」与「分账」，默认仅发布、可切换为分账；投流等其他推广方式在「售卖版本」中配置。</div>
+            <div class="radio-row">
+              <label class="radio-item"><input type="radio" name="promote" value="publish" checked onchange="promoteWay='publish'"> 仅发布</label>
+              <label class="radio-item"><input type="radio" name="promote" value="fenzhang" onchange="promoteWay='fenzhang'"> 分账</label>
+            </div>
+          </div>
+
+          <div class="module-card">
+            <div class="module-hdr" style="cursor:default"><span class="module-icon">🖥️</span>场景展示设置</div>
+            <div class="frow">
+              <label class="flabel"><span class="req">*</span>是否 P 页展示</label>
+              <div class="radio-row">
+                <label class="radio-item"><input type="radio" name="ppage" value="yes" onchange="scenePpage='yes'"> 是</label>
+                <label class="radio-item"><input type="radio" name="ppage" value="no" checked onchange="scenePpage='no'"> 否</label>
+              </div>
+              <div style="font-size:11px;color:#dc2626;margin-top:6px">P 页关闭展示后无法再开启</div>
+            </div>
+            <div class="frow">
+              <label class="flabel"><span class="req">*</span>是否搜索展示 <span class="qtip" data-tip="搜索展示包括自然搜索展示、商业化搜索展示">ⓘ</span></label>
+              <div class="radio-row">
+                <label class="radio-item"><input type="radio" name="search" value="yes" checked onchange="sceneSearch='yes'"> 是</label>
+                <label class="radio-item"><input type="radio" name="search" value="no" onchange="sceneSearch='no'"> 否</label>
+              </div>
+            </div>
+            <div class="frow" style="margin-bottom:0">
+              <label class="flabel"><span class="req">*</span>是否榜单展示 <span class="qtip" data-tip="榜单展示指该版本可参与热榜 / 分类榜等榜单曝光">ⓘ</span></label>
+              <div class="radio-row">
+                <label class="radio-item"><input type="radio" name="rank" value="yes" checked onchange="sceneRank='yes'"> 是</label>
+                <label class="radio-item"><input type="radio" name="rank" value="no" onchange="sceneRank='no'"> 否</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="module-card">
+            <div class="module-hdr" style="cursor:default"><span class="module-icon">⏱️</span>生效设置</div>
+            <div class="frow" style="margin-bottom:0">
+              <label class="flabel"><span class="req">*</span>生效时间</label>
+              <div class="radio-row">
+                <label class="radio-item"><input type="radio" name="effect" value="now" checked onchange="setEffect('now')"> 立即生效</label>
+                <label class="radio-item"><input type="radio" name="effect" value="scheduled" onchange="setEffect('scheduled')"> 预约生效</label>
+                <label class="radio-item"><input type="radio" name="effect" value="pending" onchange="setEffect('pending')"> 待生效</label>
+              </div>
+              <div id="effectExtra" style="margin-top:10px;font-size:11px;color:#9ca3af">内容审核通过后该版本立即生效（仍需该剧「已上架」才对 C 端展示）</div>
+            </div>
+          </div>
+
+          <div class="agree-row"><input type="checkbox" checked style="accent-color:#2563eb"><span>请勾选同意 <a href="#">「付费短剧经营者服务协议」</a></span></div>
+          <div class="bottom-actions">
+            <button class="btn btn-blue" id="upSubmitBtn" onclick="submitUpload()">提交审核</button>
+            <button class="btn btn-out" onclick="toast('已保存为草稿')">保存草稿</button>
+            <button class="btn btn-out" onclick="goToStep('episode')">上一步</button>
+            <button class="btn btn-out" onclick="upCancel()">取消</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ VERSION FORM ════════════ -->
+<div class="view" id="view-ver">
+  <div class="page">
+    <div class="crumb"><span class="link" onclick="go('detail')">短剧详情</span> › <b id="verCrumb">新增售卖版本</b></div>
+    <div class="tip-bar" id="verBlockTip" style="display:none"><div id="verBlockText"></div></div>
+    <div class="form-col" style="max-width:860px;padding:16px" id="verFormRoot">
+      <div class="module-card">
+        <div class="module-hdr">版本基础</div>
+        <div class="frow"><label class="flabel"><span class="req">*</span>版本名称 <span style="font-weight:400;color:#9ca3af">内部标识 · 不对 C 端展示 · max30</span></label><input class="finput" id="verName" maxlength="30" placeholder="如：大额投流版" style="max-width:420px"></div>
+        <div class="frow"><label class="flabel">推广方式</label><div class="radio-row" id="verPromoRow"></div>
+          <div class="module-note" id="verPromoNote" style="margin-top:8px"></div>
+        </div>
+      </div>
+      <!-- 投流：绑定投放账户（仅投流可见） -->
+      <div class="module-card" id="verBindBlock" style="display:none">
+        <div class="module-hdr" style="display:flex;align-items:center;justify-content:space-between">
+          <span>绑定投放账户</span>
+          <button class="btn btn-out btn-sm" onclick="openZhitou()">🚀 短剧智投</button>
+        </div>
+        <div class="module-note">投流版本需绑定 DSP 投放账户（投放账户 × 版本 sdpa 1:1）；老剧复投可用「短剧智投」一键智能托管。</div>
+        <div class="frow" style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <input class="finput" id="verAddAcct" placeholder="请输入投放账户id，英文逗号分离" style="max-width:none;flex:1">
+          <button class="btn btn-blue btn-sm" onclick="addVerAccounts()">添加</button>
+        </div>
+        <div class="frow" style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+          <input class="finput" id="verDelAcct" placeholder="请输入投放账户id，英文逗号分离" style="max-width:none;flex:1">
+          <button class="btn btn-out btn-sm" onclick="delVerAccounts()">删除</button>
+        </div>
+        <div style="font-size:12px;font-weight:600;margin-bottom:6px">已绑定账户（<b id="verBoundCount">0</b>）</div>
+        <div id="verBoundList"></div>
+      </div>
+      <div class="module-card">
+        <div class="module-hdr">售卖信息</div>
+        <div class="frow"><label class="flabel"><span class="req">*</span>售卖方式</label><div class="sm-grid" id="verSmGrid"></div></div>
+        <div id="verPriceArea"></div>
+        <div class="frow" style="margin-top:16px"><label class="flabel">设置预约转换</label>
+          <div class="module-note" style="margin:-4px 0 8px">仅支持 IAA ↔ IAP；原版本生效时自动生成转换后关联版本（待生效）</div>
+          <div class="radio-row">
+            <label class="radio-item"><input type="radio" name="verConvert" value="no" checked onchange="setVerConvert('no')"> 否</label>
+            <label class="radio-item"><input type="radio" name="verConvert" value="yes" onchange="setVerConvert('yes')"> 预约转换</label>
+          </div>
+          <div id="verConvertExtra"></div>
+          <div id="verConvertLinkedBlock" style="display:none"></div>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-hdr">单集售卖属性</div>
+        <div class="module-note">全剧统一单集价，不支持一集一价；批量设置仅改 free/paid/ad 属性</div>
+        <div id="verSellEps"></div>
+        <div id="verPanelBlock" style="display:none;margin-top:14px">
+          <div class="upz">
+            <div class="panel-section-hdr">
+              <span class="panel-section-title">营销付费面板</span>
+              <span class="panel-sep">|</span>
+              <span style="font-size:11px;color:#9ca3af">「多集优惠包」与「虚拟币充值」二选一，互斥；最多 10 个</span>
+            </div>
+            <div class="ptype-seg">
+              <div class="ptype-item on" id="vptBundle" onclick="setVerPanelType('bundle')">多集优惠包</div>
+              <div class="ptype-item" id="vptCoin" onclick="setVerPanelType('coin')">虚拟币充值</div>
+            </div>
+            <div class="panel-section-hdr" style="margin-bottom:12px">
+              <span class="panel-section-title" id="verPanelCount" style="font-size:12px">设置多集优惠包(0/10)</span>
+            </div>
+            <div class="panel-grid" id="verPanelGrid"></div>
+          </div>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-hdr">生效设置</div>
+        <div class="frow" style="margin-bottom:0"><label class="flabel"><span class="req">*</span>生效时间</label>
+          <div class="radio-row">
+            <label class="radio-item"><input type="radio" name="veffect" value="now" onchange="setVerEffect('now')"> 立即生效</label>
+            <label class="radio-item"><input type="radio" name="veffect" value="scheduled" onchange="setVerEffect('scheduled')"> 预约生效</label>
+            <label class="radio-item"><input type="radio" name="veffect" value="pending" onchange="setVerEffect('pending')"> 待生效</label>
+          </div>
+          <div id="verEffectExtra" style="margin-top:10px;font-size:11px;color:#9ca3af"></div>
+        </div>
+      </div>
+      <div class="bottom-actions" id="verActions">
+        <button class="btn btn-blue" id="verSaveBtn" onclick="saveVer()">保存版本</button>
+        <button class="btn btn-out" onclick="go('detail')">返回详情</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ HELP ════════════ -->
+<div class="view" id="view-help">
+  <div class="page">
+    <div class="crumb"><span class="link" onclick="go('list')">付费短剧列表</span> › <b>投放 ID / 多账号说明</b></div>
+    <div class="help-box">
+      <h3>投放 ID 链路（PRD 终版 · 版本 × sdpa = 1:1）</h3>
+      <div class="flow">
+        <div class="flow-node blue">经营配置 · 售卖版本</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-node">经营方式？　分账 → 分账结算（不透传 DSP / 不生成 SDPA）</div>
+        <div class="flow-arrow">↓ 投流</div>
+        <div class="flow-node blue">剧集 id（唯一 · 取消复制剧）</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-node amber">售卖版本 id（N）· 一套售卖方式+价格+一个生效面板</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-node amber">产品名 × sdpa（与售卖版本 1:1）</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-node">SDPA / DPA 商品 → 授权 DSP → 投放</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-node green">效果回传：消耗 / ROI 归因到「售卖版本 id」</div>
+      </div>
+      <ul>
+        <li>面板内「全集 / 1集 / 2集」为价格档，属于版本内部，不单独生成 sdpa。</li>
+        <li>强出扶持：同一剧 id 下各售卖版本的 sdpa 命名保持一致。</li>
+      </ul>
+    </div>
+    <div class="help-box">
+      <h3>多账号传播（生效 / 失效 / 预约）</h3>
+      <ol>
+        <li>操作强制级联到以该节点为根的整棵子树（只向下，不向上、不向旁系）。</li>
+        <li>上游优先；上游失效具封禁效力，下游不能自行生效。</li>
+        <li>分销边：跨主体级联 + 通知分销商。</li>
+        <li>「复制版本」脱离级联树，不受任何级联。</li>
+        <li>预约冲突：上游预约覆盖下游。</li>
+      </ol>
+    </div>
+    <div style="padding:0 16px"><button class="btn btn-out" onclick="go('list')">返回列表</button></div>
+  </div>
+</div>
+
+<!-- drawers / modals -->
+<div class="mask" id="mask" onclick="closeEpDrawer()"></div>
+<div class="drawer" id="epDrawer">
+  <div class="dhd"><span class="t">单集内容 / 预告</span><span class="c" onclick="closeEpDrawer()">×</span></div>
+  <div class="dtabs">
+    <div class="dtab on" id="dtEp" onclick="setEpTab('ep')">单集信息</div>
+    <div class="dtab" id="dtTrailer" onclick="setEpTab('trailer')">预告</div>
+    <div class="dtab" id="dtHighlight" onclick="setEpTab('highlight')">高光剪辑</div>
+  </div>
+  <div class="dbody" id="epTabBody"></div>
+</div>
+<!-- 分销商 / 授权账号 侧展示抽屉 -->
+<div class="mask" id="shareMask" onclick="closeShareDrawer()"></div>
+<div class="drawer wide" id="shareDrawer">
+  <div class="dhd"><span class="t" id="shareDrawerTitle">分销商侧展示</span><span class="c" onclick="closeShareDrawer()">×</span></div>
+  <div class="dbody" id="shareDrawerBody"></div>
+</div>
+<div class="ovl" id="ovlColCfg">
+  <div class="modal" style="width:420px;max-width:92vw">
+    <div class="mhd"><span class="mtitle" id="colCfgTitle">列表字段设置</span><span class="mclose" onclick="closeColCfg()">×</span></div>
+    <div class="mbody">
+      <div class="colcfg-hint">勾选显示字段，拖拽 ☰ 调整列顺序。行首复选框列与操作列固定，不可配置。</div>
+      <div id="colCfgList"></div>
+    </div>
+    <div class="mfoot"><button class="btn btn-out" onclick="closeColCfg()">取消</button><button class="btn btn-blue" onclick="confirmColCfg()">确定</button></div>
+  </div>
+</div>
+<div class="ovl" id="ovlSched">
+  <div class="modal">
+    <div class="mhd"><span class="mtitle" id="schedTitle">预约生效</span><span class="mclose" onclick="closeSched()">×</span></div>
+    <div class="mbody">
+      <div style="margin-bottom:8px" id="schedLabel">选择生效时间</div>
+      <input class="finput" type="text" id="schedTime" placeholder="选择日期时间" onfocus="this.type='datetime-local'" style="max-width:none">
+      <div style="font-size:11px;color:#9ca3af;margin-top:8px" id="schedCascade">将级联至该节点子树全部账号（多账号规则）</div>
+    </div>
+    <div class="mfoot">
+      <button class="btn btn-out" id="schedCancelBtn" onclick="cancelSchedule()">取消预约</button>
+      <button class="btn btn-out" onclick="closeSched()">关闭</button>
+      <button class="btn btn-blue" onclick="confirmSched()">确定</button>
+    </div>
+  </div>
+</div>
+<!-- 短剧智投 · 新增老剧复投项目（占位） -->
+<div class="ovl" id="ovlZhitou">
+  <div class="modal" style="width:580px;max-width:92vw">
+    <div class="mhd"><span class="mtitle">短剧智投 · 新增老剧复投项目</span><span class="mclose" onclick="closeZhitou()">×</span></div>
+    <div class="mbody">
+      <div style="font-size:12px;color:#374151;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 12px;margin-bottom:12px;line-height:1.7">
+        老剧一键智能复投：选择复投老剧 → 绑定 DSP 投放账户 → 生成智投项目。智投账户与普通账户相互独立、授权互不影响；创建后将<b>自动启用该账户的「账户智投」功能</b>，系统优选高转化剧集推广，请确保账户余额充足。
+      </div>
+      <div style="font-size:12px;font-weight:600;margin-bottom:6px">选择复投老剧（多选，已选 <b id="ztSelCount">0</b> 部；仅<b>审核通过</b>的老剧可复投）</div>
+      <div id="ztList" style="max-height:220px;overflow:auto;border:1px solid #e5e7eb;border-radius:8px;padding:4px"></div>
+      <div style="display:flex;gap:12px;margin-top:12px">
+        <div style="flex:1"><label style="font-size:11px;color:#9ca3af;display:block;margin-bottom:4px">绑定 DSP 投放账户 <span style="color:#dc2626">*</span></label><input class="finput" id="ztAccount" placeholder="如：1234" style="max-width:none" oninput="syncZtGen()"></div>
+        <div style="flex:1"><label style="font-size:11px;color:#9ca3af;display:block;margin-bottom:4px">创建人 <span style="color:#dc2626">*</span></label><input class="finput" id="ztOwner" placeholder="创建人" style="max-width:none" oninput="syncZtGen()"></div>
+      </div>
+      <div style="font-size:11px;color:#9ca3af;margin-top:8px">支持 Excel 批量导入（模板可下载）· 本 demo 为占位</div>
+    </div>
+    <div class="mfoot">
+      <button class="btn btn-out" onclick="closeZhitou()">取消</button>
+      <button class="btn btn-blue dis" id="ztGenBtn" disabled onclick="genZhitou()">生成智投项目</button>
+    </div>
+  </div>
+</div>
+<div class="ovl" id="ovlDramaSched">
+  <div class="modal">
+    <div class="mhd"><span class="mtitle">预约上架</span><span class="mclose" onclick="document.getElementById('ovlDramaSched').classList.remove('on')">×</span></div>
+    <div class="mbody">
+      <div style="margin-bottom:8px">对该短剧所有售卖版本生效。实际时间 = max(预约时间, 审核通过时间)</div>
+      <input class="finput" type="text" placeholder="选择日期时间" onfocus="this.type='datetime-local'" style="max-width:none">
+    </div>
+    <div class="mfoot"><button class="btn btn-out" onclick="document.getElementById('ovlDramaSched').classList.remove('on')">取消</button><button class="btn btn-blue" onclick="document.getElementById('ovlDramaSched').classList.remove('on');toast('已预约上架')">确定</button></div>
+  </div>
+</div>
+<!-- ════════════ 内容上传向导：抽屉 / 弹窗（完整复现） ════════════ -->
+<div class="upz">
+  <div class="spanel" id="spInfo">
+    <div class="sphdr"><span class="sptitle">批量设置信息</span><span class="mclose" onclick="closeInfo()">×</span></div>
+    <div class="spbody">
+      <div class="frow"><label class="flabel">选择集数</label>
+        <div class="range-row"><input class="finput" id="mF" type="number" min="1" value="2"><span style="color:#9ca3af">—</span><input class="finput" id="mT" type="number" min="1" value="8"></div>
+      </div>
+      <div class="frow"><label class="flabel">单集标题（留空则不修改）</label>
+        <div style="position:relative"><input class="finput" id="mTtl" maxlength="30" placeholder="将覆盖所选集标题" oninput="updMCounter()" style="padding-right:44px"><span id="mCounter" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:10px;color:#c4c4c4">0/30</span></div>
+      </div>
+      <div class="section-div"></div>
+      <div class="section-title">单集封面</div>
+      <div class="frow"><div style="display:flex;gap:10px;align-items:flex-start">
+        <div class="cover-upload-box2" id="batchCoverBox" onclick="clickBatchCover()"><span style="font-size:18px">↑</span><span>上传图片</span></div>
+        <ul class="cover-rules"><li>不允许涉及政治敏感与色情</li><li>图片格式：png/bmp/jpeg/jpg/gif</li><li>不可大于10M</li><li>图片需带有主演角色</li><li style="color:#374151;font-weight:600">该封面图应用于所有所选集</li></ul>
+      </div></div>
+    </div>
+    <div class="spfoot"><button class="btn btn-out" onclick="closeInfo()">取消</button><button class="btn btn-blue" onclick="tryApplyInfo()">确认</button></div>
+  </div>
+
+  <div class="spanel" id="spSellBatch">
+    <div class="sphdr"><span class="sptitle">批量设置单集售卖属性</span><span class="mclose" onclick="closeSellBatch()">×</span></div>
+    <div class="spbody">
+      <div class="frow"><label class="flabel">选择集数</label>
+        <div class="range-row"><input class="finput" id="sbF" type="number" min="1" value="1"><span style="color:#9ca3af">—</span><input class="finput" id="sbT" type="number" min="1" value="3"></div>
+      </div>
+      <div class="frow"><label class="flabel">设为</label><div class="radio-row" id="sbStates"></div></div>
+      <div style="font-size:11px;color:#9ca3af">付费集统一使用「单集价格」，此处不单独设价</div>
+    </div>
+    <div class="spfoot"><button class="btn btn-out" onclick="closeSellBatch()">取消</button><button class="btn btn-blue" onclick="applySellBatch()">确认</button></div>
+  </div>
+
+  <!-- 批量设置解锁集（决策6：归 Step2 批量操作） -->
+  <div class="spanel" id="spUnlock">
+    <div class="sphdr"><span class="sptitle">批量设置解锁集</span><span class="mclose" onclick="closeUnlock()">×</span></div>
+    <div class="spbody">
+      <div class="frow"><label class="flabel">免费集数（解锁集）</label>
+        <div class="range-row" style="flex-wrap:wrap">
+          <span style="color:#6b7280;font-size:12px;white-space:nowrap">前</span>
+          <input class="finput" id="unlockN" type="number" min="0" value="3" style="max-width:90px;flex:none">
+          <span style="color:#6b7280;font-size:12px">集免费，其后各集收费/广告解锁</span>
+        </div>
+      </div>
+      <div style="font-size:11px;color:#9ca3af;line-height:1.8" id="unlockHint"></div>
+      <div class="section-div"></div>
+      <div style="font-size:11px;color:#9ca3af;line-height:1.8">说明：此处仅设置「前 N 集免费」的解锁集口径；免费集之后各集的付费 / 广告解锁属性由第 3 步「售卖方式」决定（IAP→付费、IAA→广告解锁），仍可在第 3 步逐集微调。</div>
+    </div>
+    <div class="spfoot"><button class="btn btn-out" onclick="closeUnlock()">取消</button><button class="btn btn-blue" onclick="applyUnlock()">确认</button></div>
+  </div>
+
+  <div class="spanel" id="spBundle" style="width:400px">
+    <div class="sphdr"><span class="sptitle">添加付费面板</span><span class="mclose" onclick="closeBundleDrawer()">×</span></div>
+    <div class="spbody">
+      <div class="frow"><label class="flabel">面板名称</label><input class="finput" placeholder="如：暑期特惠面板" id="bundleNameInput"></div>
+      <div class="frow">
+        <label class="flabel" id="tierLabel">打包档位（集数 + 价格，可多档）</label>
+        <div id="tierEditList"></div>
+        <span class="add-tier-link" onclick="addTierRow()">＋ 新增档位</span>
+      </div>
+    </div>
+    <div class="spfoot"><button class="btn btn-out" onclick="closeBundleDrawer()">取消</button><button class="btn btn-blue" onclick="confirmCreateBundle()">确认</button></div>
+  </div>
+
+  <div class="spanel" id="sp">
+    <div class="sphdr"><span class="sptitle">批量上传视频</span><span class="mclose" onclick="closeSP()">×</span></div>
+    <div class="spbody">
+      <div style="font-size:12px;color:#1e40af;background:#eff6ff;border-radius:6px;padding:8px 11px;margin-bottom:12px" id="vfStartHint"></div>
+      <div class="dropzone" onclick="simulateDropFiles()">
+        <span style="font-size:22px">＋</span>
+        <span class="dropzone-main">点击或拖拽文件到此上传，将根据文件名自动排序</span>
+        <span class="dropzone-spec">支持mp4、mov、ogg、webm，单集视频15秒~15分钟、不大于1GB</span>
+      </div>
+      <div class="vf-summary" id="vfSummary" style="display:none"></div>
+      <div class="vf-list" id="vfList"></div>
+    </div>
+    <div class="spfoot"><button class="btn btn-blue" onclick="closeSP()">确定</button></div>
+  </div>
+
+  <!-- 批量上传视频：先选起始集 -->
+  <div class="ovl" id="ovlVideoPos">
+    <div class="modal">
+      <div class="mhdr"><span class="mtitle">请选择批量上传位置</span><span class="mclose" onclick="closeVideoPos()">×</span></div>
+      <div class="range-row" style="align-items:center;gap:6px">
+        <span style="color:#6b7280;font-size:13px">从第</span>
+        <input class="finput" id="vfStart" type="number" min="1" value="1" placeholder="请输入" style="max-width:110px">
+        <span style="color:#6b7280;font-size:13px">集开始上传视频</span>
+      </div>
+      <div class="warn-sub" style="margin-top:12px">按文件名顺序从该集依次上传，重复上传的剧集视频将会被覆盖。</div>
+      <div class="mfoot"><button class="btn btn-out" onclick="closeVideoPos()">取消</button><button class="btn btn-blue" onclick="confirmVideoPos()">确定</button></div>
+    </div>
+  </div>
+
+  <!-- 通用删除确认（上传向导） -->
+  <div class="ovl" id="ovlUpConfirm">
+    <div class="modal">
+      <div class="mhdr"><span class="mtitle" id="confirmModalTitle">确认操作</span><span class="mclose" onclick="closeConfirmModal()">×</span></div>
+      <div class="warn-body" id="confirmModalBody"></div>
+      <div class="mfoot"><button class="btn btn-out" onclick="closeConfirmModal()">取消</button><button class="btn btn-danger" onclick="execConfirmModal()">确认删除</button></div>
+    </div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+const SELLMODES=[
+  {k:'full',t:'全剧付费',tag:'IAP',d:'只允许购买全集解锁，不支持单集售卖'},
+  {k:'single',t:'单集+全剧付费',tag:'IAP',d:'单集付费与全集付费均展示，可配营销付费面板；全剧统一单集价'},
+  {k:'ad',t:'观看广告解锁',tag:'IAA',d:'观看激励广告解锁剧集'},
+];
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.style.display='block';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',2200);}
+function go(v){
+  if(v==='upload'){upEnter('new');return;}
+  if(v==='edit'){upEnter('edit');return;}
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('on'));
+  document.getElementById('view-'+v).classList.add('on');
+  const names={list:'列表',detail:'短剧详情',ver:'售卖版本',help:'说明'};
+  document.getElementById('navHint').textContent='当前：'+(names[v]||v);
+  window.scrollTo(0,0);
+  if(v==='detail'){renderHeroOps();renderJy();updateListHint();renderDramaRemark();}
+  if(v==='list'){renderDramaList();renderVerList();}
+}
+
+/* ── List ── */
+function setListTab(t){
+  document.querySelectorAll('.list-tab').forEach(el=>el.classList.toggle('on',el.dataset.lt===t));
+  document.getElementById('list-drama').style.display=t==='drama'?'block':'none';
+  document.getElementById('list-ver').style.display=t==='ver'?'block':'none';
+}
+/* 剧维度列表数据（PRD 3.2.1）：audit 四枚举 draft/review/pass/reject；owner 创始人、schedUp 预约上架时间、ut 更新时间 */
+const CURRENT_DRAMA_ID='1753396';
+function getCurrentDrama(){return dramas.find(d=>d.id===CURRENT_DRAMA_ID);}
+function renderDramaRemark(){
+  const d=getCurrentDrama();const el=document.getElementById('fRemark');
+  if(el)el.textContent=(d&&d.remark)?d.remark:'—';
+}
+const dramas=[
+  {id:'1753396',name:'总裁的秘密恋人',vers:5,sell:'IAP, IAA',promote:'分账, 仅发布, 投流, 分销',up:false,audit:'pass',eps:'60/60',owner:'建草莓酱',schedUp:'—',ct:'2024-11-08',ut:'2024-11-20 10:00',remark:'内部测试剧，勿对外'},
+  {id:'1753401',name:'重生之商业帝国',vers:2,sell:'IAP',promote:'仅发布, 投流',up:true,audit:'pass',eps:'40/40',owner:'张制片',schedUp:'—',ct:'2025-01-12',ut:'2025-01-14 18:30'},
+  {id:'1753410',name:'闪婚后大佬马甲藏不住',vers:0,sell:'—',promote:'—',up:false,audit:'review',eps:'12/80',owner:'李编辑',schedUp:'—',ct:'2025-03-01',ut:'—'},
+  {id:'1753415',name:'甜蜜陷阱',vers:0,sell:'—',promote:'—',up:false,audit:'draft',eps:'0/60',owner:'王运营',schedUp:'—',ct:'2025-03-10',ut:'—'},
+  {id:'1753420',name:'王牌保镖',vers:1,sell:'IAA',promote:'仅发布',up:false,audit:'reject',eps:'30/30',owner:'赵导',schedUp:'2025-02-25 09:00',ct:'2025-02-20',ut:'2025-02-22 14:00'}];
+const AUDIT_META={draft:{t:'待提交',c:'b-gray'},review:{t:'审核中',c:'b-amber'},pass:{t:'审核通过',c:'b-green'},reject:{t:'审核未通过',c:'b-red'}};
+function renderDramaList(){
+  renderDramaHead();
+  const cols=getVisibleColDefs('drama');
+  document.getElementById('dramaListBody').innerHTML=dramas.map(d=>{
+    return `<tr><td class="cbcol"><input type="checkbox" class="cb drama-cb" value="${d.id}" ${dramaSel.has(d.id)?'checked':''} onclick="onDramaCb()"></td>`
+      +cols.map(c=>`<td>${c.cell(d)}</td>`).join('')
+      +`<td>${dramaOpsCell(d)}</td></tr>`;
+  }).join('');
+  syncDramaBatchBar();
+}
+function toggleDramaUp(id){
+  const d=dramas.find(x=>x.id===id);if(!d)return;
+  d.up=!d.up;renderDramaList();
+  toast(d.up?`「${d.name}」已上架（模拟）`:`「${d.name}」已下架（模拟）`);
+}
+/* 剧目 tab 批量操作：勾选任意行后，批量操作条出现在筛选栏下方 */
+const dramaSel=new Set();
+function onDramaCb(){
+  dramaSel.clear();
+  document.querySelectorAll('.drama-cb').forEach(cb=>{if(cb.checked)dramaSel.add(cb.value);});
+  syncDramaBatchBar();
+}
+function toggleDramaSelAll(el){
+  document.querySelectorAll('.drama-cb').forEach(cb=>{cb.checked=el.checked;});
+  onDramaCb();
+}
+function clearDramaSel(){
+  dramaSel.clear();
+  document.querySelectorAll('.drama-cb').forEach(cb=>{cb.checked=false;});
+  const all=document.getElementById('dramaSelAll');if(all){all.checked=false;all.indeterminate=false;}
+  syncDramaBatchBar();
+}
+function syncDramaBatchBar(){
+  const n=dramaSel.size;
+  const bar=document.getElementById('dramaBatchBar');
+  if(bar)bar.classList.toggle('on',n>0);
+  const cnt=document.getElementById('dramaSelCount');if(cnt)cnt.textContent=n;
+  const total=document.querySelectorAll('.drama-cb').length;
+  const all=document.getElementById('dramaSelAll');
+  if(all){all.checked=n>0&&n===total;all.indeterminate=n>0&&n<total;}
+}
+function doDramaBatch(act){
+  const names=[...dramaSel].map(id=>{const d=dramas.find(x=>x.id===id);return d?d.name:id;});
+  toast(`批量${act}（模拟）：${names.join('、')}`);
+}
+/* 短剧智投 · 新增老剧复投项目（占位）：多选审核通过的老剧 → 绑定 DSP 投放账户 + 创建人 → 生成智投项目 */
+let ztSel=new Set();
+function openZhitou(){
+  // 预选：带入列表已勾选，仅保留审核通过的老剧
+  ztSel=new Set([...dramaSel].filter(id=>{const d=dramas.find(x=>x.id===id);return d&&d.audit==='pass';}));
+  renderZtList();
+  document.getElementById('ztAccount').value='';
+  document.getElementById('ztOwner').value='';
+  syncZtGen();
+  document.getElementById('ovlZhitou').classList.add('on');
+}
+function renderZtList(){
+  document.getElementById('ztList').innerHTML=dramas.map(d=>{
+    const ok=d.audit==='pass';
+    const at=AUDIT_META[d.audit]?.t||'';
+    return `<label class="zt-row${ok?'':' zt-dis'}"${ok?'':' title="仅审核通过的老剧可复投智投"'}>
+      <input type="checkbox" class="cb zt-cb" value="${d.id}" ${ztSel.has(d.id)?'checked':''} ${ok?'':'disabled'} onclick="onZtCb('${d.id}',this)">
+      <span class="zt-name">${d.name}</span><span class="zt-id">${d.id}</span><span class="zt-audit">${at}</span>
+    </label>`;
+  }).join('');
+}
+function onZtCb(id,el){if(el.checked)ztSel.add(id);else ztSel.delete(id);syncZtGen();}
+function syncZtGen(){
+  const acct=document.getElementById('ztAccount').value.trim();
+  const owner=document.getElementById('ztOwner').value.trim();
+  const ok=ztSel.size>0&&acct&&owner;
+  const btn=document.getElementById('ztGenBtn');
+  btn.disabled=!ok;btn.classList.toggle('dis',!ok);
+  document.getElementById('ztSelCount').textContent=ztSel.size;
+}
+function closeZhitou(){document.getElementById('ovlZhitou').classList.remove('on');}
+function genZhitou(){
+  const acct=document.getElementById('ztAccount').value.trim();
+  const owner=document.getElementById('ztOwner').value.trim();
+  if(ztSel.size===0){toast('请至少选择一部审核通过的老剧');return;}
+  if(!acct){toast('请绑定 DSP 投放账户');return;}
+  if(!owner){toast('请输入创建人');return;}
+  const names=[...ztSel].map(id=>dramas.find(x=>x.id===id)?.name||id);
+  const pid='ZT'+Date.now().toString().slice(-6);
+  closeZhitou();
+  toast(`已创建智投项目 ${pid}（复投 ${names.length} 部老剧）：已自动开启账户 ${acct} 的「账户智投」开关，可前往 DSP 补充投放素材、绑定素材包`);
+}
+
+/* ── Detail state ── */
+let dramaListed=false, auditPass=true, redDotSeen=false;
+const STMETA={live:{t:'已生效',c:'st-live',d:'d-live'},sched_fail:{t:'已预约失效',c:'st-sfail',d:'d-sfail'},pending:{t:'待生效',c:'st-pend',d:'d-pend'},sched_live:{t:'已预约生效',c:'st-slive',d:'d-slive'},failed:{t:'已失效',c:'st-fail',d:'d-fail'}};
+const isLive=s=>s==='live'||s==='sched_fail';
+let natVers=[
+  // 已转(done) 原版本：IAP→已转为 IAA，原版本失效，关联版本已生效
+  {id:'V202410001',vname:'自然流量基线',mode:'full',pay:'IAP',convert:'done',unlock:'前3集免费，第4集起付费',price:'全剧50元',market:'—',promote:'分账',dist:'—',auth:'—',state:'failed',scene:'P页、搜索、榜单',owner:'建草莓酱',ct:'2024-10-01 12:00',mt:'2024-10-08 00:00',block:'nat',linkedVerId:'V202410001C'},
+  // 上者的关联版本（转换后 IAA），已生效
+  {id:'V202410001C',vname:'自然流量·IAA已转',mode:'ad',pay:'IAA',convert:'none',unlock:'前3集免费，第4集起看广告',price:'—',market:'—',promote:'分账',dist:'—',auth:'60011122',state:'live',scene:'P页、搜索、榜单',owner:'建草莓酱',ct:'2024-10-08 00:00',mt:'2024-10-08 00:00',block:'nat',linkedVerId:'V202410001'},
+  {id:'V202409002',mode:'ad',pay:'IAA',convert:'none',unlock:'前10集免费，第11集起看广告',price:'—',market:'—',promote:'分账',dist:'—',auth:'—',state:'pending',scene:'搜索、榜单',owner:'建草莓酱',ct:'2024-09-15 16:40',mt:'2024-09-15 16:40',block:'nat'},
+];
+let bizVers=[
+  {id:'V202409001',mode:'single',pay:'IAP',convert:'none',unlock:'前8集免费，第9集起付费',price:'单集1.5元 / 全剧20元',market:'多集优惠包',promote:'仅发布',dist:'—',auth:'60011122, 60011188',state:'live',scene:'搜索、榜单',owner:'建草莓酱',ct:'2024-09-01 10:00',mt:'2024-09-01 10:00',block:'biz'},
+  // 已生效+预约转换：生效时自动生成了一个【待生效】的转换后(IAA)关联版本
+  {id:'V202411001',vname:'大额投流版',mode:'single',pay:'IAP',convert:'sched',unlock:'前5集免费，第6集起付费',price:'单集2元 / 全剧30元',market:'虚拟币充值',promote:'投流',dist:'—',auth:'—',state:'live',scene:'P页、搜索、榜单',owner:'投手A',ct:'2024-11-20 10:00',mt:'2024-11-20 10:00',block:'biz',linkedVerId:'V202411001C'},
+  // 上者的关联版本（转换后 IAA），待生效
+  {id:'V202411001C',vname:'大额投流版·IAA待生效',mode:'ad',pay:'IAA',convert:'none',unlock:'前5集免费，第6集起看广告',price:'—',market:'—',promote:'投流',dist:'—',auth:'—',state:'pending',scene:'搜索、榜单',owner:'投手A',ct:'2024-11-20 10:05',mt:'2024-11-20 10:05',block:'biz',linkedVerId:'V202411001'},
+  {id:'V202411002',mode:'ad',pay:'IAA',convert:'none',unlock:'前8集免费，第9集起看广告',price:'—',market:'—',promote:'分销',dist:'88012345, 88012346',auth:'—',state:'pending',scene:'搜索',owner:'投手A',ct:'2024-11-25 09:12',mt:'2024-11-25 09:12',block:'biz'},
+  {id:'V202410002',mode:'ad',pay:'IAA',convert:'none',unlock:'前5集免费，第6集起看广告',price:'—',market:'—',promote:'投流',dist:'—',auth:'—',state:'pending',scene:'搜索、榜单',owner:'投手A',ct:'2024-10-10 11:00',mt:'2024-10-10 11:00',block:'biz'},
+];
+function allVers(){return natVers.concat(bizVers);}
+function findVer(id){return allVers().find(x=>x.id===id);}
+function hasSaleable(){return allVers().length>0;}
+function cvHtml(c){return c==='done'?'<span class="cv-done">● 已转</span>':c==='sched'?'<span class="cv-sched">● 预约转换</span>':'<span style="color:#9ca3af">—</span>';}
+/* 关联版本：预约转换生成的互关版本；带 id 时可点击跳转到该版本详情（openVerForm view） */
+function verLinkLabel(id){const v=findVer(id);if(!v)return id;if(v.vname)return `${id} · ${v.vname}`;const t=SELLMODES.find(x=>x.k===v.mode)?.t||'';return t?`${id}（${t}）`:id;}
+function linkedVerCell(v){
+  if(!v.linkedVerId)return '<span style="color:#9ca3af">—</span>';
+  const lv=findVer(v.linkedVerId);const blk=lv?lv.block:(v.block||'biz');
+  return `<span class="vid2 link" onclick="event.stopPropagation();openVerForm('${blk}','view','${v.linkedVerId}')">${v.linkedVerId}</span>`;
+}
+function setTab(t){
+  ['copyright','make','jy','home'].forEach(k=>{const el=document.getElementById('tab-'+k);if(el)el.style.display=(k===t)?'block':'none';});
+  document.querySelectorAll('#view-detail .tab').forEach(el=>el.classList.toggle('on',el.dataset.t===t));
+  if(t==='home')renderHome();
+}
+/* 主页配置 tab（PRD 3.3）：场景展示设置 + 主页展示设置（合并原「P页展示版本」+「主页装修」）
+   —— 当前剧只能选 1 个【在售】售卖版本在主页(P页)展示；仅【在售】版本可选 */
+let homeSelVer=null; // 选中的在售版本 id
+function renderHome(){
+  const vers=allVers();
+  const saleable=vers.filter(v=>isLive(v.state)); // 在售 = 已生效/已预约失效
+  // 选中版本失效/不存在时回落：优先已在 P 页展示的在售版本，否则第一个在售版本
+  if(!saleable.some(v=>v.id===homeSelVer)){
+    const pre=saleable.find(v=>/P页/.test(v.scene));
+    homeSelVer=pre?pre.id:(saleable[0]?saleable[0].id:null);
+  }
+  const pv=document.getElementById('homeVerList');
+  if(pv){
+    if(!vers.length){pv.innerHTML='<div style="color:#9ca3af;font-size:12px">暂无售卖版本，请先在「经营配置」新增</div>';}
+    else if(!saleable.length){pv.innerHTML='<div style="color:#d97706;font-size:12px">暂无【在售】版本可选：需先在「经营配置」让某个版本生效</div>';}
+    else pv.innerHTML=vers.map(v=>{
+      const m=STMETA[v.state];const sale=isLive(v.state);
+      return `<label class="home-vrow${sale?'':' dis'}">
+        <input type="radio" name="home_pver" value="${v.id}" ${homeSelVer===v.id?'checked':''} ${sale?'':'disabled'} onchange="homeSelVer='${v.id}';renderHomePreview()">
+        <span class="vid2">${v.id}</span>
+        <span class="tag ${v.pay==='IAP'?'pay-iap':'pay-iaa'}">${v.pay}</span>
+        <span class="pm">${v.promote}</span>
+        <span class="st ${m.c}"><span class="dot ${m.d}"></span>${m.t}</span>
+        <span class="badge ${sale?'b-blue':'b-gray'}" style="font-size:10px">${sale?'在售':'非在售'}</span>
+        ${sale?'':'<span style="color:#9ca3af;font-size:11px">仅【在售】版本可在主页展示</span>'}
+      </label>`;
+    }).join('');
+  }
+  renderHomePreview();
+}
+function renderHomePreview(){
+  const box=document.getElementById('homePreview');if(!box)return;
+  const v=allVers().find(x=>x.id===homeSelVer && isLive(x.state));
+  box.innerHTML=`<div style="font-size:11px;font-weight:700;text-align:center;margin-bottom:8px">经营者主页</div>
+    <div style="font-size:11px;font-weight:600;margin-bottom:6px">短剧</div>`+
+    (v?`<div class="pp-card"><span class="pp-thumb"></span><span style="min-width:0"><b style="font-size:11px">总裁的秘密恋人</b><br><span style="color:#9ca3af;font-size:10px">${v.id} · ${v.pay}</span></span></div>`
+      :'<div style="color:#9ca3af;font-size:11px">未选择在售版本</div>');
+}
+function updateListHint(){
+  const el=document.getElementById('listHint');
+  const show=!dramaListed && allVers().some(v=>isLive(v.state)||v.state==='pending'||v.state==='sched_live');
+  el.style.display=show?'flex':'none';
+}
+function renderHeroOps(){
+  const canList=auditPass && hasSaleable();
+  const needDot=!dramaListed && canList && !redDotSeen;
+  const more=`<span class="more-wrap"><button class="btn btn-out" onclick="toggleHeroMore(event)">更多 ▾</button>
+    <span class="more-menu" id="heroMore">
+      <a onclick="go('edit')">编辑</a>
+      <a class="danger" onclick="toast('删除短剧（模拟）')">删除</a>
+    </span></span>`;
+  if(dramaListed){
+    document.getElementById('heroOps').innerHTML=`<button class="btn btn-out" onclick="setListed(false)">下架</button>`+more;
+  }else{
+    const listCls=canList?'btn btn-blue':'btn btn-blue dis';
+    const listTitle=!auditPass?'审核中不可上架':(!hasSaleable()?'请配置售卖版本':'');
+    const listDot=needDot?' red-dot':'';
+    const schedDot=needDot?' red-dot':'';
+    document.getElementById('heroOps').innerHTML=
+      `<button class="${listCls}${listDot}" title="${listTitle}" ${canList?'':'disabled'} onclick="tryList()">${canList?'上架':'上架'}</button>
+       <button class="btn btn-out${schedDot}" onclick="openDramaSched()">预约上架</button>`+more;
+  }
+}
+function tryList(){if(!auditPass){toast('审核中不可上架');return;}if(!hasSaleable()){toast('请配置售卖版本');return;}redDotSeen=true;setListed(true);}
+function openDramaSched(){redDotSeen=true;renderHeroOps();document.getElementById('ovlDramaSched').classList.add('on');}
+function toggleHeroMore(e){e.stopPropagation();document.getElementById('heroMore').classList.toggle('on');}
+function setListed(v){
+  dramaListed=v;renderHeroOps();
+  const b=document.getElementById('dramaBadge');
+  b.className='badge '+(v?'b-green':'b-gray');b.textContent=v?'已上架':'已下架';
+  document.getElementById('fUpState').textContent=v?'已上架':'已下架';
+  const j=document.getElementById('jyUpState');
+  if(j){j.textContent=v?'已上架':'已下架';j.style.color=v?'#16a34a':'#6b7280';}
+  updateListHint();
+  toast(v?'整剧已上架（所有已生效版本对外展示）':'整剧已下架（所有版本不对外）');
+}
+function opHtml(v,block){
+  const live=isLive(v.state);
+  let h=`<span class="opbtn" onclick="openVerForm('${block}','view','${v.id}')">查看</span>`;
+  if(live){
+    h+=`<span class="opbtn ob-red" onclick="doAct('${v.id}','fail')">失效</span>`;
+    h+=`<span class="opbtn ob-red" onclick="openSched('${v.id}','sched_fail')">${v.state==='sched_fail'?'改期失效':'预约失效'}</span>`;
+  }else{
+    h+=`<span class="opbtn ob-green" onclick="doAct('${v.id}','live')">${v.state==='sched_live'?'立即生效':'生效'}</span>`;
+    h+=`<span class="opbtn ob-orange" onclick="openSched('${v.id}','sched_live')">${v.state==='sched_live'?'改期生效':'预约生效'}</span>`;
+  }
+  h+=`<span class="more-wrap"><button class="opbtn" onclick="toggleMore(event,'moreD-${v.id}')">其他 ▾</button>
+    <span class="more-menu" id="moreD-${v.id}">
+      <a onclick="openVerForm('${block}','edit','${v.id}')">编辑</a>
+      <a onclick="openVerForm('${block}','copy','${v.id}')">复制</a>
+    </span></span>`;
+  return h;
+}
+/* 分销商 / 授权账号 侧展示：点击 UID 单元格 → 右侧抽屉，展示该版本在各分销商/子账号侧的列表（字段与其侧一致，版权商侧无操作项） */
+const DIST_INFO={
+  '88012345':{name:'永盛视源',share:'版权10% 分销90%',earliest:'2026-06-01',deadline:'2027-06-01'},
+  '88012346':{name:'星辰文化',share:'版权15% 分销85%',earliest:'2026-06-15',deadline:'2027-12-31'},
+};
+const AUTH_INFO={
+  '60011122':{name:'快手子账号A',earliest:'2026-05-01',deadline:'长期有效'},
+  '60011188':{name:'快手子账号B',earliest:'2026-05-10',deadline:'长期有效'},
+};
+const OUR_SUPPLIER='北京快手科技·官方';
+function shareCell(v,kind){
+  const raw=((kind==='dist'?v.dist:v.auth)||'—');
+  if(!raw||raw==='—')return '—';
+  return `<a class="sharelink" onclick="event.stopPropagation();openShareDrawer('${v.id}','${kind}')">${raw}</a>`;
+}
+function openShareDrawer(verId,kind){
+  const v=findVer(verId);if(!v)return;
+  const uids=((kind==='dist'?v.dist:v.auth)||'').split(',').map(s=>s.trim()).filter(x=>x&&x!=='—');
+  const info=kind==='dist'?DIST_INFO:AUTH_INFO;
+  const idLabel=kind==='dist'?'分销商':'授权子账号';
+  const title=(kind==='dist'?'分销商侧展示':'授权子账号侧展示')+' · '+(v.vname||v.id);
+  const sub=kind==='dist'
+    ? `以下为该版本「${v.vname||'默认版本'}（${v.id}）」被分销后，在各<b>分销商</b>「分销短剧」列表中的展示。字段与分销商侧一致，版权商侧不含列表操作项。`
+    : `以下为该版本「${v.vname||'默认版本'}（${v.id}）」在各<b>授权子账号</b>侧的展示。子账号与版权商为同步关系（无独立分成），版权商侧不含列表操作项。`;
+  const cvText=v.convert==='done'?'已转':v.convert==='sched'?'预约转换':'无';
+  const modeT=SELLMODES.find(x=>x.k===v.mode)?.t||'';
+  const rows=uids.length?uids.map(uid=>{
+    const d=info[uid]||{name:'—'};
+    const share=kind==='dist'?(d.share||'—'):'同步授权（无独立分成）';
+    return `<tr>
+      <td><b>${d.name||'—'}</b><br><span style="color:#9ca3af;font-size:11px">UID ${uid}</span></td>
+      <td><div class="drama-cell"><div class="thumb" style="width:30px;height:40px"></div><div><div class="dname">总裁的秘密恋人</div><div class="did">1753396</div></div></div></td>
+      <td>${v.vname||'默认版本'}</td>
+      <td><span class="vid2">${v.id}</span></td>
+      <td>${v.linkedVerId||'无'}</td>
+      <td>${cvText}</td>
+      <td><span class="tag ${v.pay==='IAP'?'pay-iap':'pay-iaa'}">${v.pay}</span> ${modeT}</td>
+      <td>${OUR_SUPPLIER}</td>
+      <td>${v.scene}</td>
+      <td>${share}</td>
+      <td>短剧</td>
+      <td>${d.earliest||'—'}</td>
+      <td>${d.deadline||'—'}</td>
+      <td>${v.ct}</td>
+    </tr>`;
+  }).join(''):`<tr><td colspan="14" style="text-align:center;color:#9ca3af;padding:20px">该版本暂无${idLabel}</td></tr>`;
+  document.getElementById('shareDrawerTitle').textContent=title;
+  document.getElementById('shareDrawerBody').innerHTML=`
+    <div class="blk-sub" style="max-width:none;margin-bottom:12px">${sub}</div>
+    <div style="overflow-x:auto"><table class="sd-tbl">
+      <thead><tr><th>${idLabel}</th><th>短剧信息</th><th>版本名称</th><th>版本ID</th><th>关联版本</th><th>售卖转换</th><th>售卖方式</th><th>供应商账号</th><th>场景展示</th><th>${kind==='dist'?'分成比例':'授权方式'}</th><th>内容类型</th><th>允许最早上架时间</th><th>合作截止时间</th><th>创建时间</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>`;
+  document.getElementById('shareMask').classList.add('on');
+  document.getElementById('shareDrawer').classList.add('on');
+}
+function closeShareDrawer(){document.getElementById('shareMask').classList.remove('on');document.getElementById('shareDrawer').classList.remove('on');}
+
+/* ══ 列表字段自定义：COL_DEFS + 配置存储 + 动态表头/行渲染 ══ */
+const COL_CFG_TITLES={drama:'剧目列表 · 字段设置',ver:'版本列表 · 字段设置',jy:'经营配置版本列表 · 字段设置'};
+function dramaOpsCell(d){
+  const op=d.up
+    ? `<a onclick="toggleDramaUp('${d.id}')">下架</a>`
+    : `<a onclick="toggleDramaUp('${d.id}')">上架</a>　<a onclick="toast('预约上架（模拟）：${d.name}')">预约上架</a>`;
+  return `<a onclick="go('edit')">编辑</a>　${op}`;
+}
+const DRAMA_COL_DEFS=[
+  {key:'drama',label:'短剧',cell:d=>`<div class="drama-cell"><div class="thumb"></div><div><div class="dname link" onclick="go('detail')">${d.name}</div><div class="did">${d.id}</div></div></div>`},
+  {key:'vers',label:'售卖版本数量',cell:d=>`<a onclick="go('detail');setTab('jy')">${d.vers}</a>`},
+  {key:'audit',label:'审核状态',cell:d=>{const a=AUDIT_META[d.audit]||AUDIT_META.review;return `<span class="badge ${a.c}">${a.t}</span>`;}},
+  {key:'up',label:'售卖状态',cell:d=>`<span class="badge ${d.up?'b-green':'b-gray'}">${d.up?'已上架':'已下架'}</span>`},
+  {key:'schedUp',label:'预约上架时间',cell:d=>d.schedUp||'—'},
+  {key:'sell',label:'售卖方式',thHtml:'售卖方式 <span title="按版本维度聚合：剧下任一版本匹配即命中" style="color:#9ca3af;cursor:help">ⓘ</span>',cell:d=>d.sell},
+  {key:'promote',label:'推广方式',thHtml:'推广方式 <span title="按版本维度聚合：该剧所有版本使用的推广方式去重合集" style="color:#9ca3af;cursor:help">ⓘ</span>',cell:d=>d.promote||'—'},
+  {key:'eps',label:'上传集数/总集数',cell:d=>d.eps},
+  {key:'owner',label:'创始人',cell:d=>d.owner||'—'},
+  {key:'ct',label:'创建时间',cell:d=>d.ct},
+  {key:'ut',label:'更新时间',cell:d=>d.ut||'—'},
+];
+function verPayCell(v){return `<span class="tag ${v.pay==='IAP'?'pay-iap':'pay-iaa'}">${v.pay==='IAP'?'付费短剧':'免费短剧'}</span>`;}
+function verStateCell(v){const m=STMETA[v.state];return `<span class="st ${m.c}"><span class="dot ${m.d}"></span>${m.t}</span>`;}
+function verDramaCell(){return `<div class="drama-cell"><div class="thumb"></div><div><div class="dname link" onclick="go('detail')">总裁的秘密恋人</div><div class="did">1753396</div></div></div>`;}
+const VER_COL_DEFS=[
+  {key:'vname',label:'版本名称',cell:v=>v.vname||'默认版本'},
+  {key:'id',label:'版本 ID',cell:v=>`<span class="vid2">${v.id}</span>`},
+  {key:'drama',label:'短剧',cell:()=>verDramaCell()},
+  {key:'pay',label:'售卖方式',cell:v=>verPayCell(v)},
+  {key:'convert',label:'售卖转换',cell:v=>cvHtml(v.convert)},
+  {key:'linked',label:'关联版本',cell:v=>linkedVerCell(v)},
+  {key:'unlock',label:'解锁集配置',cell:v=>v.unlock},
+  {key:'price',label:'价格配置',cell:v=>v.price},
+  {key:'market',label:'营销方式',cell:v=>v.market},
+  {key:'promote',label:'推广方式',cell:v=>`<span class="pm">${v.promote}</span>`},
+  {key:'dist',label:'分销商',cell:v=>shareCell(v,'dist')},
+  {key:'auth',label:'授权账号',cell:v=>shareCell(v,'auth')},
+  {key:'state',label:'经营状态',cell:v=>verStateCell(v)},
+  {key:'onsale',label:'是否在售',cell:v=>isLive(v.state)?'是':'否'},
+  {key:'scene',label:'场景展示',cell:v=>v.scene},
+  {key:'owner',label:'创建人',cell:v=>v.owner||'—'},
+  {key:'ct',label:'创建时间',cell:v=>v.ct},
+  {key:'mt',label:'修改时间',cell:v=>v.mt||'—'},
+];
+const JY_COL_DEFS=VER_COL_DEFS.filter(c=>c.key!=='drama');
+const COL_DEFS_MAP={drama:DRAMA_COL_DEFS,ver:VER_COL_DEFS,jy:JY_COL_DEFS};
+function mkColConfig(key){const defs=COL_DEFS_MAP[key];return {order:defs.map(d=>d.key),visible:Object.fromEntries(defs.map(d=>[d.key,true]))};}
+let colConfigs={drama:mkColConfig('drama'),ver:mkColConfig('ver'),jy:mkColConfig('jy')};
+let colCfgKey=null,colCfgDraft=null,colCfgDragKey=null;
+function getVisibleColDefs(key){
+  const cfg=colConfigs[key],defs=COL_DEFS_MAP[key];
+  return cfg.order.filter(k=>cfg.visible[k]!==false).map(k=>defs.find(d=>d.key===k)).filter(Boolean);
+}
+function thHtml(c){return c.thHtml||c.label;}
+function renderDramaHead(){
+  const head=document.getElementById('dramaListHead');if(!head)return;
+  const cols=getVisibleColDefs('drama');
+  head.innerHTML=`<th class="cbcol"><input type="checkbox" class="cb" id="dramaSelAll" onclick="toggleDramaSelAll(this)"></th>`
+    +cols.map(c=>`<th>${thHtml(c)}</th>`).join('')+`<th>操作</th>`;
+}
+function renderVerHead(){
+  const head=document.getElementById('verListHead');if(!head)return;
+  head.innerHTML=getVisibleColDefs('ver').map(c=>`<th>${thHtml(c)}</th>`).join('')+`<th>操作</th>`;
+}
+function renderJyHead(block){
+  const headId=block==='nat'?'natListHead':'bizListHead';
+  const head=document.getElementById(headId);if(!head)return;
+  const minW=block==='nat'?'300px':'340px';
+  head.innerHTML=getVisibleColDefs('jy').map(c=>`<th>${thHtml(c)}</th>`).join('')+`<th class="ops" style="min-width:${minW}">操作</th>`;
+}
+function openColCfg(key){
+  colCfgKey=key;colCfgDraft=JSON.parse(JSON.stringify(colConfigs[key]));
+  document.getElementById('colCfgTitle').textContent=COL_CFG_TITLES[key]||'列表字段设置';
+  renderColCfgList();
+  document.getElementById('ovlColCfg').classList.add('on');
+}
+function closeColCfg(){document.getElementById('ovlColCfg').classList.remove('on');colCfgKey=null;colCfgDraft=null;colCfgDragKey=null;}
+function renderColCfgList(){
+  const list=document.getElementById('colCfgList');if(!list||!colCfgDraft)return;
+  const defs=COL_DEFS_MAP[colCfgKey];
+  list.innerHTML=colCfgDraft.order.map(key=>{
+    const d=defs.find(x=>x.key===key);if(!d)return '';
+    const chk=colCfgDraft.visible[key]!==false;
+    return `<div class="colcfg-item" draggable="true" ondragstart="onColDragStart(event,'${key}')" ondragover="onColDragOver(event)" ondragleave="onColDragLeave(event)" ondrop="onColDrop(event,'${key}')">
+      <span class="colcfg-handle">☰</span>
+      <label><input type="checkbox" ${chk?'checked':''} onchange="colCfgDraft.visible['${key}']=this.checked"> ${d.label}</label>
+    </div>`;
+  }).join('');
+}
+function onColDragStart(e,key){colCfgDragKey=key;e.dataTransfer.effectAllowed='move';}
+function onColDragOver(e){e.preventDefault();e.currentTarget.classList.add('drag-over');}
+function onColDragLeave(e){e.currentTarget.classList.remove('drag-over');}
+function onColDrop(e,targetKey){
+  e.preventDefault();e.currentTarget.classList.remove('drag-over');
+  if(!colCfgDragKey||colCfgDragKey===targetKey||!colCfgDraft)return;
+  const order=colCfgDraft.order,from=order.indexOf(colCfgDragKey),to=order.indexOf(targetKey);
+  if(from<0||to<0)return;
+  order.splice(from,1);order.splice(to,0,colCfgDragKey);colCfgDragKey=null;renderColCfgList();
+}
+function confirmColCfg(){
+  if(!colCfgDraft||!colCfgKey)return;
+  const vis=Object.values(colCfgDraft.visible).some(v=>v!==false);
+  if(!vis){toast('请至少保留一个显示字段');return;}
+  colConfigs[colCfgKey]=JSON.parse(JSON.stringify(colCfgDraft));
+  closeColCfg();
+  if(colCfgKey==='drama')renderDramaList();
+  else if(colCfgKey==='ver')renderVerList();
+  else renderJy();
+  toast('列表字段已更新');
+}
+
+function verRow(v,block){
+  const cols=getVisibleColDefs('jy');
+  return `<tr>${cols.map(c=>`<td>${c.cell(v,block)}</td>`).join('')}<td class="ops">${opHtml(v,block)}</td></tr>`;
+}
+function renderJy(){
+  renderJyHead('nat');renderJyHead('biz');
+  document.getElementById('natBody').innerHTML=natVers.map(v=>verRow(v,'nat')).join('');
+  document.getElementById('bizBody').innerHTML=bizVers.map(v=>verRow(v,'biz')).join('');
+}
+function doAct(id,act){
+  const v=findVer(id);if(!v)return;
+  if(act==='live'){
+    if(v.block==='nat'||v.promote==='分账'){
+      const other=natVers.find(x=>x.id!==id&&isLive(x.state));
+      if(other){toast(`分账版本同时仅一个可生效：请先失效「${other.id}」`);return;}
+    }
+    v.state='live';
+  }else if(act==='fail')v.state='failed';
+  renderJy();renderVerList();updateListHint();
+  toast(`「${id}」已${act==='live'?'生效':'失效'}（将级联子树账号）`);
+}
+let pendingSched=null;
+function openSched(id,type){
+  pendingSched={id,type};const v=findVer(id);
+  const isLiveSched=(type==='sched_live');
+  document.getElementById('schedTitle').textContent=isLiveSched?'预约生效':'预约失效';
+  document.getElementById('schedLabel').textContent=isLiveSched?'选择生效时间':'选择失效时间';
+  document.getElementById('schedCancelBtn').style.display=(v.state===type)?'inline-flex':'none';
+  document.getElementById('schedTime').value='';document.getElementById('schedTime').type='text';
+  document.getElementById('ovlSched').classList.add('on');
+}
+function closeSched(){document.getElementById('ovlSched').classList.remove('on');pendingSched=null;}
+function confirmSched(){const {id,type}=pendingSched;const v=findVer(id);v.state=type;closeSched();renderJy();renderVerList();toast(type==='sched_live'?`「${id}」已预约生效`:`「${id}」已预约失效`);}
+function cancelSchedule(){const {id,type}=pendingSched;const v=findVer(id);v.state=(type==='sched_live')?'pending':'live';closeSched();renderJy();toast('已取消预约');}
+document.addEventListener('click',()=>document.querySelectorAll('.more-menu').forEach(m=>m.classList.remove('on')));
+/* 轻量多选下拉：展开/收起 + 勾选后按钮显示已选摘要 */
+function toggleMsel(e,id){
+  e.stopPropagation();
+  const el=document.getElementById(id);const open=el.classList.contains('on');
+  document.querySelectorAll('.msel.on').forEach(m=>m.classList.remove('on'));
+  if(!open)el.classList.add('on');
+}
+function onMselChange(id){
+  const el=document.getElementById(id);const txt=el.querySelector('.msel-txt');
+  const labels=[...el.querySelectorAll('input:checked')].map(i=>i.parentNode.textContent.trim());
+  if(labels.length){txt.textContent=labels.join('、');txt.classList.remove('ph');}
+  else{txt.textContent=el.dataset.ph;txt.classList.add('ph');}
+}
+document.addEventListener('click',()=>document.querySelectorAll('.msel.on').forEach(m=>m.classList.remove('on')));
+
+function renderVerList(){
+  renderVerHead();
+  const cols=getVisibleColDefs('ver');
+  document.getElementById('verListBody').innerHTML=allVers().map(v=>{
+    return `<tr>${cols.map(c=>`<td>${c.cell(v)}</td>`).join('')}<td class="ops">${verTabOpHtml(v)}</td></tr>`;
+  }).join('');
+}
+/* 版本 tab 操作（PRD 版本维度）：查看 / 生效·失效 / 预约生效·预约失效 / 其他（编辑、复制），按状态机显隐 */
+function verTabOpHtml(v){
+  const live=isLive(v.state);
+  let h=`<span class="opbtn" onclick="openVerForm('${v.block}','view','${v.id}')">查看</span>`;
+  if(live){
+    h+=`<span class="opbtn ob-red" onclick="doAct('${v.id}','fail')">失效</span>`;
+    h+=`<span class="opbtn ob-red" onclick="openSched('${v.id}','sched_fail')">${v.state==='sched_fail'?'改期失效':'预约失效'}</span>`;
+  }else{
+    h+=`<span class="opbtn ob-green" onclick="doAct('${v.id}','live')">${v.state==='sched_live'?'立即生效':'生效'}</span>`;
+    h+=`<span class="opbtn ob-orange" onclick="openSched('${v.id}','sched_live')">${v.state==='sched_live'?'改期生效':'预约生效'}</span>`;
+  }
+  h+=`<span class="more-wrap"><button class="opbtn" onclick="toggleMore(event,'more-${v.id}')">其他 ▾</button>
+    <span class="more-menu" id="more-${v.id}">
+      <a onclick="openVerForm('${v.block}','edit','${v.id}')">编辑</a>
+      <a onclick="openVerForm('${v.block}','copy','${v.id}')">复制</a>
+    </span></span>`;
+  return h;
+}
+function toggleMore(e,id){e.stopPropagation();const m=document.getElementById(id);const open=m.classList.contains('on');document.querySelectorAll('.more-menu').forEach(x=>x.classList.remove('on'));if(!open)m.classList.add('on');}
+
+/* ── Episode drawer ── */
+const EPS=[{n:1,t:'第一集 · 命运的相遇'},{n:2,t:'第二集 · 隐藏的身份'},{n:3,t:'第三集 · 危机降临'},{n:4,t:'第四集 · 反击开始'},{n:5,t:'第五集 · 真相大白'},{n:6,t:'第六集 · 终极对决'}];
+let TRAILERS=[{t:'总裁的秘密恋人 · 正片预告',dur:'00:32'}];
+let HIGHLIGHTS=[{t:'总裁的秘密恋人 · 名场面高光',dur:'00:18'}];
+function openEpDrawer(){document.getElementById('mask').classList.add('on');document.getElementById('epDrawer').classList.add('on');setEpTab('ep');}
+function closeEpDrawer(){document.getElementById('mask').classList.remove('on');document.getElementById('epDrawer').classList.remove('on');}
+function setEpTab(t){
+  document.getElementById('dtEp').classList.toggle('on',t==='ep');
+  document.getElementById('dtTrailer').classList.toggle('on',t==='trailer');
+  document.getElementById('dtHighlight').classList.toggle('on',t==='highlight');
+  const b=document.getElementById('epTabBody');
+  if(t==='ep'){
+    b.innerHTML=EPS.map(e=>`<div class="eprow"><div class="epcov"></div><div style="flex:1"><div style="font-weight:700;font-size:12px">第${e.n}集</div><div style="font-size:11.5px;color:#6b7280;margin-top:2px">${e.t}</div></div></div>`).join('');
+  }else if(t==='trailer'){
+    b.innerHTML=`<div style="border:1.5px dashed #93c5fd;border-radius:9px;padding:16px;text-align:center;color:#2563eb;cursor:pointer;margin-bottom:10px" onclick="TRAILERS.push({t:'新建预告 '+(TRAILERS.length+1),dur:'00:15'});setEpTab('trailer');toast('已新建预告')">＋ 新建预告</div>`+
+      TRAILERS.map(tr=>`<div class="eprow"><div class="epcov" style="width:64px;height:40px"></div><div style="flex:1"><div style="font-weight:700;font-size:12px">${tr.t}</div><div style="font-size:11px;color:#6b7280">时长 ${tr.dur}</div></div>
+      <span style="color:#2563eb;cursor:pointer;font-size:12px" onclick="toast('编辑预告')">编辑</span></div>`).join('');
+  }else{
+    b.innerHTML=`<div style="border:1.5px dashed #93c5fd;border-radius:9px;padding:16px;text-align:center;color:#2563eb;cursor:pointer;margin-bottom:10px" onclick="HIGHLIGHTS.push({t:'高光剪辑 '+(HIGHLIGHTS.length+1),dur:'00:20'});setEpTab('highlight');toast('已添加高光剪辑')">＋ 添加高光剪辑</div>`+
+      HIGHLIGHTS.map(hl=>`<div class="eprow"><div class="epcov" style="width:64px;height:40px"></div><div style="flex:1"><div style="font-weight:700;font-size:12px">${hl.t}</div><div style="font-size:11px;color:#6b7280">时长 ${hl.dur}</div></div>
+      <span style="color:#2563eb;cursor:pointer;font-size:12px" onclick="toast('编辑高光剪辑')">编辑</span></div>`).join('');
+  }
+}
+
+/* ══════════ 内容上传 / 信息编辑 向导（完整复现 短剧内容上传-重构demo.html，不删减） ══════════ */
+let upMode='new'; // 'new'=内容上传 | 'edit'=从列表/详情进入的短剧信息编辑（同一向导复用）
+function upEnter(mode){
+  upMode=mode;
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('on'));
+  document.getElementById('view-upload').classList.add('on');
+  document.getElementById('navHint').textContent='当前：'+(mode==='edit'?'信息编辑':'内容上传');
+  document.getElementById('upCrumb').innerHTML = mode==='edit'
+    ? `<span class="link" onclick="go('detail')">短剧详情</span> › <b>短剧信息编辑</b>`
+    : `<span class="link" onclick="go('list')">付费短剧列表</span> › <b>内容上传</b>`;
+  upReviewPass=false;upReviewOpen=(mode==='edit');renderUpReview();
+  document.getElementById('upReview').style.display = mode==='edit'?'block':'none';
+  const ti=document.getElementById('upTitleInput');
+  ti.disabled=(mode==='edit');ti.style.background=(mode==='edit')?'#f9fafb':'#fff';
+  const d=getCurrentDrama();
+  document.getElementById('upRemarkInput').value=(mode==='edit'&&d&&d.remark)?d.remark:'';
+  currentTab='basic';visited={basic:false,episode:false,sell:false};renderTabUI();
+  window.scrollTo(0,0);
+}
+function upCancel(){toast('已取消');go(upMode==='edit'?'detail':'list');}
+function submitUpload(){
+  const remark=document.getElementById('upRemarkInput').value.trim();
+  if(upMode==='edit'){
+    const d=getCurrentDrama();if(d)d.remark=remark;
+    toast('修改已提交审核；售卖信息变更将按生效设置更新自然流量版本');go('detail');
+  }else{toast('内容+售卖信息已提交审核；将生成「自然流量·待生效」售卖版本，审核通过后按规则生效');go('list');}
+}
+
+/* ── 编辑态：审核结果面板 ── */
+let upReviewOpen=false,upReviewPass=false;
+function renderUpReview(){
+  const p=document.getElementById('upReview');
+  p.className='review-panel '+(upReviewPass?'pass':'fail');
+  document.getElementById('upReviewTitle').textContent=upReviewPass?'✓ 短剧审核通过':'⚠ 短剧审核未通过，共 2 个问题需修改';
+  document.getElementById('upReviewArrow').style.display=upReviewPass?'none':'inline-block';
+  document.getElementById('upReviewArrow').classList.toggle('open',upReviewOpen&&!upReviewPass);
+  document.getElementById('upReviewBody').classList.toggle('open',upReviewOpen&&!upReviewPass);
+}
+function toggleUpReview(){if(upReviewPass)return;upReviewOpen=!upReviewOpen;renderUpReview();}
+function toggleUpReviewPass(){upReviewPass=!upReviewPass;upReviewOpen=!upReviewPass;renderUpReview();}
+
+/* ── 通用确认弹层（上传向导） ── */
+let confirmModalCallback=null;
+function showConfirmModal(title,body,cb){
+  document.getElementById('confirmModalTitle').textContent=title;
+  document.getElementById('confirmModalBody').textContent=body;
+  confirmModalCallback=cb;
+  document.getElementById('ovlUpConfirm').classList.add('on');
+}
+function closeConfirmModal(){document.getElementById('ovlUpConfirm').classList.remove('on');confirmModalCallback=null;}
+function execConfirmModal(){const cb=confirmModalCallback;closeConfirmModal();if(cb)cb();}
+
+/* ── 步骤切换 ── */
+let currentTab='basic';
+let visited={basic:false,episode:false,sell:false};
+function switchTab(tab){if(tab===currentTab)return;visited[currentTab]=true;currentTab=tab;renderTabUI();}
+function goToStep(tab){visited[currentTab]=true;currentTab=tab;renderTabUI();}
+function renderTabUI(){
+  document.getElementById('tabContentBasic').style.display=currentTab==='basic'?'block':'none';
+  document.getElementById('tabContentEpisode').style.display=currentTab==='episode'?'block':'none';
+  document.getElementById('tabContentSell').style.display=currentTab==='sell'?'block':'none';
+  updStep('basic','circleBasic','nameBasic','1');
+  updStep('episode','circleEpisode','nameEpisode','2');
+  updStep('sell','circleSell','nameSell','3');
+  if(currentTab==='sell')renderSell();
+}
+function updStep(id,circleId,nameId,num){
+  const c=document.getElementById(circleId),n=document.getElementById(nameId);
+  if(currentTab===id){c.className='tab-circle current';c.textContent=num;n.className='tab-name';}
+  else if(visited[id]){c.className='tab-circle done';c.textContent='✓';n.className='tab-name done';}
+  else{c.className='tab-circle next';c.textContent=num;n.className='tab-name next';}
+}
+function toggleModule(id){
+  const body=document.getElementById('body-'+id);
+  const txt=document.getElementById('collapseTxt-'+id);
+  const arrow=document.getElementById('collapseArrow-'+id);
+  const isCollapsed=body.classList.toggle('collapsed');
+  document.getElementById(id).classList.toggle('collapsed',isCollapsed);
+  arrow.classList.toggle('collapsed',isCollapsed);
+  txt.textContent=isCollapsed?'展开':'收起';
+}
+
+/* ── Step1：基础信息 ── */
+function updCounter(el,counterId){document.getElementById(counterId).textContent=el.value.length+'/'+el.maxLength;}
+let actors=[{},{}];
+function renderActors(){
+  document.getElementById('actorList').innerHTML=actors.map((a,i)=>`
+    <div class="actor-card">
+      <div class="actor-hdr">演员${i+1}${actors.length>2?`<span class="actor-del" onclick="delActor(${i})">🗑 删除</span>`:'<span></span>'}</div>
+      <div class="actor-body"><div class="actor-grid">
+        <div><label class="flabel"><span class="req">*</span>演员姓名</label><input class="finput" placeholder="请输入"></div>
+        <div><label class="flabel"><span class="req">*</span>演员性别</label><input class="finput" placeholder="请选择"></div>
+        <div><label class="flabel"><span class="req">*</span>演员角色</label><input class="finput" placeholder="请输入角色名"></div>
+        <div><label class="flabel">出生日期</label><input class="finput" placeholder="请选择"></div>
+        <div><label class="flabel">演员国籍</label><input class="finput" placeholder="请输入"></div>
+        <div><label class="flabel">所属公司</label><input class="finput" placeholder="请输入"></div>
+      </div></div>
+    </div>`).join('');
+}
+function addActor(){actors.push({});renderActors();}
+function delActor(i){if(actors.length<=2){toast('至少保留2名演员信息');return;}actors.splice(i,1);renderActors();}
+
+/* 导演 / 编剧（短剧专属） */
+let directors=[{}];
+let writers=[{}];
+function renderPersonList(listId,list,role,delFn,minCount){
+  document.getElementById(listId).innerHTML=list.map((a,i)=>`
+    <div class="actor-card">
+      <div class="actor-hdr">${role}${i+1}${list.length>minCount?`<span class="actor-del" onclick="${delFn}(${i})">🗑 删除</span>`:'<span></span>'}</div>
+      <div class="actor-body"><div class="actor-grid">
+        <div><label class="flabel"><span class="req">*</span>${role}姓名</label><input class="finput" placeholder="填写本人真实姓名"></div>
+        <div><label class="flabel"><span class="req">*</span>${role}性别</label><input class="finput" placeholder="请选择"></div>
+        <div><label class="flabel">出生日期</label><input class="finput" placeholder="请选择"></div>
+        <div><label class="flabel">${role}国籍</label><input class="finput" placeholder="请输入"></div>
+        <div><label class="flabel">所属公司</label><input class="finput" placeholder="请输入"></div>
+      </div></div>
+    </div>`).join('');
+}
+function renderDirectors(){renderPersonList('directorList',directors,'导演','delDirector',1);}
+function addDirector(){directors.push({});renderDirectors();}
+function delDirector(i){if(directors.length<=1){toast('至少保留1名导演信息');return;}directors.splice(i,1);renderDirectors();}
+function renderWriters(){renderPersonList('writerList',writers,'编剧','delWriter',1);}
+function addWriter(){writers.push({});renderWriters();}
+function delWriter(i){if(writers.length<=1){toast('至少保留1名编剧信息');return;}writers.splice(i,1);renderWriters();}
+
+/* 内容类型联动 + 作者声明 */
+let contentType='short';      // 'short' | 'manga'
+let manhuaMethod='';
+let declValue='';             // '' | 'none' | 'ai'
+let declLocked=false;
+const SHORT_ROWS=['row-actors','row-directors','row-writers'];
+const MANGA_ROWS=['row-manhua-method'];
+function onContentTypeChange(t){
+  contentType=t;
+  SHORT_ROWS.forEach(id=>document.getElementById(id).style.display=(t==='short')?'block':'none');
+  MANGA_ROWS.forEach(id=>document.getElementById(id).style.display=(t==='manga')?'block':'none');
+  const mm=document.getElementById('manhuaMethod');if(mm)mm.style.color=mm.value?'#374151':'#9ca3af';
+  refreshDecl();checkCostBeian();
+}
+function onManhuaMethodChange(){const el=document.getElementById('manhuaMethod');el.style.color=el.value?'#374151':'#9ca3af';manhuaMethod=el.value;refreshDecl();}
+function refreshDecl(){
+  // 漫剧 + AIGC剧 → 锁定为「含AI生成内容」，不可选「内容无需添加声明」
+  if(contentType==='manga' && manhuaMethod==='aigc'){declLocked=true;declValue='ai';}
+  else{declLocked=false;}
+  document.getElementById('declLockTip').style.display=declLocked?'block':'none';
+  document.getElementById('declSelect').classList.toggle('locked',declLocked);
+  closeDeclMenu();renderDeclText();
+}
+function renderDeclText(){
+  const t=document.getElementById('declText');
+  if(declValue==='none'){t.textContent='内容无需添加声明';t.style.color='#374151';}
+  else if(declValue==='ai'){t.textContent='含AI生成内容';t.style.color='#374151';}
+  else{t.textContent='请选择';t.style.color='#9ca3af';}
+  document.getElementById('declOptNone').classList.toggle('sel',declValue==='none');
+  document.getElementById('declOptAi').classList.toggle('sel',declValue==='ai');
+}
+function toggleDeclMenu(e){
+  if(e)e.stopPropagation();
+  if(declLocked){toast('AIGC剧默认为「含AI生成内容」，不可修改');return;}
+  const open=document.getElementById('declMenu').classList.toggle('on');
+  document.getElementById('declArrow').textContent=open?'▴':'▾';
+}
+function closeDeclMenu(){document.getElementById('declMenu').classList.remove('on');document.getElementById('declArrow').textContent='▾';}
+function pickDecl(v,e){if(e)e.stopPropagation();declValue=v;renderDeclText();closeDeclMenu();}
+document.addEventListener('click',e=>{
+  const s=document.getElementById('declSelect'),m=document.getElementById('declMenu');
+  if(s&&m&&!s.contains(e.target)&&!m.contains(e.target))closeDeclMenu();
+});
+function jumpTo(id,el){
+  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelectorAll('.anchor-item').forEach(a=>a.classList.remove('active'));
+  el.classList.add('active');
+}
+function initScrollSpy(){
+  const sections=['mod-basic','mod-copyright','mod-beian'];
+  window.addEventListener('scroll',()=>{
+    if(!document.getElementById('view-upload').classList.contains('on')||currentTab!=='basic')return;
+    let activeId=sections[0];
+    for(const id of sections){const el=document.getElementById(id);if(el.getBoundingClientRect().top<160)activeId=id;}
+    document.querySelectorAll('.anchor-item').forEach(a=>a.classList.toggle('active',a.dataset.target===activeId));
+  },{passive:true});
+}
+
+/* ── Step1：备案信息 + 制作成本 × 备案号校验（PRD 3.1，触发：漫剧 且 无备案号） ── */
+let hasBeian='yes';
+function setHasBeian(v){
+  hasBeian=v;
+  document.getElementById('beianYesBlock').style.display=(v==='yes')?'block':'none';
+  document.getElementById('beianNoBlock').style.display=(v==='no')?'block':'none';
+  checkCostBeian();
+}
+function checkCostBeian(){
+  const inp=document.getElementById('costInput'),err=document.getElementById('costBeianErr');
+  if(!inp||!err)return;
+  if(!(contentType==='manga'&&hasBeian==='no')){err.style.display='none';inp.classList.remove('err');return;}
+  const cost=parseFloat(inp.value);
+  let msg;
+  if(isNaN(cost))msg='请填写制作成本；漫剧无备案号时将按成本档位校验所需备案号类型';
+  else if(cost>=80)msg='制作成本大于等于80万，请提供重点备案号';
+  else if(cost>=30)msg='制作成本大于等于30万，请提供普通备案号';
+  else msg='制作成本小于30万，请提供V字头备案号';
+  err.textContent=msg;err.style.display='block';inp.classList.add('err');
+}
+
+/* ── Step2：单集信息设置（纯内容：标题 / 封面 / 视频） ── */
+// sell: 自然流量单集售卖属性 'free'（免费）| 'paid'（付费/IAP）| 'ad'（广告解锁/IAA）；默认前3集免费
+let eps=[
+  {uid:1,title:'第一集',video:'uploaded',  cover:true, progress:100,sell:'free'},
+  {uid:2,title:'第二集',video:'none',      cover:false,progress:0,  sell:'free'},
+  {uid:3,title:'第三集',video:'fail',      cover:true, progress:0,  sell:'free'},
+  {uid:4,title:'第四集',video:'uploaded',  cover:true, progress:100,sell:'paid'},
+  {uid:5,title:'第五集',video:'uploaded',  cover:true, progress:100,sell:'paid'},
+  {uid:6,title:'',       video:'uploading', cover:false,progress:45, sell:'paid'},
+  {uid:7,title:'',       video:'none',      cover:false,progress:0,  sell:'paid'},
+  {uid:8,title:'',       video:'none',      cover:false,progress:0,  sell:'paid'},
+];
+let nextUid=9,batchCoverUploaded=false,dragIdx=null;
+function videoBoxHtml(ep,idx){
+  if(ep.video==='uploaded'){
+    return `<div class="video-box has" onclick="clickVideo(${idx})">
+      <img src="https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=300&h=200&fit=crop">
+      <div class="video-actions"><div class="va-item">↑<span>替换</span></div><div class="va-item">🔗<span>链接</span></div><div class="va-item">▶<span>预览</span></div></div>
+    </div>`;
+  }
+  if(ep.video==='uploading'){
+    return `<div class="video-box has"><div class="video-status-tag vst-proc">${ep.progress}%</div>
+      <div class="video-empty">↻<span>上传中 ${ep.progress}%</span></div>
+      <div class="video-progress-mini"><div class="video-progress-mini-bar" style="width:${ep.progress}%"></div></div>
+    </div>`;
+  }
+  if(ep.video==='fail'){
+    return `<div class="video-box has" onclick="clickVideo(${idx})"><div class="video-status-tag vst-fail">解析失败</div><div class="video-empty" style="color:#dc2626">✕<span>点击重新上传</span></div></div>`;
+  }
+  return `<div class="video-box"><div class="video-empty" style="flex-direction:row;gap:20px">
+      <div class="vupload-opt" onclick="clickVideo(${idx})"><span style="font-size:17px">↑</span><span>上传视频</span></div>
+      <div class="vupload-opt" onclick="toast('上传链接（模拟）')"><span style="font-size:17px">🔗</span><span>上传链接</span></div>
+    </div></div>`;
+}
+function renderEpisodes(){
+  const epc=document.getElementById('epCount');if(epc)epc.textContent=eps.length;
+  document.getElementById('grid').innerHTML = eps.map((ep,idx)=>{
+    const num=idx+1;
+    const len=ep.title.length;
+    const cc=len>=30?'over':len>=24?'warn':'';
+    return `<div class="card" id="card${num}"
+        draggable="true" ondragstart="dragStart(event,${idx})" ondragover="dragOver(event,${idx})"
+        ondragleave="dragLeave(event)" ondrop="dragDrop(event,${idx})" ondragend="dragEnd(event)">
+      <div class="card-hdr">
+        <div class="card-hdr-left"><span class="drag-handle">⠿</span><span class="card-num">第${num}集</span></div>
+        <span class="card-del" onclick="deleteEpisode(${idx})">✕</span>
+      </div>
+      <div class="title-wrap">
+        <input class="title-input" maxlength="30" placeholder="请输入单集标题" value="${ep.title}" oninput="saveTitle(${idx},this)">
+        <span class="title-counter ${cc}">${len}/30</span>
+      </div>
+      <div class="assets-row">
+        <div><span class="asset-label">封面</span><div class="cover-box${ep.cover?' has':''}" onclick="clickCover(${idx})">
+          ${ep.cover?`<img src="https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=150&h=200&fit=crop">`:`<span style="font-size:15px;color:#d1d5db">↑</span><span>上传图片</span>`}
+        </div></div>
+        <div style="flex:1"><span class="asset-label">视频</span>${videoBoxHtml(ep,idx)}</div>
+      </div>
+    </div>`;
+  }).join('') + `<div class="add-card" onclick="addEpisode()"><span style="font-size:26px">＋</span><span>添加单集</span></div>`;
+}
+function saveTitle(idx,inp){
+  eps[idx].title=inp.value;
+  const len=inp.value.length;const c=inp.nextElementSibling;
+  c.textContent=len+'/30';c.className='title-counter'+(len>=30?' over':len>=24?' warn':'');
+}
+function clickCover(idx){eps[idx].cover=true;renderEpisodes();toast(`第${idx+1}集封面上传成功`);}
+function clickVideo(idx){
+  if(eps[idx].video==='uploaded'||eps[idx].video==='uploading')return;
+  startUpload(idx);
+}
+function startUpload(idx){
+  eps[idx].video='uploading';eps[idx].progress=0;renderEpisodes();toast(`第${idx+1}集视频解析中…`);
+  const timer=setInterval(()=>{
+    eps[idx].progress=Math.min(100,eps[idx].progress+Math.round(8+Math.random()*15));
+    if(eps[idx].progress>=100){clearInterval(timer);eps[idx].video='uploaded';toast(`第${idx+1}集视频已上传 ✓`);}
+    renderEpisodes();
+  },220);
+}
+function addEpisode(){
+  eps.push({uid:nextUid++,title:'',video:'none',cover:false,progress:0,sell:sellMode==='ad'?'ad':'paid'});
+  renderEpisodes();toast(`已添加第${eps.length}集`);
+  setTimeout(()=>{const card=document.getElementById('card'+eps.length);if(card)card.scrollIntoView({behavior:'smooth',block:'center'});},50);
+}
+function deleteEpisode(idx){
+  const ep=eps[idx];
+  const risky=ep.video!=='none'||ep.cover;
+  const msg=risky?`第${idx+1}集已上传视频/封面，删除后不可恢复，是否继续？`:`确认删除第${idx+1}集？`;
+  showConfirmModal('删除单集',msg,()=>{
+    eps.splice(idx,1);renderEpisodes();toast('已删除该集，后续集数已自动重新编号');
+  });
+}
+function dragStart(e,idx){dragIdx=idx;e.currentTarget.classList.add('dragging');e.dataTransfer.effectAllowed='move';}
+function dragOver(e,idx){e.preventDefault();e.currentTarget.classList.add('drag-over');}
+function dragLeave(e){e.currentTarget.classList.remove('drag-over');}
+function dragDrop(e,idx){
+  e.preventDefault();e.currentTarget.classList.remove('drag-over');
+  if(dragIdx===null||dragIdx===idx)return;
+  const moved=eps.splice(dragIdx,1)[0];eps.splice(idx,0,moved);dragIdx=null;renderEpisodes();toast('已调整集数顺序');
+}
+function dragEnd(e){document.querySelectorAll('.upz .card').forEach(c=>c.classList.remove('dragging','drag-over'));dragIdx=null;}
+
+function openInfo(){
+  document.getElementById('sp').classList.remove('on');
+  batchCoverUploaded=false;
+  document.getElementById('batchCoverBox').className='cover-upload-box2';
+  document.getElementById('batchCoverBox').innerHTML='<span style="font-size:18px">↑</span><span>上传图片</span>';
+  document.getElementById('mTtl').value='';document.getElementById('mCounter').textContent='0/30';
+  document.getElementById('mF').max=eps.length;document.getElementById('mT').max=eps.length;document.getElementById('mT').value=eps.length;
+  document.getElementById('spInfo').classList.add('on');
+}
+function closeInfo(){document.getElementById('spInfo').classList.remove('on');}
+function updMCounter(){
+  const inp=document.getElementById('mTtl');const len=inp.value.length;
+  const c=document.getElementById('mCounter');c.textContent=len+'/30';c.style.color=len>=30?'#ef4444':len>=24?'#f59e0b':'#c4c4c4';
+}
+function clickBatchCover(){
+  batchCoverUploaded=true;const box=document.getElementById('batchCoverBox');
+  box.className='cover-upload-box2 has';box.innerHTML='<span style="font-size:18px">🖼</span><span>已选择</span>';
+}
+function tryApplyInfo(){
+  const f=Math.min(+document.getElementById('mF').value,+document.getElementById('mT').value);
+  const t=Math.max(+document.getElementById('mF').value,+document.getElementById('mT').value);
+  const ttl=document.getElementById('mTtl').value.trim();
+  eps.forEach((ep,i)=>{
+    const num=i+1;
+    if(num>=f&&num<=t){
+      if(ttl)ep.title=ttl;
+      if(batchCoverUploaded)ep.cover=true;
+    }
+  });
+  renderEpisodes();closeInfo();toast(`已批量设置第${f}–${t}集`);
+}
+/* 批量操作下拉（三项：批量设置信息 / 批量上传视频 / 批量设置解锁集） */
+function toggleBatchMenu(e){if(e)e.stopPropagation();document.getElementById('batchMenu').classList.toggle('on');}
+function closeBatchMenu(){document.getElementById('batchMenu').classList.remove('on');}
+function pickBatch(which){closeBatchMenu();if(which==='info')openInfo();else if(which==='video')openVideo();else openUnlock();}
+document.addEventListener('click',e=>{const w=document.querySelector('.batch-menu-wrap');if(w&&!w.contains(e.target))closeBatchMenu();});
+
+/* 批量设置解锁集（决策6：归 Step2） */
+function openUnlock(){
+  const n=eps.filter(x=>x.sell==='free').length;
+  const inp=document.getElementById('unlockN');
+  inp.value=n;inp.max=eps.length;
+  document.getElementById('unlockHint').textContent=`当前共 ${eps.length} 集，其中前 ${n} 集为免费（解锁）集`;
+  document.getElementById('spUnlock').classList.add('on');
+}
+function closeUnlock(){document.getElementById('spUnlock').classList.remove('on');}
+function applyUnlock(){
+  const n=Math.max(0,Math.min(Math.floor(+document.getElementById('unlockN').value||0),eps.length));
+  eps.forEach((e,i)=>{e.sell=i<n?'free':(sellMode==='ad'?'ad':'paid');});
+  closeUnlock();
+  toast(n>=eps.length?`已设置全部 ${eps.length} 集免费`:`已设置解锁集：前${n}集免费，第${n+1}集起${sellMode==='ad'?'广告解锁':'付费'}`);
+}
+
+/* 批量上传视频：先选起始集 → 再进上传面板 */
+let vfStartEp=1;
+function openVideo(){
+  document.getElementById('spInfo').classList.remove('on');
+  const inp=document.getElementById('vfStart');
+  inp.value=1;inp.max=eps.length;
+  document.getElementById('ovlVideoPos').classList.add('on');
+}
+function closeVideoPos(){document.getElementById('ovlVideoPos').classList.remove('on');}
+function confirmVideoPos(){
+  vfStartEp=Math.max(1,Math.min(+document.getElementById('vfStart').value||1,eps.length));
+  closeVideoPos();
+  vfFiles=[];document.getElementById('vfList').innerHTML='';
+  document.getElementById('vfSummary').style.display='none';
+  document.getElementById('vfStartHint').textContent=`将从第 ${vfStartEp} 集开始，按文件名顺序依次上传，重复集将被覆盖`;
+  document.getElementById('sp').classList.add('on');
+}
+function closeSP(){document.getElementById('sp').classList.remove('on');}
+let vfFiles=[];
+function simulateDropFiles(){
+  const start=vfStartEp;
+  const count=Math.min(4,eps.length-(start-1));
+  if(count<=0){toast('起始集超出范围');return;}
+  const totalSizes=Array.from({length:count},()=>+(Math.random()*3+1).toFixed(1));
+  for(let k=0;k<count;k++){
+    const epIdx=start-1+k;
+    // 演示：第2个文件模拟校验失败（超1GB）；第3个文件慢速上传（长时间保持"上传中"中间态）
+    vfFiles.push({epIdx,filename:`痞老板的短剧名称_${epIdx+1}.mp4`,progress:0,total:totalSizes[k],done:false,fail:false,willFail:k===1,slow:k===2});
+  }
+  vfFiles.sort((a,b)=>a.filename.localeCompare(b.filename,'zh',{numeric:true}));
+  toast(`已选择 ${count} 个文件，从第${start}集开始按文件名排序上传`);
+  renderVfList();
+  vfFiles.forEach((f,i)=>animateUpload(i));
+}
+function renderVfList(){
+  const sum=document.getElementById('vfSummary');
+  if(vfFiles.length){
+    const ok=vfFiles.filter(f=>f.done&&!f.fail).length;
+    const bad=vfFiles.filter(f=>f.fail).length;
+    const finished=vfFiles.every(f=>f.done||f.fail);
+    sum.style.display='block';
+    sum.innerHTML=finished?`上传完成<span>${ok}集成功，${bad}集失败</span>`:`上传中<span>${ok+bad} / ${vfFiles.length}</span>`;
+  }else{sum.style.display='none';}
+  document.getElementById('vfList').innerHTML=vfFiles.map((f,i)=>{
+    const mb=(f.total*f.progress/100).toFixed(1);
+    let statusHtml;
+    if(f.fail){
+      statusHtml=`<div class="vf-status failtxt">⊗ 视频内容超1GB，请修改后再次上传</div>`;
+    }else if(f.done){
+      statusHtml=`<div class="vf-status done">✔ 上传完成</div>`;
+    }else{
+      statusHtml=`<div class="vf-progress-track"><div class="vf-progress-fill" style="width:${f.progress}%"></div></div>
+        <div class="vf-status">${f.progress}% | ${mb}MB/${f.total}MB</div>`;
+    }
+    return `<div class="vf-row${f.fail?' fail':''}" draggable="true" data-i="${i}">
+      <span class="vf-drag">⠿</span>
+      <span class="vf-epnum">第${f.epIdx+1}集</span>
+      <div class="vf-info">
+        <span class="vf-name">${f.filename}</span>
+        ${statusHtml}
+      </div>
+      <div class="vf-actions">${f.fail?`<span class="vf-reup" onclick="retryVf(${i})" title="重新上传">⟳</span>`:''}<span class="vf-del" onclick="removeVf(${i})">🗑</span></div>
+    </div>`;
+  }).join('');
+}
+function animateUpload(i){
+  const timer=setInterval(()=>{
+    const f=vfFiles[i];
+    if(!f){clearInterval(timer);return;}
+    f.progress=Math.min(100,f.progress+(f.slow?1:Math.round(6+Math.random()*12)));
+    if(f.progress>=100){
+      f.progress=100;clearInterval(timer);
+      if(f.willFail){f.fail=true;eps[f.epIdx].video='fail';}
+      else{f.done=true;eps[f.epIdx].video='uploaded';eps[f.epIdx].progress=100;}
+      renderEpisodes();
+    }else{
+      eps[f.epIdx].video='uploading';eps[f.epIdx].progress=f.progress;
+      renderEpisodes();
+    }
+    renderVfList();
+  },200);
+}
+function retryVf(i){const f=vfFiles[i];if(!f)return;f.willFail=false;f.fail=false;f.done=false;f.progress=0;toast(`第${f.epIdx+1}集重新上传中…`);renderVfList();animateUpload(i);}
+function removeVf(i){vfFiles.splice(i,1);renderVfList();}
+
+/* ── Step3：售卖信息（自然流量版本） ── */
+const UP_SELLMODES=[
+  {k:'full',  t:'全剧付费',    tag:'IAP',cls:'tag-iap',d:'只允许购买全集解锁，不支持单集售卖'},
+  {k:'single',t:'单集+全剧付费',tag:'IAP',cls:'tag-iap',d:'单集付费与全集付费均展示，可配营销付费面板'},
+  {k:'ad',    t:'观看广告解锁',  tag:'IAA',cls:'tag-iaa',d:'观看激励广告解锁剧集'},
+];
+let sellMode='full',sellFullPrice='30',sellSinglePrice='1',sellAdUnlock='1';
+let promoteWay='publish',scenePpage='no',sceneSearch='yes',sceneRank='yes';
+function renderSell(){
+  document.getElementById('smGrid').innerHTML=UP_SELLMODES.map(m=>`
+    <div class="sm-card${sellMode===m.k?' on':''}" onclick="setSellMode('${m.k}')">
+      <div class="sm-top">${m.t}<span class="sm-tag ${m.cls}">${m.tag}</span></div>
+      <div class="sm-desc">${m.d}</div>
+    </div>`).join('');
+  let ph='';
+  if(sellMode==='full'){
+    ph=`<div class="frow"><label class="flabel">全剧价格</label><div class="price-row"><input class="pinput" type="number" value="${sellFullPrice}" oninput="sellFullPrice=this.value"><span class="punit">元</span></div></div>`;
+  }else if(sellMode==='single'){
+    ph=`<div class="frow"><label class="flabel">全剧价格</label><div class="price-row"><input class="pinput" type="number" value="${sellFullPrice}" oninput="sellFullPrice=this.value"><span class="punit">元</span></div></div>
+        <div class="frow" style="margin-bottom:0"><label class="flabel">单集价格 <span class="fhelp">（全剧统一，不支持一集一价）</span></label><div class="price-row"><input class="pinput" type="number" value="${sellSinglePrice}" oninput="sellSinglePrice=this.value;renderSellEps()"><span class="punit">元</span></div></div>`;
+  }else{
+    ph=`<div class="frow" style="margin-bottom:0"><label class="flabel">观看一次广告解锁集数</label><div class="price-row"><input class="pinput" style="width:90px" type="number" value="${sellAdUnlock}" oninput="sellAdUnlock=this.value"><span class="punit">集</span></div></div>`;
+  }
+  document.getElementById('priceArea').innerHTML=ph;
+  renderSellEps();
+  renderPanels();
+  if(typeof convertMode!=='undefined'&&convertMode==='yes')setConvert('yes'); // 随售卖方式刷新转换区（IAA才显单集价）
+}
+function setSellMode(k){
+  if(k===sellMode)return;
+  const isAd=(k==='ad');
+  eps.forEach(e=>{if(e.sell!=='free')e.sell=isAd?'ad':'paid';});
+  sellMode=k;renderSell();
+  toast(`售卖方式已切换为「${UP_SELLMODES.find(m=>m.k===k).t}」，单集售卖属性已同步`);
+}
+function renderSellEps(){
+  const isAd=(sellMode==='ad');
+  document.getElementById('sellEpNote').textContent=isAd
+    ? '逐集标记 免费 / 广告解锁'
+    : (sellMode==='single'?'逐集标记 免费 / 付费（付费集统一单集价）':'逐集标记 免费 / 付费（付费集按全剧价解锁）');
+  document.getElementById('sellEpGrid').innerHTML=eps.map((e,i)=>{
+    let tag;
+    if(e.sell==='free')tag=`<span class="tag t-free" onclick="cycleSell(${i})">免费</span>`;
+    else if(e.sell==='ad')tag=`<span class="tag t-ad" onclick="cycleSell(${i})">广告解锁</span>`;
+    else tag=`<span class="tag t-paid" onclick="cycleSell(${i})">付费${sellMode==='single'?' ¥'+sellSinglePrice:''}</span>`;
+    return `<div class="sellep-card"><div class="sellep-num">第${i+1}集</div><div class="sellep-ttl">${e.title||'（未命名）'}</div>${tag}</div>`;
+  }).join('');
+}
+function cycleSell(i){
+  const states=(sellMode==='ad')?['free','ad']:['free','paid'];
+  const e=eps[i];e.sell=states[(states.indexOf(e.sell)+1)%states.length];renderSellEps();
+}
+let convertMode='no'; // no | yes（预约转换售卖方式）
+function setConvert(m){
+  convertMode=m;
+  const ex=document.getElementById('convertExtra');
+  if(m!=='yes'){ex.innerHTML='';return;}
+  const fromIAA=(sellMode==='ad');   // 当前 IAA → 新版本走「单集+全剧付费」(IAP)，需设全剧价+单集价
+  const priceRow=fromIAA
+    ? `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="color:#6b7280;font-size:12px">新版本全剧价格</span><input class="pinput" style="width:120px" type="number" step="0.5" min="0.5" value="30"><span class="punit">元</span></div>
+       <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="color:#6b7280;font-size:12px">新版本单集价格</span><input class="pinput" style="width:120px" type="number" step="0.5" min="0.5" value="1"><span class="punit">元</span></div>`
+    : '';
+  ex.innerHTML=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="color:#6b7280;font-size:12px">设置转换时间</span><input class="pinput" style="width:220px" type="text" placeholder="选择日期时间" onfocus="this.type='datetime-local'"></div>
+    ${priceRow}
+    <div class="convert-note">
+      <div>1. 仅支持转换售卖方式（IAA ↔ IAP），解锁集数、推广方式等其他信息均不变</div>
+      <div>2. 达到转换时间时，旧售卖方式版本自动失效、同时新增新售卖方式版本</div>
+      ${fromIAA
+        ? '<div>3. 当前为广告解锁(IAA)，转换后走「单集+全剧付费」(IAP)：需设全剧价格与单集价格；营销付费面板可在新版本生成后于其「编辑」中配置</div>'
+        : '<div>3. 当前为付费(IAP)，转换后为广告解锁(IAA)：无需价格；原付费面板作废、不带入新版本</div>'}
+      <div>4. 详情页「售卖转换」列展示为「预约转换」，到点后变为「已转」；原版本转换后保留在列表、状态=已失效</div>
+    </div>`;
+}
+let effectMode='now'; // now=立即生效 | scheduled=预约生效 | pending=待生效
+function setEffect(m){
+  effectMode=m;
+  const ex=document.getElementById('effectExtra');
+  if(m==='scheduled'){
+    ex.innerHTML=`<div class="price-row"><span style="color:#6b7280;font-size:12px">预约生效时间</span><input class="pinput" style="width:200px" type="text" placeholder="选择日期时间" onfocus="this.type='datetime-local'"></div>
+      <div style="font-size:11px;color:#9ca3af;margin-top:6px">实际生效时间 = max（预约生效时间，内容审核通过时间）；仍需该剧「已上架」才对 C 端展示</div>`;
+  }else if(m==='pending'){
+    ex.style.color='#b45309';ex.innerHTML='内容审核通过后该版本<b>不会自动生效</b>，需在售卖版本中手动生效；未生效时即便剧已上架也不对外';return;
+  }else{
+    ex.innerHTML='内容审核通过后该版本立即生效（仍需该剧「已上架」才对 C 端展示）';
+  }
+  ex.style.color='#9ca3af';
+}
+function openSellBatch(){
+  const isAd=(sellMode==='ad');
+  document.getElementById('sbF').max=eps.length;document.getElementById('sbT').max=eps.length;document.getElementById('sbT').value=eps.length;
+  const opts=isAd?[['free','免费'],['ad','广告解锁']]:[['free','免费'],['paid','付费']];
+  document.getElementById('sbStates').innerHTML=opts.map((s,idx)=>`<label class="radio-item"><input type="radio" name="sbs" value="${s[0]}" ${idx===0?'checked':''}> ${s[1]}</label>`).join('');
+  document.getElementById('spSellBatch').classList.add('on');
+}
+function closeSellBatch(){document.getElementById('spSellBatch').classList.remove('on');}
+function applySellBatch(){
+  const f=Math.min(+document.getElementById('sbF').value,+document.getElementById('sbT').value);
+  const t=Math.max(+document.getElementById('sbF').value,+document.getElementById('sbT').value);
+  const v=document.querySelector('input[name="sbs"]:checked').value;
+  eps.forEach((e,i)=>{if(i+1>=f&&i+1<=t)e.sell=v;});
+  renderSellEps();closeSellBatch();toast(`已批量设置第${f}–${t}集`);
+}
+
+/* ── 营销付费面板：多集优惠包 / 虚拟币充值（二选一·互斥，仅"单集+全剧付费"） ── */
+let panelType='bundle';   // 'bundle'=多集优惠包 | 'coin'=虚拟币充值
+let bundles=[{id:1,name:'基础优惠包',base:true,tiers:[{l:'全集',p:30},{l:'5集',p:10},{l:'10集',p:18}]}];
+let coins=[{id:1,name:'基础充值面板',base:true,tiers:[{amount:6,gift:60},{amount:30,gift:600}]}];
+const COIN_RATE=100;      // 演示：1元=100剧豆
+let tierEditRows=[],editingBundleId=null;
+function curPanels(){return panelType==='bundle'?bundles:coins;}
+function setPanelType(t){
+  if(t===panelType)return;
+  panelType=t;
+  document.getElementById('ptBundle').classList.toggle('on',t==='bundle');
+  document.getElementById('ptCoin').classList.toggle('on',t==='coin');
+  renderPanels();
+  toast(`已切换为「${t==='bundle'?'多集优惠包':'虚拟币充值'}」（与另一类互斥）`);
+}
+function renderPanels(){
+  const show=(sellMode==='single');
+  document.getElementById('panelBlock').style.display=show?'block':'none';
+  if(!show)return;
+  const list=curPanels();
+  document.getElementById('panelCountText').textContent=`设置${panelType==='bundle'?'多集优惠包':'虚拟币充值面板'}(${list.length}/10)`;
+  const cards=list.map(b=>{
+    const chips=(panelType==='bundle')
+      ? b.tiers.map(t=>`<span class="tier-chip">${t.l} ¥${t.p.toFixed(2)}</span>`).join('')
+      : b.tiers.map(t=>`<span class="tier-chip">¥${t.amount} → ${t.amount*COIN_RATE+t.gift}剧豆</span>`).join('');
+    return `<div class="panel-card">
+      <div class="panel-name-row"><span class="panel-name">${b.name}</span>${b.base?'<span class="base-badge">基础面板</span>':''}</div>
+      <div class="tier-row">${chips}</div>
+      <div class="panel-actions">
+        <span class="panel-action" onclick="editBundle(${b.id})">编辑</span>
+        <span class="panel-action" onclick="copyBundle(${b.id})">复制</span>
+        <span class="panel-action danger" onclick="delBundle(${b.id})">删除</span>
+        <span class="panel-action" onclick="toast('已设为通用模版')">设为模版</span>
+      </div>
+    </div>`;
+  }).join('');
+  const addLabel=panelType==='bundle'?'添加优惠包':'添加充值面板';
+  const add=`<div class="panel-add-card"><span class="add-option" onclick="toast('选择通用模版（模拟）')">⇄ 选择通用模版</span><span class="add-option" onclick="openAddPanel()">⊹ ${addLabel}</span></div>`;
+  document.getElementById('panelGrid').innerHTML=cards+add;
+}
+function bundleTitle(edit){return (panelType==='bundle'?(edit?'编辑':'添加')+'优惠包':(edit?'编辑':'添加')+'充值面板');}
+function tierLabelText(){return panelType==='bundle'?'打包档位（集数 + 价格，可多档）':'充值档位（充值金额 + 赠送剧豆，可多档）';}
+function openAddPanel(){
+  const list=curPanels();
+  if(list.length>=10){toast('最多支持10个面板');return;}
+  editingBundleId=null;
+  document.querySelector('#spBundle .sptitle').textContent=bundleTitle(false);
+  document.getElementById('bundleNameInput').value='';
+  document.getElementById('bundleNameInput').placeholder=panelType==='bundle'?'如：暑期优惠包':'如：主推充值面板';
+  document.getElementById('tierLabel').textContent=tierLabelText();
+  tierEditRows=panelType==='bundle'?[{l:'全集',p:''},{l:'',p:''}]:[{amount:'',gift:''},{amount:'',gift:''}];
+  renderTierEditRows();
+  document.getElementById('spBundle').classList.add('on');
+}
+function editBundle(id){
+  const b=curPanels().find(x=>x.id===id);if(!b)return;
+  editingBundleId=id;
+  document.querySelector('#spBundle .sptitle').textContent=bundleTitle(true);
+  document.getElementById('bundleNameInput').value=b.name;
+  document.getElementById('tierLabel').textContent=tierLabelText();
+  tierEditRows=panelType==='bundle'?b.tiers.map(t=>({l:t.l,p:String(t.p)})):b.tiers.map(t=>({amount:String(t.amount),gift:String(t.gift)}));
+  renderTierEditRows();
+  document.getElementById('spBundle').classList.add('on');
+}
+function closeBundleDrawer(){document.getElementById('spBundle').classList.remove('on');}
+function addTierRow(){tierEditRows.push(panelType==='bundle'?{l:'',p:''}:{amount:'',gift:''});renderTierEditRows();}
+function removeTierRow(i){tierEditRows.splice(i,1);renderTierEditRows();}
+function renderTierEditRows(){
+  document.getElementById('tierEditList').innerHTML=tierEditRows.map((t,i)=>{
+    if(panelType==='bundle'){
+      return `<div class="tier-edit-row">
+        <input placeholder="如：全集 / 5集" value="${t.l}" oninput="tierEditRows[${i}].l=this.value">
+        <input placeholder="价格" type="number" step="0.5" value="${t.p}" oninput="tierEditRows[${i}].p=this.value">
+        ${tierEditRows.length>1?`<span class="tier-del" onclick="removeTierRow(${i})">✕</span>`:''}
+      </div>`;
+    }
+    const coin=(parseFloat(t.amount)||0)*COIN_RATE+(parseFloat(t.gift)||0);
+    return `<div class="tier-edit-row">
+      <input placeholder="充值金额(元)" type="number" step="1" value="${t.amount}" oninput="tierEditRows[${i}].amount=this.value;renderTierEditRows()">
+      <input placeholder="赠送剧豆" type="number" step="10" value="${t.gift}" oninput="tierEditRows[${i}].gift=this.value;renderTierEditRows()">
+      <span style="font-size:10px;color:#9ca3af;white-space:nowrap">=${coin}剧豆</span>
+      ${tierEditRows.length>1?`<span class="tier-del" onclick="removeTierRow(${i})">✕</span>`:''}
+    </div>`;
+  }).join('');
+}
+function confirmCreateBundle(){
+  const name=document.getElementById('bundleNameInput').value.trim()||'未命名面板';
+  let tiers;
+  if(panelType==='bundle')tiers=tierEditRows.filter(t=>t.l&&t.p).map(t=>({l:t.l,p:parseFloat(t.p)}));
+  else tiers=tierEditRows.filter(t=>t.amount).map(t=>({amount:parseFloat(t.amount),gift:parseFloat(t.gift)||0}));
+  if(!tiers.length){toast('请至少填写一个档位');return;}
+  const list=curPanels();
+  if(editingBundleId){const b=list.find(x=>x.id===editingBundleId);b.name=name;b.tiers=tiers;}
+  else{list.push({id:Date.now(),name,base:list.length===0,tiers});}
+  closeBundleDrawer();renderPanels();renderVerPanels();toast('已保存');
+}
+function copyBundle(id){const list=curPanels();const s=list.find(x=>x.id===id);if(!s)return;list.push({id:Date.now(),name:s.name+' 副本',base:false,tiers:s.tiers.map(t=>({...t}))});renderPanels();renderVerPanels();toast('已复制');}
+function delBundle(id){showConfirmModal('删除面板','确认删除该面板？删除后将立即影响 C 端展示',()=>{const list=curPanels();const idx=list.findIndex(x=>x.id===id);if(idx>-1)list.splice(idx,1);renderPanels();renderVerPanels();toast('已删除');});}
+
+/* ── Version form (对齐上传 Tab3，无 IAAP / 无一集一价) ── */
+let verCtx={block:'biz',mode:'new',id:null}, verSellMode='single';
+function openVerForm(block,mode,id){
+  verCtx={block,mode,id:id||null};
+  const titles={new:'新增售卖版本',edit:'编辑售卖版本',view:'查看售卖版本（只读）',copy:'复制售卖版本'};
+  document.getElementById('verCrumb').textContent=titles[mode];
+  const root=document.getElementById('verFormRoot');
+  root.classList.toggle('ro',mode==='view');
+  document.getElementById('verSaveBtn').style.display=mode==='view'?'none':'inline-flex';
+  document.getElementById('verBlockTip').style.display='flex';
+  document.getElementById('verBlockText').textContent=block==='nat'
+    ? '来自分账版本配置：推广方式锁定「分账」，其他选项置灰。同一时刻仅一个分账版本可生效。'
+    : '来自经营版本配置：推广方式可选投流 / 分销 / 仅发布，分账置灰。投流时产品名×sdpa 与版本 1:1。';
+  // promo
+  if(block==='nat'){
+    document.getElementById('verPromoRow').innerHTML=`<label class="radio-item"><input type="radio" name="vpromo" value="分账" checked> 分账</label>
+      <label class="radio-item" style="opacity:.45"><input type="radio" disabled> 投流</label>
+      <label class="radio-item" style="opacity:.45"><input type="radio" disabled> 分销</label>
+      <label class="radio-item" style="opacity:.45"><input type="radio" disabled> 仅发布</label>`;
+    document.getElementById('verPromoNote').textContent='分账不透传 DSP、不生成 SDPA / 推广链接';
+  }else{
+    document.getElementById('verPromoRow').innerHTML=`<label class="radio-item"><input type="radio" name="vpromo" value="投流" checked onchange="onVerPromoChange()"> 投流</label>
+      <label class="radio-item"><input type="radio" name="vpromo" value="分销" onchange="onVerPromoChange()"> 分销</label>
+      <label class="radio-item"><input type="radio" name="vpromo" value="仅发布" onchange="onVerPromoChange()"> 仅发布</label>
+      <label class="radio-item" style="opacity:.45"><input type="radio" disabled> 分账</label>`;
+    document.getElementById('verPromoNote').textContent='';
+  }
+  const src=id?findVer(id):null;
+  if(src){verSellMode=src.mode||'single';document.getElementById('verName').value=(mode==='copy'?(src.vname?src.vname+' 副本':src.id+' 副本'):(src.vname||('版本 '+src.id)));}
+  else{verSellMode='single';document.getElementById('verName').value='';}
+  if(mode==='copy')document.getElementById('verName').value=(src?src.id:'')+' · 复制版';
+  renderVerSell();
+  // 投流绑定账户：view/edit 且当前为投流时给演示账户，其余清空；再按推广方式显隐
+  const curPromo=document.querySelector('input[name=vpromo]:checked')?.value;
+  verBoundAccounts=(mode!=='new'&&curPromo==='投流')?['1620059213127','1620059218888']:[];
+  onVerPromoChange();
+  // 预约转换带入：view/edit/copy 由版本 convert 字段决定（sched 未转 / done 已转均展示关联），new 默认否
+  const conv=(src&&mode!=='new'&&(src.convert==='sched'||src.convert==='done'))?'yes':'no';
+  const cvRadio=document.querySelector(`input[name=verConvert][value="${conv}"]`);
+  if(cvRadio)cvRadio.checked=true;
+  setVerConvert(conv);
+  renderVerConvertLinked();
+  // 生效设置带入：new 默认立即生效；copy 重置为待生效；view/edit 由当前版本状态映射
+  const eff=(mode==='new')?'now':(mode==='copy')?'pending':stateToEffect(src?src.state:null);
+  const effRadio=document.querySelector(`input[name=veffect][value="${eff}"]`);
+  if(effRadio)effRadio.checked=true;
+  setVerEffect(eff);
+  applyVerFormRO(mode==='view');
+  go('ver');
+  if(mode==='view')toast('查看模式：字段只读置灰');
+  if(mode==='copy')toast('复制版脱离多账号级联树，发布后生成新版本');
+}
+/* 版本状态 → 生效设置单选：预约生效→scheduled；待生效/已失效→pending；已生效/已预约失效→now */
+function stateToEffect(state){
+  if(state==='sched_live')return 'scheduled';
+  if(state==='pending'||state==='failed')return 'pending';
+  if(state==='live'||state==='sched_fail')return 'now';
+  return 'now';
+}
+function setVerEffect(m){
+  const ex=document.getElementById('verEffectExtra');
+  if(!ex)return;
+  if(m==='scheduled'){
+    ex.innerHTML=`<div style="display:flex;align-items:center;gap:8px"><span>预约生效时间</span><input class="pinput" style="width:200px" type="text" placeholder="选择日期时间" onfocus="this.type='datetime-local'"></div>
+      <div style="margin-top:6px">实际生效时间 = max(预约时间, 审核通过时间)</div>`;
+    ex.style.color='#6b7280';
+  }else if(m==='pending'){
+    ex.innerHTML='该版本<b>不会自动生效</b>，需在售卖版本列表中手动「生效」；未生效时即便该剧已上架也不对 C 端展示。';
+    ex.style.color='#b45309';
+  }else{
+    ex.innerHTML='内容审核通过后该版本立即生效（仍需该剧「已上架」才对 C 端展示）。';
+    ex.style.color='#9ca3af';
+  }
+}
+/* 查看模式只读：真正禁用表单控件（记录/恢复原 disabled，避免污染 edit/copy/new），配合 .ro 视觉灰化 */
+function applyVerFormRO(ro){
+  const root=document.getElementById('verFormRoot');
+  root.classList.toggle('ro',ro);
+  root.querySelectorAll('input,select,textarea').forEach(el=>{
+    if(el.closest('.bottom-actions'))return; // 返回详情/保存按钮由显隐单独控制
+    if(ro){
+      if(!el.hasAttribute('data-ro-prev'))el.setAttribute('data-ro-prev',el.disabled?'1':'0');
+      el.disabled=true;
+    }else if(el.hasAttribute('data-ro-prev')){
+      el.disabled=el.getAttribute('data-ro-prev')==='1';
+      el.removeAttribute('data-ro-prev');
+    }
+  });
+}
+function renderVerSell(){
+  document.getElementById('verSmGrid').innerHTML=SELLMODES.map(m=>`<div class="sm-card ${verSellMode===m.k?'sel':''}" onclick="if(verCtx.mode==='view')return;verSellMode='${m.k}';renderVerSell()">
+    <div class="sm-t"><span class="tag ${m.tag==='IAP'?'pay-iap':'pay-iaa'}">${m.tag}</span>${m.t}</div><div class="sm-d">${m.d}</div></div>`).join('');
+  let price='';
+  if(verSellMode==='full')price=`<div class="price-row"><span>全剧价格</span><input class="pinput" type="number" value="30"><span class="punit">元</span></div>`;
+  if(verSellMode==='single')price=`<div class="price-row"><span>全剧价格</span><input class="pinput" type="number" value="30"><span class="punit">元</span>
+    <span style="margin-left:12px">统一单集价格</span><input class="pinput" type="number" value="2"><span class="punit">元</span></div>
+    <div style="font-size:11px;color:#9ca3af;margin-top:6px">不支持一集一价</div>`;
+  if(verSellMode==='ad')price=`<div class="price-row"><span>观看一次广告解锁</span><input class="pinput" type="number" value="1"><span class="punit">集</span></div>`;
+  document.getElementById('verPriceArea').innerHTML=price;
+  renderVerPanels();
+  const attrs=EPS.map((e,i)=>({n:e.n,t:e.t,sell:i<3?'free':(verSellMode==='ad'?'ad':'paid')}));
+  document.getElementById('verSellEps').innerHTML=attrs.map(e=>{
+    const lab=e.sell==='free'?'免费':e.sell==='ad'?'广告解锁':'付费';
+    const cls=e.sell==='free'?'ep-free':e.sell==='ad'?'ep-ad':'ep-paid';
+    return `<div class="sellep-row"><div><b>第${e.n}集</b> · ${e.t}</div><span class="${cls}">${lab}</span></div>`;
+  }).join('');
+  if(document.querySelector('input[name=verConvert]:checked')?.value==='yes')setVerConvert('yes');
+  else renderVerConvertLinked();
+}
+function setVerConvert(m){
+  const ex=document.getElementById('verConvertExtra');
+  if(!ex)return;
+  if(m!=='yes'){ex.innerHTML='';renderVerConvertLinked();return;}
+  const fromIAA=verSellMode==='ad';
+  // IAA→IAP：转换后走「单集+全剧付费」，需补转换后售价；IAP→IAA：无需价格
+  const priceRow=fromIAA?`<div class="price-row" style="margin-top:8px"><span>转换后全剧价格</span><input class="pinput" type="number" value="30"><span class="punit">元</span>
+    <span style="margin-left:12px">转换后单集价格</span><input class="pinput" type="number" value="1"><span class="punit">元</span></div>`:'';
+  const dirNote=fromIAA
+    ? '<div>3. 当前为广告解锁(IAA)，转换后走「单集+全剧付费」(IAP)：需设「转换后全剧价格」与「转换后单集价格」</div>'
+    : '<div>3. 当前为付费(IAP)，转换后为广告解锁(IAA)：无需设置价格；原付费面板作废、不带入新版本</div>';
+  ex.innerHTML=`<div class="price-row" style="margin-top:8px"><span>设置转换时间</span><input class="pinput" style="width:200px" type="text" placeholder="选择日期时间" onfocus="this.type='datetime-local'"></div>${priceRow}
+    <div class="convert-note">
+      <div>1. 仅支持 IAA ↔ IAP；解锁集、推广方式不变</div>
+      <div>2. 到点：旧版失效 + 新版生效；详情列「预约转换」→「已转」</div>
+      ${dirNote}
+    </div>`;
+  renderVerConvertLinked();
+}
+/* 「设置预约转换」模块 · 关联版本：独立区块，不因切换「否/预约转换」被清空；view/edit 有 linkedVerId 即展示 */
+function renderVerConvertLinked(){
+  const box=document.getElementById('verConvertLinkedBlock');
+  if(!box)return;
+  const cur=verCtx.id?findVer(verCtx.id):null;
+  if(!cur||!cur.linkedVerId||verCtx.mode==='new'||verCtx.mode==='copy'){
+    box.style.display='none';box.innerHTML='';return;
+  }
+  const lv=findVer(cur.linkedVerId);
+  if(!lv){box.style.display='none';box.innerHTML='';return;}
+  const stTxt=STMETA[lv.state]?STMETA[lv.state].t:'';
+  const blk=lv.block||cur.block||'biz';
+  const lvName=lv.vname||('版本 '+lv.id);
+  let verb='关联版本';
+  if(cur.convert==='sched'&&cur.state==='live')verb='本版本已生效并设置预约转换，生效时已自动生成关联版本';
+  else if(cur.convert==='sched')verb='本版本已设置预约转换，生效后将自动生成关联版本';
+  else if(cur.convert==='done')verb='本版本已转换，关联版本';
+  box.style.display='block';
+  box.innerHTML=`<div class="convert-linked" style="margin-top:10px;padding:10px 12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;font-size:12px;color:#1e40af;line-height:1.7">
+    <div style="font-weight:600;margin-bottom:4px">关联版本</div>
+    <div>${verb}：</div>
+    <div style="margin-top:6px;display:flex;align-items:center;flex-wrap:wrap;gap:6px">
+      <span class="vid2 link" onclick="openVerForm('${blk}','view','${lv.id}')">${lv.id}</span>
+      <span style="color:#374151;font-weight:600">${lvName}</span>
+      ${stTxt?`<span class="badge ${lv.state==='pending'?'b-gray':lv.state==='live'?'b-green':'b-amber'}">${stTxt}</span>`:''}
+    </div>
+    <div style="color:#3b82f6;margin-top:6px;font-size:11px">点击版本 ID 跳转查看关联版本详情 · 到点原版本失效 → 关联版本生效</div>
+  </div>`;
+}
+function getRadioYes(name){return document.querySelector(`input[name=${name}]:checked`)?.value==='yes';}
+function saveVer(){
+  const name=document.getElementById('verName').value||'未命名版本';
+  const promo=document.querySelector('input[name=vpromo]:checked')?.value||(verCtx.block==='nat'?'分账':'仅发布');
+  const pay=verSellMode==='ad'?'IAA':'IAP';
+  const convert=document.querySelector('input[name=verConvert]:checked')?.value==='yes'?'sched':'none';
+  const id=verCtx.mode==='edit'&&verCtx.id?verCtx.id:('V'+Date.now().toString().slice(-9));
+  // 生效设置 → 版本状态：立即生效→live、预约生效→sched_live、待生效→pending
+  const effVal=document.querySelector('input[name=veffect]:checked')?.value||'pending';
+  let state=effVal==='now'?'live':effVal==='scheduled'?'sched_live':'pending';
+  // 分账板块同一时刻仅一个版本可生效：若已有生效的分账版本，则本次落为待生效
+  if(state==='live'&&(verCtx.block==='nat'||promo==='分账')){
+    const other=natVers.find(x=>x.id!==id&&isLive(x.state));
+    if(other)state='pending';
+  }
+  // 场景展示（P页/搜索/榜单）不在版本表单配置，沿用内容上传设置；新建版本默认 搜索、榜单
+  const sceneParts=['搜索','榜单'];
+  const nowStr=new Date().toISOString().slice(0,16).replace('T',' ');
+  const row={id,vname:name,mode:verSellMode,pay,convert,unlock:verSellMode==='ad'?'前3集免费，第4集起看广告':'前3集免费，第4集起付费',
+    price:verSellMode==='ad'?'—':(verSellMode==='full'?'全剧30元':'单集2元 / 全剧30元'),
+    market:verSellMode==='single'?(panelType==='bundle'?'多集优惠包':'虚拟币充值'):'—',promote:promo,state,scene:sceneParts.join('、')||'—',owner:'当前用户',ct:nowStr,mt:nowStr,block:verCtx.block};
+  if(verCtx.mode==='edit'&&verCtx.id){
+    const arr=verCtx.block==='nat'?natVers:bizVers;
+    const i=arr.findIndex(x=>x.id===verCtx.id);
+    if(i>=0)arr[i]={...arr[i],...row,id:verCtx.id};
+  }else{
+    (verCtx.block==='nat'?natVers:bizVers).unshift(row);
+  }
+  toast(verCtx.mode==='copy'?'已复制并生成新版本（脱离级联树）':'版本已保存');
+  go('detail');setTab('jy');
+}
+
+/* ── 投流：绑定投放账户 ── */
+let verBoundAccounts=[];
+function onVerPromoChange(){
+  const promo=document.querySelector('input[name=vpromo]:checked')?.value;
+  const blk=document.getElementById('verBindBlock');
+  if(blk)blk.style.display=(promo==='投流')?'block':'none';
+  renderVerBound();
+}
+function parseAccts(str){return (str||'').split(/[,，]/).map(s=>s.trim()).filter(Boolean);}
+function addVerAccounts(){
+  const inp=document.getElementById('verAddAcct');
+  const ids=parseAccts(inp.value);
+  if(!ids.length){toast('请输入投放账户id（英文逗号分离）');return;}
+  let n=0;ids.forEach(id=>{if(!verBoundAccounts.includes(id)){verBoundAccounts.push(id);n++;}});
+  inp.value='';renderVerBound();toast(n?`已添加 ${n} 个投放账户`:'账户已存在，无需重复添加');
+}
+function delVerAccounts(){
+  const inp=document.getElementById('verDelAcct');
+  const ids=parseAccts(inp.value);
+  if(!ids.length){toast('请输入要删除的投放账户id（英文逗号分离）');return;}
+  const before=verBoundAccounts.length;
+  verBoundAccounts=verBoundAccounts.filter(x=>!ids.includes(x));
+  inp.value='';renderVerBound();toast(`已删除 ${before-verBoundAccounts.length} 个投放账户`);
+}
+function renderVerBound(){
+  const box=document.getElementById('verBoundList');if(!box)return;
+  const cnt=document.getElementById('verBoundCount');if(cnt)cnt.textContent=verBoundAccounts.length;
+  box.innerHTML=verBoundAccounts.length
+    ? verBoundAccounts.map(id=>`<span class="acct-chip">【${id}】</span>`).join('')
+    : '<div style="color:#9ca3af;font-size:12px">暂无已绑定账户</div>';
+}
+
+/* ── 营销付费面板（版本表单，复用 Step3 数据/抽屉/样式；仅单集+全剧付费出现） ── */
+function setVerPanelType(t){
+  if(t===panelType)return;
+  panelType=t;
+  renderVerPanels();
+  toast(`已切换为「${t==='bundle'?'多集优惠包':'虚拟币充值'}」（与另一类互斥）`);
+}
+function renderVerPanels(){
+  const block=document.getElementById('verPanelBlock');if(!block)return;
+  const show=(verSellMode==='single');
+  block.style.display=show?'block':'none';
+  if(!show)return;
+  const tb=document.getElementById('vptBundle'),tc=document.getElementById('vptCoin');
+  if(tb)tb.classList.toggle('on',panelType==='bundle');
+  if(tc)tc.classList.toggle('on',panelType==='coin');
+  const list=curPanels();
+  document.getElementById('verPanelCount').textContent=`设置${panelType==='bundle'?'多集优惠包':'虚拟币充值面板'}(${list.length}/10)`;
+  const cards=list.map(b=>{
+    const chips=(panelType==='bundle')
+      ? b.tiers.map(t=>`<span class="tier-chip">${t.l} ¥${t.p.toFixed(2)}</span>`).join('')
+      : b.tiers.map(t=>`<span class="tier-chip">¥${t.amount} → ${t.amount*COIN_RATE+t.gift}剧豆</span>`).join('');
+    return `<div class="panel-card">
+      <div class="panel-name-row"><span class="panel-name">${b.name}</span>${b.base?'<span class="base-badge">基础面板</span>':''}</div>
+      <div class="tier-row">${chips}</div>
+      <div class="panel-actions">
+        <span class="panel-action" onclick="editBundle(${b.id})">编辑</span>
+        <span class="panel-action" onclick="copyBundle(${b.id})">复制</span>
+        <span class="panel-action danger" onclick="delBundle(${b.id})">删除</span>
+      </div>
+    </div>`;
+  }).join('');
+  const addLabel=panelType==='bundle'?'添加优惠包':'添加充值面板';
+  const add=`<div class="panel-add-card"><span class="add-option" onclick="openAddPanel()">⊹ ${addLabel}</span></div>`;
+  document.getElementById('verPanelGrid').innerHTML=cards+add;
+}
+
+/* init */
+/* init */
+renderDramaList();renderVerList();renderHeroOps();renderJy();renderDramaRemark();
+renderActors();renderDirectors();renderWriters();onContentTypeChange('short');initScrollSpy();renderEpisodes();renderTabUI();
+</script>
+</body>
+</html>
