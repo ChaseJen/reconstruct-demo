@@ -13,11 +13,10 @@
 
 ```bash
 cd "/Users/celestejen/Desktop/经营者管理平台重构需求"
-./sync-demo.sh
-git add 短剧管理平台-统一demo.html index.html
-git commit -m "update demo"
-git push
+./deploy-demo.sh
 ```
+
+（仅复制不同步 push 时可用 `./sync-demo.sh` + 手动 git。）
 
 约 1～2 分钟后 GitHub Pages 自动更新。
 
@@ -37,7 +36,7 @@ git init
 git add index.html .gitignore sync-demo.sh DEPLOY.md 会话交接文档.md
 git add 短剧管理平台-统一demo.html 售卖版本设置-demo.html *.svg
 git commit -m "Add short drama management platform demo for GitHub Pages"
-gh repo create short-drama-demo --public --source=. --remote=origin --push
+gh repo create reconstruct-demo --public --source=. --remote=origin --push
 ```
 
 （仓库名可自定；`--private` 可改为私有，Pages 仍可用但需账号权限。）
@@ -45,7 +44,7 @@ gh repo create short-drama-demo --public --source=. --remote=origin --push
 ### 3. 开启 GitHub Pages
 
 ```bash
-gh api repos/{owner}/short-drama-demo/pages -X POST \
+gh api repos/{owner}/reconstruct-demo/pages -X POST \
   -f build_type=legacy \
   -f source[branch]=main \
   -f source[path]=/
@@ -56,7 +55,7 @@ gh api repos/{owner}/short-drama-demo/pages -X POST \
 ### 4. 访问链接
 
 ```
-https://<你的GitHub用户名>.github.io/short-drama-demo/
+https://<你的GitHub用户名>.github.io/reconstruct-demo/
 ```
 
 ## 备选：不用 Git，Netlify Drop
