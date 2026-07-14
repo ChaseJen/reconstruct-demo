@@ -74,7 +74,9 @@ table.lt{width:100%;border-collapse:collapse;font-size:12.5px;min-width:1100px}
 .viewep{display:inline-flex;align-items:center;gap:5px;margin-top:12px;font-size:12px;color:#2563eb;cursor:pointer;border:1px solid #bfdbfe;background:#eff6ff;padding:6px 12px;border-radius:7px}
 .fields{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 24px;margin-top:16px;padding-top:16px;border-top:1px solid #f0f1f3}
 .fitem .flab{color:#9ca3af;font-size:12px;margin-bottom:3px}.fitem .fval{color:#1a1a1a;font-weight:500;font-size:12px}
-.hero-ops{position:absolute;top:20px;right:22px;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;max-width:420px}
+.hero-ops{position:absolute;top:20px;right:22px;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;max-width:420px;align-items:center}
+.hero-demo-toggle{font-size:10px;color:#c4c4c4;cursor:pointer;text-decoration:underline;text-underline-offset:2px;white-space:nowrap;flex-basis:100%;text-align:right;margin-top:2px}
+.hero-demo-toggle:hover{color:#2563eb}
 .tabs{display:flex;gap:0;padding:0 22px;margin:16px 16px 0;border-bottom:1px solid #e5e7eb}
 .tab{padding:12px 18px;font-size:14px;font-weight:600;color:#6b7280;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
 .tab.on{color:#16a34a;border-bottom-color:#16a34a}
@@ -1529,6 +1531,7 @@ function renderDramaList(){
 }
 function toggleDramaUp(id){
   const d=dramas.find(x=>x.id===id);if(!d)return;
+  if(!d.up && d.audit!=='pass'){toast('内容审核通过后才可上架');return;}
   d.up=!d.up;renderDramaList();
   toast(d.up?`「${d.name}」已上架（模拟）`:`「${d.name}」已下架（模拟）`);
 }
@@ -1627,7 +1630,6 @@ let bizVers=[
 ];
 function allVers(){return natVers.concat(bizVers);}
 function findVer(id){return allVers().find(x=>x.id===id);}
-function hasSaleable(){return allVers().length>0;}
 function cvHtml(c){return c==='done'?'<span class="cv-done">● 已转</span>':c==='sched'?'<span class="cv-sched">● 预约转换</span>':'<span style="color:#9ca3af">—</span>';}
 /* 关联版本：预约转换生成的互关版本；带 id 时可点击跳转到该版本详情（openVerForm view） */
 function verLinkLabel(id){const v=findVer(id);if(!v)return id;if(v.vname)return `${id} · ${v.vname}`;const t=SELLMODES.find(x=>x.k===v.mode)?.t||'';return t?`${id}（${t}）`:id;}
@@ -1685,30 +1687,51 @@ function updateListHint(){
   el.style.display=show?'flex':'none';
 }
 function renderHeroOps(){
-  const canList=auditPass && hasSaleable();
-  const needDot=!dramaListed && canList && !redDotSeen;
+  // 短剧上传时即生成默认售卖版本，不存在「无售卖版本」场景；剧维度上架仅受内容审核状态约束
+  const canList=auditPass;                    // 审核通过才可上架（预约上架不受审核约束，到点按 max 规则生效）
+  const needDot=!redDotSeen;                  // 待（重新）上架提示：未上架 / 下架后 / 编辑售卖版本后置为待处理；点上架或预约上架后消失
   const more=`<span class="more-wrap"><button class="btn btn-out" onclick="toggleHeroMore(event)">更多 ▾</button>
     <span class="more-menu" id="heroMore">
       <a onclick="go('edit')">编辑</a>
       <a class="danger" onclick="toast('删除短剧（模拟）')">删除</a>
     </span></span>`;
+  const demo=`<span class="hero-demo-toggle" onclick="toggleAuditDemo()">演示：切换审核状态（当前${auditPass?'审核通过':'审核中'}）</span>`;
+  const schedBtn=`<button class="btn btn-out${needDot?' red-dot':''}" onclick="openDramaSched()">预约上架</button>`;
+  let ops;
   if(dramaListed){
-    document.getElementById('heroOps').innerHTML=`<button class="btn btn-out" onclick="setListed(false)">下架</button>`+more;
+    if(auditPass){
+      // 已上架（审核通过）：下架 + 更多
+      ops=`<button class="btn btn-out" onclick="setListed(false)">下架</button>`+more;
+    }else{
+      // 已上架 + 二次修改基础信息导致审核中：上架置灰（审核中不可上架）+ 预约上架（红点）+ 下架
+      ops=`<button class="btn btn-blue dis" title="审核中不可上架" disabled>上架</button>${schedBtn}<button class="btn btn-out" onclick="setListed(false)">下架</button>`+more;
+    }
   }else{
+    // 未上架：上架仅在审核通过时可点，否则置灰 hover「审核中不可上架」；预约上架恒可用
     const listCls=canList?'btn btn-blue':'btn btn-blue dis';
-    const listTitle=!auditPass?'审核中不可上架':(!hasSaleable()?'请配置售卖版本':'');
-    const listDot=needDot?' red-dot':'';
-    const schedDot=needDot?' red-dot':'';
-    document.getElementById('heroOps').innerHTML=
-      `<button class="${listCls}${listDot}" title="${listTitle}" ${canList?'':'disabled'} onclick="tryList()">${canList?'上架':'上架'}</button>
-       <button class="btn btn-out${schedDot}" onclick="openDramaSched()">预约上架</button>`+more;
+    const listTitle=canList?'':'审核中不可上架';
+    const listDot=(canList&&needDot)?' red-dot':'';
+    ops=`<button class="${listCls}${listDot}" title="${listTitle}" ${canList?'':'disabled'} onclick="tryList()">上架</button>${schedBtn}`+more;
   }
+  document.getElementById('heroOps').innerHTML=ops+demo;
 }
-function tryList(){if(!auditPass){toast('审核中不可上架');return;}if(!hasSaleable()){toast('请配置售卖版本');return;}redDotSeen=true;setListed(true);}
+function tryList(){if(!auditPass){toast('审核中不可上架');return;}redDotSeen=true;setListed(true);}
+/* 演示：切换审核状态，验证「审核中不可上架」与红点逻辑 */
+function toggleAuditDemo(){
+  auditPass=!auditPass;
+  if(!auditPass && dramaListed)redDotSeen=false; // 已上架转审核中（二次修改）→ 预约上架红点提示（PRD 行2）
+  const b=document.getElementById('auditBadge');
+  if(b){b.className='badge '+(auditPass?'b-green':'b-amber');b.textContent=auditPass?'审核通过':'审核中';}
+  const fa=document.getElementById('fAudit');if(fa)fa.textContent=auditPass?'审核通过':'审核中';
+  renderHeroOps();updateListHint();
+  toast('演示：审核状态已切换为「'+(auditPass?'审核通过':'审核中')+'」');
+}
 function openDramaSched(){redDotSeen=true;renderHeroOps();document.getElementById('ovlDramaSched').classList.add('on');}
 function toggleHeroMore(e){e.stopPropagation();document.getElementById('heroMore').classList.toggle('on');}
 function setListed(v){
-  dramaListed=v;renderHeroOps();
+  dramaListed=v;
+  if(!v)redDotSeen=false;   // 下架 → 重新提示去上架（PRD：已下架审核通过仍红点提示）
+  renderHeroOps();
   const b=document.getElementById('dramaBadge');
   b.className='badge '+(v?'b-green':'b-gray');b.textContent=v?'已上架':'已下架';
   document.getElementById('fUpState').textContent=v?'已上架':'已下架';
@@ -1831,9 +1854,15 @@ function closeShareDrawer(){document.getElementById('shareMask').classList.remov
 /* ══ 列表字段自定义：COL_DEFS + 配置存储 + 动态表头/行渲染 ══ */
 const COL_CFG_TITLES={drama:'剧目列表 · 字段设置',ver:'版本列表 · 字段设置',jy:'经营配置版本列表 · 字段设置'};
 function dramaOpsCell(d){
-  const op=d.up
-    ? `<a onclick="toggleDramaUp('${d.id}')">下架</a>`
-    : `<a onclick="toggleDramaUp('${d.id}')">上架</a>　<a onclick="toast('预约上架（模拟）：${d.name}')">预约上架</a>`;
+  // 上架前置：内容审核通过（售卖版本上传时必有默认版本，不再校验版本数量）。审核中/未通过/待提交 时上架置灰
+  let op;
+  if(d.up){
+    op=`<a onclick="toggleDramaUp('${d.id}')">下架</a>`;
+  }else if(d.audit==='pass'){
+    op=`<a onclick="toggleDramaUp('${d.id}')">上架</a>　<a onclick="toast('预约上架（模拟）：${d.name}')">预约上架</a>`;
+  }else{
+    op=`<span style="color:#c4c4c4;cursor:not-allowed" title="内容审核通过后才可上架">上架</span>　<a onclick="toast('预约上架（模拟）：${d.name}')">预约上架</a>`;
+  }
   return `<a onclick="go('edit')">编辑</a>　${op}`;
 }
 const DRAMA_COL_DEFS=[
@@ -2873,6 +2902,8 @@ function saveVer(){
   }else{
     (verCtx.block==='nat'?natVers:bizVers).unshift(row);
   }
+  // 编辑/新增售卖版本后，重新提示剧维度「去上架」（红点复现，直到用户点上架/预约上架）
+  redDotSeen=false;
   toast(verCtx.mode==='copy'?'已复制并生成新版本（脱离级联树）':'版本已保存');
   go('detail');setTab('jy');
 }
