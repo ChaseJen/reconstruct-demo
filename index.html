@@ -536,6 +536,16 @@ table.lt{width:100%;border-collapse:collapse;font-size:12.5px;min-width:1100px}
             </div>
           </div>
         </div>
+        <div><label>场景展示</label>
+          <div class="msel" id="msDramaScene" data-ph="请选择场景展示">
+            <div class="msel-btn" onclick="toggleMsel(event,'msDramaScene')"><span class="msel-txt ph">请选择场景展示</span><span class="msel-arrow">▾</span></div>
+            <div class="msel-menu" onclick="event.stopPropagation()">
+              <label><input type="checkbox" onchange="onMselChange('msDramaScene')"> P页</label>
+              <label><input type="checkbox" onchange="onMselChange('msDramaScene')"> 搜索</label>
+              <label><input type="checkbox" onchange="onMselChange('msDramaScene')"> 榜单</label>
+            </div>
+          </div>
+        </div>
         <div><label>上架状态</label><select class="fselect"><option>全部</option><option>已上架</option><option>已下架</option></select></div>
         <div><label>审核状态</label><select class="fselect"><option>全部</option><option>待提交</option><option>审核中</option><option>审核通过</option><option>审核未通过</option></select></div>
       </div>
@@ -1513,11 +1523,11 @@ function renderDramaRemark(){
   if(el)el.textContent=(d&&d.remark)?d.remark:'—';
 }
 const dramas=[
-  {id:'1753396',name:'总裁的秘密恋人',vers:5,sell:'IAP, IAA',promote:'分账, 仅发布, 投流, 分销',up:false,audit:'pass',eps:'60/60',owner:'建草莓酱',schedUp:'—',ct:'2024-11-08',ut:'2024-11-20 10:00',remark:'内部测试剧，勿对外'},
-  {id:'1753401',name:'重生之商业帝国',vers:2,sell:'IAP',promote:'仅发布, 投流',up:true,audit:'pass',eps:'40/40',owner:'张制片',schedUp:'—',ct:'2025-01-12',ut:'2025-01-14 18:30'},
-  {id:'1753410',name:'闪婚后大佬马甲藏不住',vers:0,sell:'—',promote:'—',up:false,audit:'review',eps:'12/80',owner:'李编辑',schedUp:'—',ct:'2025-03-01',ut:'—'},
-  {id:'1753415',name:'甜蜜陷阱',vers:0,sell:'—',promote:'—',up:false,audit:'draft',eps:'0/60',owner:'王运营',schedUp:'—',ct:'2025-03-10',ut:'—'},
-  {id:'1753420',name:'王牌保镖',vers:1,sell:'IAA',promote:'仅发布',up:false,audit:'reject',eps:'30/30',owner:'赵导',schedUp:'2025-02-25 09:00',ct:'2025-02-20',ut:'2025-02-22 14:00'}];
+  {id:'1753396',name:'总裁的秘密恋人',vers:5,sell:'IAP, IAA',promote:'分账, 仅发布, 投流, 分销',scene:'P页、搜索、榜单',up:false,audit:'pass',eps:'60/60',owner:'建草莓酱',schedUp:'—',ct:'2024-11-08',ut:'2024-11-20 10:00',remark:'内部测试剧，勿对外'},
+  {id:'1753401',name:'重生之商业帝国',vers:2,sell:'IAP',promote:'仅发布, 投流',scene:'搜索、榜单',up:true,audit:'pass',eps:'40/40',owner:'张制片',schedUp:'—',ct:'2025-01-12',ut:'2025-01-14 18:30'},
+  {id:'1753410',name:'闪婚后大佬马甲藏不住',vers:0,sell:'—',promote:'—',scene:'搜索',up:false,audit:'review',eps:'12/80',owner:'李编辑',schedUp:'—',ct:'2025-03-01',ut:'—'},
+  {id:'1753415',name:'甜蜜陷阱',vers:0,sell:'—',promote:'—',scene:'—',up:false,audit:'draft',eps:'0/60',owner:'王运营',schedUp:'—',ct:'2025-03-10',ut:'—'},
+  {id:'1753420',name:'王牌保镖',vers:1,sell:'IAA',promote:'仅发布',scene:'搜索、榜单',up:false,audit:'reject',eps:'30/30',owner:'赵导',schedUp:'2025-02-25 09:00',ct:'2025-02-20',ut:'2025-02-22 14:00'}];
 const AUDIT_META={draft:{t:'待提交',c:'b-gray'},review:{t:'审核中',c:'b-amber'},pass:{t:'审核通过',c:'b-green'},reject:{t:'审核未通过',c:'b-red'}};
 function renderDramaList(){
   renderDramaHead();
@@ -1873,6 +1883,7 @@ const DRAMA_COL_DEFS=[
   {key:'schedUp',label:'预约上架时间',cell:d=>d.schedUp||'—'},
   {key:'sell',label:'售卖方式',thHtml:'售卖方式 <span title="按版本维度聚合：剧下任一版本匹配即命中" style="color:#9ca3af;cursor:help">ⓘ</span>',cell:d=>d.sell},
   {key:'promote',label:'推广方式',thHtml:'推广方式 <span title="按版本维度聚合：该剧所有版本使用的推广方式去重合集" style="color:#9ca3af;cursor:help">ⓘ</span>',cell:d=>d.promote||'—'},
+  {key:'scene',label:'场景展示',cell:d=>d.scene||'—'},
   {key:'eps',label:'上传集数/总集数',cell:d=>d.eps},
   {key:'owner',label:'创始人',cell:d=>d.owner||'—'},
   {key:'ct',label:'创建时间',cell:d=>d.ct},
@@ -1896,7 +1907,6 @@ const VER_COL_DEFS=[
   {key:'auth',label:'授权账号',cell:v=>shareCell(v,'auth')},
   {key:'state',label:'经营状态',cell:v=>verStateCell(v)},
   {key:'onsale',label:'是否在售',cell:v=>isLive(v.state)?'是':'否'},
-  {key:'scene',label:'场景展示',cell:v=>v.scene},
   {key:'owner',label:'创建人',cell:v=>v.owner||'—'},
   {key:'ct',label:'创建时间',cell:v=>v.ct},
   {key:'mt',label:'修改时间',cell:v=>v.mt||'—'},
