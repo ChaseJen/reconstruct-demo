@@ -2719,10 +2719,10 @@ function confirmCreateBundle(){
   const list=curPanels();
   if(editingBundleId){const b=list.find(x=>x.id===editingBundleId);b.name=name;b.tiers=tiers;}
   else{list.push({id:Date.now(),name,base:list.length===0,tiers});}
-  closeBundleDrawer();renderPanels();renderVerPanels();toast('已保存');
+  closeBundleDrawer();renderPanels();renderVerPanels();renderConvPanels();toast('已保存');
 }
-function copyBundle(id){const list=curPanels();const s=list.find(x=>x.id===id);if(!s)return;list.push({id:Date.now(),name:s.name+' 副本',base:false,tiers:s.tiers.map(t=>({...t}))});renderPanels();renderVerPanels();toast('已复制');}
-function delBundle(id){showConfirmModal('删除面板','确认删除该面板？删除后将立即影响 C 端展示',()=>{const list=curPanels();const idx=list.findIndex(x=>x.id===id);if(idx>-1)list.splice(idx,1);renderPanels();renderVerPanels();toast('已删除');});}
+function copyBundle(id){const list=curPanels();const s=list.find(x=>x.id===id);if(!s)return;list.push({id:Date.now(),name:s.name+' 副本',base:false,tiers:s.tiers.map(t=>({...t}))});renderPanels();renderVerPanels();renderConvPanels();toast('已复制');}
+function delBundle(id){showConfirmModal('删除面板','确认删除该面板？删除后将立即影响 C 端展示',()=>{const list=curPanels();const idx=list.findIndex(x=>x.id===id);if(idx>-1)list.splice(idx,1);renderPanels();renderVerPanels();renderConvPanels();toast('已删除');});}
 
 /* ── Version form (对齐上传 Tab3，无 IAAP / 无一集一价) ── */
 let verCtx={block:'biz',mode:'new',id:null}, verSellMode='single';
@@ -2844,16 +2844,62 @@ function setVerConvert(m){
   // IAA→IAP：转换后走「单集+全剧付费」，需补转换后售价；IAP→IAA：无需价格
   const priceRow=fromIAA?`<div class="price-row" style="margin-top:8px"><span>转换后全剧价格</span><input class="pinput" type="number" value="30"><span class="punit">元</span>
     <span style="margin-left:12px">转换后单集价格</span><input class="pinput" type="number" value="1"><span class="punit">元</span></div>`:'';
+  // IAA→IAP 转换后走「单集+全剧付费」，与新建 IAP 版本一致，需配置营销付费面板（优惠包 / 虚拟币 二选一互斥）
+  const convPanel=fromIAA?`
+    <div class="upz" id="convPanelWrap" style="margin-top:14px">
+      <div class="panel-section-hdr">
+        <span class="panel-section-title">转换后营销付费面板</span>
+        <span class="panel-sep">|</span>
+        <span style="font-size:11px;color:#9ca3af">「多集优惠包」与「虚拟币充值」二选一，互斥，最多10个（样式同新建 IAP 版本）</span>
+      </div>
+      <div class="ptype-seg">
+        <div class="ptype-item" id="convBundle" onclick="setConvPanelType('bundle')">多集优惠包</div>
+        <div class="ptype-item" id="convCoin" onclick="setConvPanelType('coin')">虚拟币充值</div>
+      </div>
+      <div class="panel-section-hdr" style="margin-bottom:12px">
+        <span class="panel-section-title" id="convPanelCount" style="font-size:12px">设置多集优惠包(0/10)</span>
+      </div>
+      <div class="panel-grid" id="convPanelGrid"></div>
+    </div>`:'';
   const dirNote=fromIAA
-    ? '<div>3. 当前为广告解锁(IAA)，转换后走「单集+全剧付费」(IAP)：需设「转换后全剧价格」与「转换后单集价格」</div>'
+    ? '<div>3. 当前为广告解锁(IAA)，转换后走「单集+全剧付费」(IAP)：需设「转换后全剧价格」「转换后单集价格」，并配置营销付费面板（优惠包/虚拟币）</div>'
     : '<div>3. 当前为付费(IAP)，转换后为广告解锁(IAA)：无需设置价格；原付费面板作废、不带入新版本</div>';
-  ex.innerHTML=`<div class="price-row" style="margin-top:8px"><span>设置转换时间</span><input class="pinput" style="width:200px" type="text" placeholder="选择日期时间" onfocus="this.type='datetime-local'"></div>${priceRow}
+  ex.innerHTML=`<div class="price-row" style="margin-top:8px"><span>设置转换时间</span><input class="pinput" style="width:200px" type="text" placeholder="选择日期时间" onfocus="this.type='datetime-local'"></div>${priceRow}${convPanel}
     <div class="convert-note">
       <div>1. 仅支持 IAA ↔ IAP；解锁集、推广方式不变</div>
       <div>2. 到点：旧版失效 + 新版生效；详情列「预约转换」→「已转」</div>
       ${dirNote}
     </div>`;
+  if(fromIAA)renderConvPanels();
   renderVerConvertLinked();
+}
+/* 转换后（IAA→IAP）营销付费面板：复用新建版本的面板数据与新增/编辑抽屉，样式一致 */
+function setConvPanelType(t){if(t===panelType)return;panelType=t;renderConvPanels();toast(`已切换为「${t==='bundle'?'多集优惠包':'虚拟币充值'}」（与另一类互斥）`);}
+function renderConvPanels(){
+  const grid=document.getElementById('convPanelGrid');if(!grid)return;
+  const tb=document.getElementById('convBundle'),tc=document.getElementById('convCoin');
+  if(tb)tb.classList.toggle('on',panelType==='bundle');
+  if(tc)tc.classList.toggle('on',panelType==='coin');
+  const list=curPanels();
+  const ct=document.getElementById('convPanelCount');
+  if(ct)ct.textContent=`设置${panelType==='bundle'?'多集优惠包':'虚拟币充值面板'}(${list.length}/10)`;
+  const cards=list.map(b=>{
+    const chips=(panelType==='bundle')
+      ? b.tiers.map(t=>`<span class="tier-chip">${t.l} ¥${t.p.toFixed(2)}</span>`).join('')
+      : b.tiers.map(t=>`<span class="tier-chip">¥${t.amount} → ${t.amount*COIN_RATE+t.gift}剧豆</span>`).join('');
+    return `<div class="panel-card">
+      <div class="panel-name-row"><span class="panel-name">${b.name}</span>${b.base?'<span class="base-badge">基础面板</span>':''}</div>
+      <div class="tier-row">${chips}</div>
+      <div class="panel-actions">
+        <span class="panel-action" onclick="editBundle(${b.id})">编辑</span>
+        <span class="panel-action" onclick="copyBundle(${b.id})">复制</span>
+        <span class="panel-action danger" onclick="delBundle(${b.id})">删除</span>
+      </div>
+    </div>`;
+  }).join('');
+  const addLabel=panelType==='bundle'?'添加优惠包':'添加充值面板';
+  const add=`<div class="panel-add-card"><span class="add-option" onclick="openAddPanel()">⊹ ${addLabel}</span></div>`;
+  grid.innerHTML=cards+add;
 }
 /* 「设置预约转换」模块 · 关联版本：独立区块，不因切换「否/预约转换」被清空；view/edit 有 linkedVerId 即展示 */
 function renderVerConvertLinked(){
