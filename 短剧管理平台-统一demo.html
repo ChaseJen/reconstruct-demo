@@ -199,6 +199,10 @@ table.lt{width:100%;border-collapse:collapse;font-size:12.5px;min-width:1100px}
 .sd-tbl{width:100%;min-width:1180px;border-collapse:collapse;font-size:12px}
 .sd-tbl th{background:#f9fafb;color:#374151;font-weight:600;text-align:left;padding:9px 10px;white-space:nowrap;border-bottom:1px solid #eef0f2}
 .sd-tbl td{padding:9px 10px;border-bottom:1px solid #f3f4f6;white-space:nowrap;vertical-align:top}
+.dist-share-tbl{width:100%;border-collapse:collapse;font-size:12px}
+.dist-share-tbl th{background:#f9fafb;color:#374151;font-weight:600;text-align:left;padding:10px 12px;border-bottom:1px solid #eef0f2;white-space:nowrap}
+.dist-share-tbl td{padding:10px 12px;border-bottom:1px solid #f3f4f6;vertical-align:middle}
+.dist-share-tbl tr:last-child td{border-bottom:none}
 .eprow{display:flex;gap:12px;border:1px solid #e5e7eb;border-radius:9px;padding:11px;margin-bottom:10px;align-items:center}
 .epcov{width:48px;height:64px;border-radius:6px;background:linear-gradient(135deg,#dbeafe,#bfdbfe);flex-shrink:0}
 .ovl{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;align-items:center;justify-content:center}
@@ -1163,6 +1167,44 @@ table.lt{width:100%;border-collapse:collapse;font-size:12.5px;min-width:1100px}
         <div style="font-size:12px;font-weight:600;margin-bottom:6px">已绑定账户（<b id="verBoundCount">0</b>）</div>
         <div id="verBoundList"></div>
       </div>
+      <!-- 分销：分销设置（仅推广方式=分销 可见；点击版本列表「分销商」跳入并置灰只读） -->
+      <div class="module-card" id="verDistBlock" style="display:none">
+        <div class="module-hdr">分销设置</div>
+        <div class="frow"><label class="flabel"><span class="req">*</span>分销类型</label>
+          <select class="fselect" id="verDistType" style="max-width:280px"><option>指派分销</option><option>公开分销</option></select>
+        </div>
+        <div style="border-left:3px solid #22c55e;padding-left:14px;margin-top:8px">
+          <div style="font-size:13px;font-weight:700;color:#111;margin-bottom:14px">指派分销设置</div>
+          <div class="frow"><label class="flabel"><span class="req">*</span>授权方式</label>
+            <div class="radio-row">
+              <label class="radio-item"><input type="radio" name="verDistAuthWay" value="acct" checked> 授权分销商账号</label>
+              <label class="radio-item"><input type="radio" name="verDistAuthWay" value="group"> 授权分销商组</label>
+            </div>
+          </div>
+          <div class="frow"><label class="flabel"><span class="req">*</span>选择分销商账号</label>
+            <input class="finput" style="max-width:none" placeholder="搜索分销商账号/UID">
+            <div style="font-size:11px;color:#9ca3af;margin-top:6px">可搜索并勾选多个分销商账号</div>
+          </div>
+          <div class="frow"><label class="radio-item" style="font-weight:600;color:#374151"><input type="checkbox"> 保存为分销商组</label></div>
+          <div class="frow"><label class="flabel"><span class="req">*</span>分成比例</label>
+            <div style="border:1px solid #e5e7eb;border-radius:8px;overflow-x:auto">
+              <table class="dist-share-tbl">
+                <thead><tr><th>分销商账号</th><th>分成比例 <input class="finput" style="max-width:64px;display:inline-block;padding:4px 8px" placeholder="批量" type="number"> % <button class="btn btn-blue btn-sm" style="margin-left:2px" onclick="fillVerDistShare()">填充</button></th><th style="text-align:right">操作</th></tr></thead>
+                <tbody id="verDistShareBody"><tr><td colspan="3" style="text-align:center;color:#9ca3af;padding:16px">请先选择分销商账号</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="frow"><label class="flabel">合作截止时间</label>
+            <input class="finput" id="verDistDeadline" style="max-width:280px" placeholder="选择日期时间" onfocus="this.type='datetime-local'">
+          </div>
+          <div class="frow" style="margin-bottom:0"><label class="flabel"><span class="req">*</span>是否允许投放聚星</label>
+            <div class="radio-row">
+              <label class="radio-item"><input type="radio" name="verDistJuxing" value="yes"> 是</label>
+              <label class="radio-item"><input type="radio" name="verDistJuxing" value="no" checked> 否</label>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="module-card">
         <div class="module-hdr">售卖信息</div>
         <div class="frow"><label class="flabel"><span class="req">*</span>售卖方式</label><div class="sm-grid" id="verSmGrid"></div></div>
@@ -1694,8 +1736,8 @@ function opHtml(v,block){
 }
 /* 分销商 / 授权账号 侧展示：点击 UID 单元格 → 右侧抽屉，展示该版本在各分销商/子账号侧的列表（字段与其侧一致，版权商侧无操作项） */
 const DIST_INFO={
-  '88012345':{name:'永盛视源',share:'版权10% 分销90%',earliest:'2026-06-01',deadline:'2027-06-01'},
-  '88012346':{name:'星辰文化',share:'版权15% 分销85%',earliest:'2026-06-15',deadline:'2027-12-31'},
+  '88012345':{name:'永盛视源',share:'版权10% 分销90%',pct:90,earliest:'2026-06-01',deadline:'2027-06-01'},
+  '88012346':{name:'星辰文化',share:'版权15% 分销85%',pct:85,earliest:'2026-06-15',deadline:'2027-12-31'},
 };
 const AUTH_INFO={
   '60011122':{name:'快手子账号A',earliest:'2026-05-01',deadline:'长期有效'},
@@ -1705,7 +1747,43 @@ const OUR_SUPPLIER='北京快手科技·官方';
 function shareCell(v,kind){
   const raw=((kind==='dist'?v.dist:v.auth)||'—');
   if(!raw||raw==='—')return '—';
-  return `<a class="sharelink" onclick="event.stopPropagation();openShareDrawer('${v.id}','${kind}')">${raw}</a>`;
+  // 分销商：跳转到售卖版本页（置灰只读，推广方式=分销，展示分销设置）；授权账号：仍走侧抽屉
+  const fn=kind==='dist'?`openDistConfig('${v.id}')`:`openShareDrawer('${v.id}','auth')`;
+  return `<a class="sharelink" onclick="event.stopPropagation();${fn}">${raw}</a>`;
+}
+/* 点击分销商 → 跳转售卖版本页，置灰只读，推广方式锁定分销，带入该版本的分销设置 */
+function openDistConfig(id){
+  const v=findVer(id);if(!v)return;
+  openVerForm(v.block,'view',id);
+  const r=document.querySelector('input[name=vpromo][value="分销"]');
+  if(r)r.checked=true;
+  document.getElementById('verCrumb').textContent='分销设置（只读）';
+  document.getElementById('verBlockText').textContent='由版本列表「分销商」进入：仅查看该版本的分销设置，字段置灰只读。';
+  onVerPromoChange();
+  renderVerDistBlock(v);
+  applyVerFormRO(true); // 分成比例表是渲染后新增的输入，需重新置灰
+}
+function renderVerDistBlock(v){
+  const uids=((v&&v.dist)||'').split(',').map(s=>s.trim()).filter(x=>x&&x!=='—');
+  const tbody=document.getElementById('verDistShareBody');
+  if(!tbody)return;
+  if(!uids.length){tbody.innerHTML='<tr><td colspan="3" style="text-align:center;color:#9ca3af;padding:16px">请先选择分销商账号</td></tr>';return;}
+  tbody.innerHTML=uids.map(uid=>{
+    const d=DIST_INFO[uid]||{name:'—',pct:''};
+    return `<tr>
+      <td>${d.name||'—'} <span style="color:#9ca3af;font-size:11px">UID ${uid}</span></td>
+      <td><input class="finput" style="max-width:90px;display:inline-block" type="number" value="${d.pct||''}"> %</td>
+      <td style="text-align:right"><a class="sharelink" onclick="this.closest('tr').remove()">移除</a></td>
+    </tr>`;
+  }).join('');
+  const first=DIST_INFO[uids[0]];
+  const dl=document.getElementById('verDistDeadline');
+  if(dl&&first){dl.type='text';dl.value=first.deadline||'';}
+}
+function fillVerDistShare(){
+  const pct=document.querySelector('#verDistBlock .dist-share-tbl thead input')?.value;
+  if(pct==='')return;
+  document.querySelectorAll('#verDistShareBody tr input').forEach(i=>i.value=pct);
 }
 function openShareDrawer(verId,kind){
   const v=findVer(verId);if(!v)return;
@@ -2654,6 +2732,9 @@ function openVerForm(block,mode,id){
   const effRadio=document.querySelector(`input[name=veffect][value="${eff}"]`);
   if(effRadio)effRadio.checked=true;
   setVerEffect(eff);
+  // 分销设置：每次打开先重置分成比例表（openDistConfig 会随后带入具体数据）
+  const dsb=document.getElementById('verDistShareBody');
+  if(dsb)dsb.innerHTML='<tr><td colspan="3" style="text-align:center;color:#9ca3af;padding:16px">请先选择分销商账号</td></tr>';
   applyVerFormRO(mode==='view');
   go('ver');
   if(mode==='view')toast('查看模式：字段只读置灰');
@@ -2802,6 +2883,8 @@ function onVerPromoChange(){
   const promo=document.querySelector('input[name=vpromo]:checked')?.value;
   const blk=document.getElementById('verBindBlock');
   if(blk)blk.style.display=(promo==='投流')?'block':'none';
+  const db=document.getElementById('verDistBlock');
+  if(db)db.style.display=(promo==='分销')?'block':'none';
   renderVerBound();
 }
 function parseAccts(str){return (str||'').split(/[,，]/).map(s=>s.trim()).filter(Boolean);}
