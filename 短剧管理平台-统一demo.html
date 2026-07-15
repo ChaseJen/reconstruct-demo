@@ -790,7 +790,7 @@ table.lt{width:100%;border-collapse:collapse;font-size:12.5px;min-width:1100px}
       <div class="tabbar">
         <div class="tab-step" onclick="switchTab('basic')">
           <div class="tab-circle current" id="circleBasic">1</div>
-          <div><div class="tab-name" id="nameBasic">短剧基础信息</div><div class="tab-sub">标题、简介、封面、演员及版权备案</div></div>
+          <div><div class="tab-name" id="nameBasic">短剧基础信息</div><div class="tab-sub">标题、简介、封面、演员、版权备案及场景展示</div></div>
         </div>
         <div class="tab-line"></div>
         <div class="tab-step" onclick="switchTab('episode')">
@@ -800,7 +800,7 @@ table.lt{width:100%;border-collapse:collapse;font-size:12.5px;min-width:1100px}
         <div class="tab-line"></div>
         <div class="tab-step" onclick="switchTab('sell')">
           <div class="tab-circle next" id="circleSell">3</div>
-          <div><div class="tab-name next" id="nameSell">售卖信息</div><div class="tab-sub">自然流量售卖方式、单集售卖属性、推广方式及场景展示</div></div>
+          <div><div class="tab-name next" id="nameSell">售卖信息</div><div class="tab-sub">自然流量售卖方式、单集售卖属性及推广方式</div></div>
         </div>
       </div>
     </div>
@@ -819,6 +819,7 @@ table.lt{width:100%;border-collapse:collapse;font-size:12.5px;min-width:1100px}
           <div class="anchor-item active" data-target="mod-basic" onclick="jumpTo('mod-basic',this)">短剧基础信息</div>
           <div class="anchor-item" data-target="mod-copyright" onclick="jumpTo('mod-copyright',this)">版权信息</div>
           <div class="anchor-item" data-target="mod-beian" onclick="jumpTo('mod-beian',this)">备案信息</div>
+          <div class="anchor-item" data-target="mod-scene" onclick="jumpTo('mod-scene',this)">场景展示</div>
         </div>
         <div class="form-col">
           <div class="module-card" id="mod-basic">
@@ -1002,6 +1003,38 @@ table.lt{width:100%;border-collapse:collapse;font-size:12.5px;min-width:1100px}
             </div>
           </div>
 
+          <div class="module-card" id="mod-scene">
+            <div class="module-hdr" onclick="toggleModule('mod-scene')">
+              <span class="module-icon">🖥️</span>场景展示设置
+              <span class="module-collapse-btn"><span id="collapseTxt-mod-scene">收起</span><span class="module-collapse-arrow" id="collapseArrow-mod-scene">⌃</span></span>
+            </div>
+            <div class="module-body" id="body-mod-scene">
+              <div class="module-note">场景展示为剧维度设置，作用于该短剧整体（P页 / 搜索 / 榜单），与售卖版本无关。</div>
+              <div class="frow">
+                <label class="flabel"><span class="req">*</span>是否 P 页展示</label>
+                <div class="radio-row">
+                  <label class="radio-item"><input type="radio" name="ppage" value="yes" onchange="scenePpage='yes'"> 是</label>
+                  <label class="radio-item"><input type="radio" name="ppage" value="no" checked onchange="scenePpage='no'"> 否</label>
+                </div>
+                <div style="font-size:11px;color:#dc2626;margin-top:6px">P 页关闭展示后无法再开启</div>
+              </div>
+              <div class="frow">
+                <label class="flabel"><span class="req">*</span>是否搜索展示 <span class="qtip" data-tip="搜索展示包括自然搜索展示、商业化搜索展示">ⓘ</span></label>
+                <div class="radio-row">
+                  <label class="radio-item"><input type="radio" name="search" value="yes" checked onchange="sceneSearch='yes'"> 是</label>
+                  <label class="radio-item"><input type="radio" name="search" value="no" onchange="sceneSearch='no'"> 否</label>
+                </div>
+              </div>
+              <div class="frow" style="margin-bottom:0">
+                <label class="flabel"><span class="req">*</span>是否榜单展示 <span class="qtip" data-tip="榜单展示指该短剧可参与热榜 / 分类榜等榜单曝光">ⓘ</span></label>
+                <div class="radio-row">
+                  <label class="radio-item"><input type="radio" name="rank" value="yes" checked onchange="sceneRank='yes'"> 是</label>
+                  <label class="radio-item"><input type="radio" name="rank" value="no" onchange="sceneRank='no'"> 否</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="agree-row"><input type="checkbox" checked style="accent-color:#2563eb"><span>请勾选同意 <a href="#">「付费短剧经营者服务协议」</a></span></div>
           <div class="bottom-actions">
             <button class="btn btn-blue" onclick="goToStep('episode')">下一步</button>
@@ -1096,31 +1129,6 @@ table.lt{width:100%;border-collapse:collapse;font-size:12.5px;min-width:1100px}
             </div>
           </div>
 
-          <div class="module-card">
-            <div class="module-hdr" style="cursor:default"><span class="module-icon">🖥️</span>场景展示设置</div>
-            <div class="frow">
-              <label class="flabel"><span class="req">*</span>是否 P 页展示</label>
-              <div class="radio-row">
-                <label class="radio-item"><input type="radio" name="ppage" value="yes" onchange="scenePpage='yes'"> 是</label>
-                <label class="radio-item"><input type="radio" name="ppage" value="no" checked onchange="scenePpage='no'"> 否</label>
-              </div>
-              <div style="font-size:11px;color:#dc2626;margin-top:6px">P 页关闭展示后无法再开启</div>
-            </div>
-            <div class="frow">
-              <label class="flabel"><span class="req">*</span>是否搜索展示 <span class="qtip" data-tip="搜索展示包括自然搜索展示、商业化搜索展示">ⓘ</span></label>
-              <div class="radio-row">
-                <label class="radio-item"><input type="radio" name="search" value="yes" checked onchange="sceneSearch='yes'"> 是</label>
-                <label class="radio-item"><input type="radio" name="search" value="no" onchange="sceneSearch='no'"> 否</label>
-              </div>
-            </div>
-            <div class="frow" style="margin-bottom:0">
-              <label class="flabel"><span class="req">*</span>是否榜单展示 <span class="qtip" data-tip="榜单展示指该版本可参与热榜 / 分类榜等榜单曝光">ⓘ</span></label>
-              <div class="radio-row">
-                <label class="radio-item"><input type="radio" name="rank" value="yes" checked onchange="sceneRank='yes'"> 是</label>
-                <label class="radio-item"><input type="radio" name="rank" value="no" onchange="sceneRank='no'"> 否</label>
-              </div>
-            </div>
-          </div>
 
           <div class="module-card">
             <div class="module-hdr" style="cursor:default"><span class="module-icon">⏱️</span>生效设置</div>
@@ -2253,7 +2261,7 @@ function jumpTo(id,el){
   el.classList.add('active');
 }
 function initScrollSpy(){
-  const sections=['mod-basic','mod-copyright','mod-beian'];
+  const sections=['mod-basic','mod-copyright','mod-beian','mod-scene'];
   window.addEventListener('scroll',()=>{
     if(!document.getElementById('view-upload').classList.contains('on')||currentTab!=='basic')return;
     let activeId=sections[0];
