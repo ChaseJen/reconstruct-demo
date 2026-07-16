@@ -56,7 +56,8 @@ table.lt{width:100%;border-collapse:collapse;font-size:12.5px;min-width:1100px}
 .st-live{color:#16a34a}.st-fail{color:#9ca3af}.st-pend{color:#6b7280}.st-slive{color:#2563eb}.st-sfail{color:#d97706}
 .dot{width:6px;height:6px;border-radius:50%;display:inline-block}
 .d-live{background:#16a34a}.d-fail{background:#9ca3af}.d-pend{background:#9ca3af}.d-slive{background:#2563eb}.d-sfail{background:#d97706}
-.cv-done{color:#16a34a;font-size:12px}.cv-sched{color:#d97706;font-size:12px}
+.cv-done{color:#16a34a;font-size:12px}.cv-sched{color:#d97706;font-size:12px}.cv-from{color:#2563eb;font-size:12px}
+.link-dir{color:#9ca3af;font-size:11px;margin-right:3px}
 .red-dot{position:relative}
 .red-dot::after{content:'';position:absolute;top:-2px;right:-2px;width:7px;height:7px;background:#ef4444;border-radius:50%;border:1.5px solid #fff}
 .hint{font-size:11px;color:#9ca3af;line-height:1.6;margin:8px 16px 0}
@@ -1233,8 +1234,9 @@ table.lt{width:100%;border-collapse:collapse;font-size:12.5px;min-width:1100px}
           <div class="module-note" style="margin:-4px 0 8px">仅支持 IAA ↔ IAP；原版本生效时自动生成转换后关联版本（待生效）</div>
           <div class="radio-row">
             <label class="radio-item"><input type="radio" name="verConvert" value="no" checked onchange="setVerConvert('no')"> 否</label>
-            <label class="radio-item"><input type="radio" name="verConvert" value="yes" onchange="setVerConvert('yes')"> 预约转换</label>
+            <label class="radio-item" id="verConvertYesItem"><input type="radio" name="verConvert" value="yes" onchange="setVerConvert('yes')"> 预约转换</label>
           </div>
+          <div id="verConvertNoChain" style="display:none;font-size:11px;color:#b45309;margin-top:6px">本版本由转换生成（售卖转换=转换生成），<b>不支持再次预约转换</b>；如需再次转换请复制为新版本后设置。</div>
           <div id="verConvertExtra"></div>
           <div id="verConvertLinkedBlock" style="display:none"></div>
         </div>
@@ -1634,7 +1636,7 @@ let natVers=[
   // 已转(done) 原版本：IAP→已转为 IAA，原版本失效，关联版本已生效
   {id:'V202410001',vname:'自然流量基线',mode:'full',pay:'IAP',convert:'done',unlock:'前3集免费，第4集起付费',price:'全剧50元',market:'—',promote:'分账',dist:'—',auth:'—',state:'failed',scene:'P页、搜索、榜单',owner:'建草莓酱',ct:'2024-10-01 12:00',mt:'2024-10-08 00:00',block:'nat',linkedVerId:'V202410001C'},
   // 上者的关联版本（转换后 IAA），已生效
-  {id:'V202410001C',vname:'自然流量·IAA已转',mode:'ad',pay:'IAA',convert:'none',unlock:'前3集免费，第4集起看广告',price:'—',market:'—',promote:'分账',dist:'—',auth:'60011122',state:'live',scene:'P页、搜索、榜单',owner:'建草莓酱',ct:'2024-10-08 00:00',mt:'2024-10-08 00:00',block:'nat',linkedVerId:'V202410001'},
+  {id:'V202410001C',vname:'自然流量·IAA已转',mode:'ad',pay:'IAA',convert:'from',unlock:'前3集免费，第4集起看广告',price:'—',market:'—',promote:'分账',dist:'—',auth:'60011122',state:'live',scene:'P页、搜索、榜单',owner:'建草莓酱',ct:'2024-10-08 00:00',mt:'2024-10-08 00:00',block:'nat',linkedVerId:'V202410001'},
   {id:'V202409002',mode:'ad',pay:'IAA',convert:'none',unlock:'前10集免费，第11集起看广告',price:'—',market:'—',promote:'分账',dist:'—',auth:'—',state:'pending',scene:'搜索、榜单',owner:'建草莓酱',ct:'2024-09-15 16:40',mt:'2024-09-15 16:40',block:'nat'},
 ];
 let bizVers=[
@@ -1642,19 +1644,29 @@ let bizVers=[
   // 已生效+预约转换：生效时自动生成了一个【待生效】的转换后(IAA)关联版本
   {id:'V202411001',vname:'大额投流版',mode:'single',pay:'IAP',convert:'sched',unlock:'前5集免费，第6集起付费',price:'单集2元 / 全剧30元',market:'虚拟币充值',promote:'投流',dist:'—',auth:'—',state:'live',scene:'P页、搜索、榜单',owner:'投手A',ct:'2024-11-20 10:00',mt:'2024-11-20 10:00',block:'biz',linkedVerId:'V202411001C'},
   // 上者的关联版本（转换后 IAA），待生效
-  {id:'V202411001C',vname:'大额投流版·IAA待生效',mode:'ad',pay:'IAA',convert:'none',unlock:'前5集免费，第6集起看广告',price:'—',market:'—',promote:'投流',dist:'—',auth:'—',state:'pending',scene:'搜索、榜单',owner:'投手A',ct:'2024-11-20 10:05',mt:'2024-11-20 10:05',block:'biz',linkedVerId:'V202411001'},
+  {id:'V202411001C',vname:'大额投流版·IAA待生效',mode:'ad',pay:'IAA',convert:'from',unlock:'前5集免费，第6集起看广告',price:'—',market:'—',promote:'投流',dist:'—',auth:'—',state:'pending',scene:'搜索、榜单',owner:'投手A',ct:'2024-11-20 10:05',mt:'2024-11-20 10:05',block:'biz',linkedVerId:'V202411001'},
   {id:'V202411002',mode:'ad',pay:'IAA',convert:'none',unlock:'前8集免费，第9集起看广告',price:'—',market:'—',promote:'分销',dist:'88012345, 88012346',auth:'—',state:'pending',scene:'搜索',owner:'投手A',ct:'2024-11-25 09:12',mt:'2024-11-25 09:12',block:'biz'},
   {id:'V202410002',mode:'ad',pay:'IAA',convert:'none',unlock:'前5集免费，第6集起看广告',price:'—',market:'—',promote:'投流',dist:'—',auth:'—',state:'pending',scene:'搜索、榜单',owner:'投手A',ct:'2024-10-10 11:00',mt:'2024-10-10 11:00',block:'biz'},
 ];
 function allVers(){return natVers.concat(bizVers);}
 function findVer(id){return allVers().find(x=>x.id===id);}
-function cvHtml(c){return c==='done'?'<span class="cv-done">● 已转</span>':c==='sched'?'<span class="cv-sched">● 预约转换</span>':'<span style="color:#9ca3af">—</span>';}
+/* 售卖转换枚举：— 无关系 / 预约转换·已转 = 老版本（转换发起方）/ 转换生成 = 新版本（由转换产生，不允许再次转换） */
+function cvHtml(c){
+  if(c==='done')return '<span class="cv-done">● 已转</span>';
+  if(c==='sched')return '<span class="cv-sched">● 预约转换</span>';
+  if(c==='from')return '<span class="cv-from">● 转换生成</span>';
+  return '<span style="color:#9ca3af">—</span>';
+}
+const isConvSource=c=>c==='sched'||c==='done';   // 老版本
+const isConvTarget=c=>c==='from';                // 新版本
 /* 关联版本：预约转换生成的互关版本；带 id 时可点击跳转到该版本详情（openVerForm view） */
 function verLinkLabel(id){const v=findVer(id);if(!v)return id;if(v.vname)return `${id} · ${v.vname}`;const t=SELLMODES.find(x=>x.k===v.mode)?.t||'';return t?`${id}（${t}）`:id;}
 function linkedVerCell(v){
   if(!v.linkedVerId)return '<span style="color:#9ca3af">—</span>';
   const lv=findVer(v.linkedVerId);const blk=lv?lv.block:(v.block||'biz');
-  return `<span class="vid2 link" onclick="event.stopPropagation();openVerForm('${blk}','view','${v.linkedVerId}')">${v.linkedVerId}</span>`;
+  // 带方向：老版本「转换为 xxx」，新版本「转换自 xxx」
+  const dir=isConvTarget(v.convert)?'转换自':'转换为';
+  return `<span class="link-dir">${dir}</span><span class="vid2 link" onclick="event.stopPropagation();openVerForm('${blk}','view','${v.linkedVerId}')">${v.linkedVerId}</span>`;
 }
 function setTab(t){
   ['copyright','make','jy','home'].forEach(k=>{const el=document.getElementById('tab-'+k);if(el)el.style.display=(k===t)?'block':'none';});
@@ -1835,7 +1847,7 @@ function openShareDrawer(verId,kind){
   const sub=kind==='dist'
     ? `以下为该版本「${v.vname||'默认版本'}（${v.id}）」被分销后，在各<b>分销商</b>「分销短剧」列表中的展示。字段与分销商侧一致，版权商侧不含列表操作项。`
     : `以下为该版本「${v.vname||'默认版本'}（${v.id}）」在各<b>授权子账号</b>侧的展示。子账号与版权商为同步关系（无独立分成），版权商侧不含列表操作项。`;
-  const cvText=v.convert==='done'?'已转':v.convert==='sched'?'预约转换':'无';
+  const cvText=v.convert==='done'?'已转':v.convert==='sched'?'预约转换':v.convert==='from'?'转换生成':'无';
   const modeT=SELLMODES.find(x=>x.k===v.mode)?.t||'';
   const rows=uids.length?uids.map(uid=>{
     const d=info[uid]||{name:'—'};
@@ -2801,6 +2813,14 @@ function openVerForm(block,mode,id){
   const dsb=document.getElementById('verDistShareBody');
   if(dsb)dsb.innerHTML='<tr><td colspan="3" style="text-align:center;color:#9ca3af;padding:16px">请先选择分销商账号</td></tr>';
   applyVerFormRO(mode==='view');
+  // 不允许链式转换：转换生成的新版本不可再设预约转换。显式两向赋值（view 恒只读），避免 disabled 在多次打开间残留
+  const isFromVer=!!(src&&isConvTarget(src.convert)&&mode!=='new'&&mode!=='copy');
+  const cvYes=document.querySelector('input[name=verConvert][value=yes]');
+  if(cvYes)cvYes.disabled=(mode==='view')?true:isFromVer;
+  const yesItem=document.getElementById('verConvertYesItem');
+  if(yesItem)yesItem.style.opacity=isFromVer?'.45':'';
+  const noChain=document.getElementById('verConvertNoChain');
+  if(noChain)noChain.style.display=isFromVer?'block':'none';
   go('ver');
   if(mode==='view')toast('查看模式：字段只读置灰');
   if(mode==='copy')toast('复制版脱离多账号级联树，发布后生成新版本');
@@ -2945,9 +2965,10 @@ function renderVerConvertLinked(){
   const blk=lv.block||cur.block||'biz';
   const lvName=lv.vname||('版本 '+lv.id);
   let verb='关联版本';
-  if(cur.convert==='sched'&&cur.state==='live')verb='本版本已生效并设置预约转换，生效时已自动生成关联版本';
-  else if(cur.convert==='sched')verb='本版本已设置预约转换，生效后将自动生成关联版本';
-  else if(cur.convert==='done')verb='本版本已转换，关联版本';
+  if(cur.convert==='sched'&&cur.state==='live')verb='本版本（老版本）已生效并设置预约转换，生效时已自动生成转换后的新版本';
+  else if(cur.convert==='sched')verb='本版本（老版本）已设置预约转换，生效后将自动生成转换后的新版本';
+  else if(cur.convert==='done')verb='本版本（老版本）已完成转换，转换后的新版本';
+  else if(isConvTarget(cur.convert))verb='本版本由下方老版本转换生成（不支持再次转换），转换来源';
   box.style.display='block';
   box.innerHTML=`<div class="convert-linked" style="margin-top:10px;padding:10px 12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;font-size:12px;color:#1e40af;line-height:1.7">
     <div style="font-weight:600;margin-bottom:4px">关联版本</div>
@@ -2965,7 +2986,11 @@ function saveVer(){
   const name=document.getElementById('verName').value||'未命名版本';
   const promo=document.querySelector('input[name=vpromo]:checked')?.value||(verCtx.block==='nat'?'分账':'仅发布');
   const pay=verSellMode==='ad'?'IAA':'IAP';
-  const convert=document.querySelector('input[name=verConvert]:checked')?.value==='yes'?'sched':'none';
+  // 转换生成的新版本保留 from 标记（不允许再次转换，不会被编辑覆盖成 none/sched）
+  const srcVer=verCtx.id?findVer(verCtx.id):null;
+  const convert=(srcVer&&isConvTarget(srcVer.convert)&&verCtx.mode==='edit')
+    ? 'from'
+    : (document.querySelector('input[name=verConvert]:checked')?.value==='yes'?'sched':'none');
   const id=verCtx.mode==='edit'&&verCtx.id?verCtx.id:('V'+Date.now().toString().slice(-9));
   // 生效设置 → 版本状态：立即生效→live、预约生效→sched_live、待生效→pending
   const effVal=document.querySelector('input[name=veffect]:checked')?.value||'pending';
