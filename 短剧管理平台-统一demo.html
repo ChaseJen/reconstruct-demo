@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- 尽量避免线上 demo 被浏览器缓存住旧版（GitHub Pages 的 HTML 默认 max-age=600，且不支持自定义响应头，
+     故 meta 只能尽力而为；同步脚本会额外输出带 commit 号的链接，那个必定绕过缓存） -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>短剧管理平台 · 统一 Demo</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
