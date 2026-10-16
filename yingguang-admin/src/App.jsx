@@ -506,15 +506,14 @@ function PlanDrawer({ plan, tasks, onClose, onTask }) {
       <div className="drawer-head"><button aria-label="关闭详情" onClick={onClose}><CloseOutlined /></button><h2>查看详情</h2></div>
       <div className="drawer-body">
         <dl className="drawer-fields"><Field label="计划ID">{plan.id}</Field><Field label="计划名称">{plan.name}</Field><Field label="分成比例">{plan.share.replace("｜", " ")}</Field><Field label="分销达人方式">{plan.mode}</Field><Field label="计划开始时间">{plan.startAt}</Field><Field label="计划结束时间">{plan.endAt}</Field><Field label="任务参与规则"><div className="drawer-rule"><div className="editor-toolbar"><b>B</b><i>I</i><u>U</u><UnorderedListOutlined /><OrderedListOutlined /><span>H₁</span><span>H₂</span><ClearOutlined /></div><pre>{plan.rule || ruleText}</pre></div></Field></dl>
-        <h3>分销版本及网盘链接</h3>
+        <h3>短剧及网盘链接</h3>
         <table className="drawer-table version-task-table">
-          <thead><tr><th>短剧名称</th><th>分销版本</th><th>任务状态</th><th>网盘链接（二创素材）</th><th>操作</th></tr></thead>
+          <thead><tr><th>短剧名称</th><th>任务状态</th><th>网盘链接（二创素材）</th><th>操作</th></tr></thead>
           <tbody>{bindings.map((assetItem) => {
             const currentTask = planTasks.find((item) => item.assetId === assetItem.assetId) || planTasks.find((item) => item.seriesId === assetItem.seriesId && item.pauseReason !== "PA转换");
             const material = plan.materials.find((m) => m.seriesId === assetItem.seriesId);
             return <tr key={assetItem.assetId}>
               <td><strong>{assetItem.seriesName}</strong><small>ID: {assetItem.seriesId}</small></td>
-              <td>{assetItem.name}</td>
               <td>{currentTask ? <StatusTag status={currentTask.status} /> : "尚未生成"}</td>
               <td><span className="link-copy">{material?.link}</span></td>
               <td>{currentTask ? <button className="task-link" onClick={() => onTask(currentTask)}>查看任务</button> : "—"}</td>

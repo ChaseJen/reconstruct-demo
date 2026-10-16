@@ -117,7 +117,7 @@ button:disabled { cursor: not-allowed; }
 .drawer-table th:first-child { width: 120px; }.drawer-table th:last-child { width: 128px; }
 .drawer-table strong, .drawer-table small { display: block; }
 .drawer-table small { margin-top: 4px; color: #90959d; }
-.version-task-table th:first-child { width: 150px; }.version-task-table th:nth-child(2) { width: 130px; }.version-task-table th:nth-child(3) { width: 78px; }.version-task-table th:nth-child(4) { width: auto; }.version-task-table th:last-child { width: 76px; }
+.version-task-table th:first-child { width: 150px; }.version-task-table th:nth-child(2) { width: 78px; }.version-task-table th:nth-child(3) { width: auto; }.version-task-table th:last-child { width: 76px; }
 .link-copy { color: #4a76b5; overflow-wrap: anywhere; }
 .task-link { padding: 0; border: 0; background: none; color: #357bd8; }
 .task-link .status-tag { margin-right: 6px; }

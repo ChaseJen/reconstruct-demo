@@ -33,3 +33,5 @@ The canonical business behavior for this prototype is:
 - The task-detail page in this Demo shows the web-drive material link as read-only and must not include a pencil/edit entry. The list edit modal includes a checked-by-default option “同步更新其他计划中该短剧的素材链接”. When checked, save updates every plan containing the same `seriesId`; when unchecked, only the current plan is updated. A historical PRD once described task end time as editable, but that control is absent from the currently verified online UI; keep it read-only unless the product owner reconfirms otherwise.
 
 - 创建计划页不展示「已选短剧及生效版本」模块。单选保留短剧下拉和素材链接输入；多选上传区域内仅展示导入短剧及素材链接，支持清空、重新上传，切换到多选时清空单选结果。编辑计划的版本及素材维护保持原有行为。
+
+- 查看计划详情的表格不展示分销版本列，标题为「短剧及网盘链接」，保留短剧、任务状态、素材链接和查看任务操作。
