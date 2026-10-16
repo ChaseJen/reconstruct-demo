@@ -473,19 +473,17 @@ function TaskList({ tasks, plans, onView, onAction, onEdit, menu, setMenu }) {
       <Filters type="tasks" values={{ ...filters, tab }} onChange={setFilters} onSearch={() => setApplied(filters)} onReset={() => { setFilters({ ...empty, tab }); setApplied({ ...empty, tab }); }} />
       <div className="table-shell">
         <table className="data-table task-table">
-          <thead><tr><th className="check-cell"><input type="checkbox" aria-label="全选" /></th><th>任务名称&amp;ID</th><th>任务状态</th><th>版本名称</th><th>{tab === "novel" ? "小说名称" : "短剧名称"}</th>{tab === "drama" && <th>是否漫剧</th>}<th>关联任务</th><th>分成比例</th><th>达人选择方式</th><th>任务来源</th><th>规则ID</th><th>计划名称</th><th>计划创建时间</th><th>任务启动时间</th><th>任务结束时间</th><th>任务修改时间</th><th>最新修改人</th><th>操作</th></tr></thead>
+          <thead><tr><th className="check-cell"><input type="checkbox" aria-label="全选" /></th><th>任务名称&amp;ID</th><th>任务状态</th><th>版本名称</th><th>{tab === "novel" ? "小说名称" : "短剧名称"}</th>{tab === "drama" && <th>是否漫剧</th>}<th>分成比例</th><th>达人选择方式</th><th>任务来源</th><th>规则ID</th><th>计划名称</th><th>计划创建时间</th><th>任务启动时间</th><th>任务结束时间</th><th>任务修改时间</th><th>最新修改人</th><th>操作</th></tr></thead>
           <tbody>{filtered.length ? filtered.map((task) => {
             const plan = plans.find((item) => item.id === task.planId);
-            const relatedTask = task.relatedTaskId ? tasks.find((item) => item.id === task.relatedTaskId) : null;
             return <tr key={task.id}>
               <td className="check-cell"><input type="checkbox" aria-label={`选择任务${task.id}`} /></td>
               <td><strong className="truncate">{task.name}</strong><small>ID: {task.id}</small></td>
               <td><StatusTag status={task.status} /></td><td>{assetById[task.assetId]?.name || "—"}</td><td>{task.seriesName}</td>{tab === "drama" && <td>{task.isComic ? "漫剧" : "真人剧"}</td>}
-              <td>{relatedTask ? <button className="related-task-link" onClick={() => onView(relatedTask)}><strong>{task.relation}：{relatedTask.name}</strong><small>ID: {relatedTask.id}</small></button> : <span className="muted-text">—</span>}</td>
               <td>{task.share.split("｜").map((line) => <span className="stack" key={line}>{line}</span>)}</td><td>{task.mode}</td><td>{task.source}</td><td>{task.ruleId}</td><td>{task.planName}<small>{task.planId ? `ID: ${task.planId}` : "—"}</small></td><td>{plan?.createdAt || task.modifiedAt}</td><td>{task.startAt}</td><td>{task.endAt}</td><td>{task.modifiedAt}</td><td>{task.modifier}</td>
               <td className="action-cell"><button onClick={() => onView(task)}>查看</button>{task.status === "进行中" && <button onClick={() => onAction("pause", task)}>暂停</button>}{task.status === "已暂停" && <button disabled={!task.canRestart} className={!task.canRestart ? "disabled" : ""} title={task.canRestart ? undefined : restartBlockedReason(task)} onClick={() => onAction("restart", task)}>开启</button>}<span className="more-wrap"><button aria-label={`任务${task.id}更多操作`} onClick={() => setMenu(menu === `task-${task.id}` ? null : `task-${task.id}`)}><EllipsisOutlined /></button><MoreMenu open={menu === `task-${task.id}`} onEdit={() => onEdit(task)} onEnd={() => onAction("end", task)} /></span></td>
             </tr>;
-          }) : <tr><td className="empty-row" colSpan={tab === "drama" ? 18 : 17}>暂无数据</td></tr>}</tbody>
+          }) : <tr><td className="empty-row" colSpan={tab === "drama" ? 17 : 16}>暂无数据</td></tr>}</tbody>
         </table>
       </div>
       <Pagination total="90827" />
